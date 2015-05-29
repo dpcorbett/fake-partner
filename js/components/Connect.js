@@ -1,9 +1,20 @@
 import React from 'react';
 
-let Connect = React.createClass({
+let ConnectHandler = React.createClass({
   render() {
-    return <div>Lol</div>;
+    return <Connect servers={ this.props.store.refine('servers') } />;
   }
 });
 
-export default Connect;
+let Connect = React.createClass({
+  render() {
+    let options = this.props.servers.value.map(item => <option value={ item }>{ item }</option>);
+    return (
+      <select>
+        { options }
+      </select>
+    );
+  }
+});
+
+export default ConnectHandler;

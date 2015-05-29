@@ -1,20 +1,24 @@
 import React from 'react';
 import Router from 'react-router';
 import { DefaultRoute, Link, Route, RouteHandler } from 'react-router';
-import { Map } from 'immutable';
+import { Cursor } from 'react-cursor';
 
 import Connect from './components/Connect.js';
 
-var store = Map({
-  servers: [ 'alpha.doshii.co' ]
-});
-
 let App = React.createClass({
+  getInitialState() {
+    return {
+      servers: [ 'alpha.doshii.co' ]
+    };
+  },
+
   render() {
+    let cursor = Cursor.build(this);
+
     return (
       <div className="nav">
         {/* this is the important part */}
-        <RouteHandler/>
+        <RouteHandler store={ cursor }/>
       </div>
     );
   }
