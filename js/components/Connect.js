@@ -1,16 +1,11 @@
 import React from 'react';
 
 let ConnectHandler = React.createClass({
-  willComponentMount() {
-    var forms = this.props.store.refine('forms');
-    forms.set({ connect: {} });
-  },
-
   render() {
-    var forms = this.props.store.refine('forms');
+    var servers = this.props.store.refine('servers');
+    var form = this.props.store.refine('forms', 'connect');
 
-    return <Connect servers={ this.props.store.refine('servers') }
-                    form={ forms.refine('connect') }/>;
+    return <Connect servers={ servers } form={ form } />;
   }
 });
 
@@ -23,18 +18,26 @@ let Connect = React.createClass({
     this.props.form.merge({ clientSecret: event.target.value });
   },
 
+  connect() {
+    var { clientId, clientSecret } = this.props.form.value;
+
+  },
+
   render() {
     let options = this.props.servers.value.map(item => <option value={ item }>{ item }</option>);
-    var text = JSON.stringify(this.props.form.value);
+    let { clientId, clientSecret } = this.props.form.value;
 
     return (
-      <form>
+      <form onSubmit={ this.connect }>
         <select>
           { options }
         </select>
-        <label>Client ID: <input type="text" onChange={ this.handleClientID } /></label>
-        <label>Client Secret: <input type="text" onChange={ this.handleClientSecret } /></label>
-      <div> { text } </div>
+        <label>Client ID:
+          <input type="text" value={ clientId } onChange={ this.handleClientID } />
+        </label>
+        <label>Client Secret:
+          <input type="text" value={ clientSecret } onChange={ this.handleClientSecret } />
+        </label>
       </form>
     );
   }
