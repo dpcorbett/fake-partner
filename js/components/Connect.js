@@ -1,15 +1,19 @@
 import React from 'react';
+import { Navigation } from 'react-router';
 
 let ConnectHandler = React.createClass({
   render() {
     var servers = this.props.store.refine('servers');
     var form = this.props.store.refine('forms', 'connect');
+    var spec = this.props.store.refine('serverSpec');
 
-    return <Connect servers={ servers } form={ form } />;
+    return <Connect servers={ servers } form={ form } spec={ spec }/>;
   }
 });
 
 let Connect = React.createClass({
+  mixins: [Navigation],
+
   handleID(event) {
     this.props.form.merge({ clientId: event.target.value });
   },
@@ -22,9 +26,16 @@ let Connect = React.createClass({
     this.props.form.merge({ clientServer: event.target.value });
   },
 
-  connect() {
-    let { clientId, clientSecret, clientServer } = this.props.form.value;
+  connect(e) {
+    e.preventDefault();
 
+    let { clientId, clientSecret, clientServer } = this.props.form.value;
+    let auth = new Buffer(clientId + ':' + clientSecret).toString('base64');
+    let url = 'wss://' + clientServer + '/partner/api/v1/socket?auth=' + auth;
+
+    let spec = this.props.spec.set({ url, events: [] });
+
+    this.transitionTo('server');
   },
 
   render() {
@@ -44,6 +55,7 @@ let Connect = React.createClass({
           <input type="text" value={ clientSecret } onChange={ this.handleSecret } />
         </label>
         <div>{ text }</div>
+        <button type="submit">Connect</button>
       </form>
     );
   }

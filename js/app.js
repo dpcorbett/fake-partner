@@ -5,6 +5,7 @@ import { Cursor } from 'react-cursor';
 
 import ConnectHandler from './components/Connect.js';
 import Orders from './components/Orders';
+import Server from './components/Server.js'
 
 let App = React.createClass({
   getInitialState() {
@@ -52,7 +53,8 @@ let App = React.createClass({
           clientSecret: '83376f3562f719f694e14862aa716d688eb46bb867f93f4f251a44ed5e288d7b',
           clientServer: 'alpha.doshii.co'
         }
-      }
+      },
+      serverSpec: {}
     };
   },
 
@@ -71,7 +73,8 @@ let App = React.createClass({
 let routes = (
   <Route name="app" path="/" handler={App}>
     <DefaultRoute handler={ConnectHandler} />
-    <Route name="orders" path="/orders/:id" handler={Orders} />    
+    <Route name="orders" path="/orders/:id" handler={Orders} />
+    <Route name="server" path="/server" handler={Server}/>
   </Route>
 );
 
