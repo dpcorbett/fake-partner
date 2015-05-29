@@ -8,7 +8,8 @@ import Connect from './components/Connect.js';
 let App = React.createClass({
   getInitialState() {
     return {
-      servers: [ 'alpha.doshii.co' ]
+      servers: [ 'alpha.doshii.co' ],
+      forms: {}
     };
   },
 
