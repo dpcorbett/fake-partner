@@ -1,13 +1,19 @@
 import React from 'react';
 import Router from 'react-router';
 import { DefaultRoute, Link, Route, RouteHandler } from 'react-router';
+import { Map } from 'immutable';
+
+import Connect from './components/Connect.js';
+
+var store = Map({
+  servers: [ 'alpha.doshii.co' ]
+});
 
 let App = React.createClass({
   render() {
     return (
       <div className="nav">
-        <h1> HELLO ZOG </h1>
-        {/* this is the importTant part */}
+        {/* this is the important part */}
         <RouteHandler/>
       </div>
     );
@@ -16,7 +22,7 @@ let App = React.createClass({
 
 let routes = (
   <Route name="app" path="/" handler={App}>
-
+    <DefaultRoute handler={Connect} />
   </Route>
 );
 
