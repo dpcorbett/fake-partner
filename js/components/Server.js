@@ -26,7 +26,7 @@ let Server = React.createClass({
 
       this._timer = window.setInterval(() => {
         var time = (new Date()).getTime();
-        this._ws.send('"primus::ping::"' + time + '"');
+        this._ws.send('"primus::ping::' + time + '"');
       }, 1000);
     };
 
