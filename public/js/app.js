@@ -1,6 +1,6 @@
 /* global window, angular */
 
-window.app = angular.module('FakePOSApp', [
+window.app = angular.module('FakePartnerApp', [
   'ui.router',
   'angular-flash.service',
   'angular-flash.flash-alert-directive',
@@ -35,7 +35,7 @@ window.app = angular.module('FakePOSApp', [
 
 // Load some constants into ng
 ['meerkatHost', 'token', 'primusUrl', 'apiVersion'].forEach(function(v){
-  angular.module('FakePOSApp').constant(v, window[v]);
+  angular.module('FakePartnerApp').constant(v, window[v]);
 });
 
 

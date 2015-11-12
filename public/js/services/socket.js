@@ -1,5 +1,5 @@
 angular
-  .module('FakePOSApp')
+  .module('FakePartnerApp')
   .service('Socket', [
     '$q', '$http', '$log', 'flash',
     'lodash', 'primus', 'primusUrl', 'Meerkat', SocketService

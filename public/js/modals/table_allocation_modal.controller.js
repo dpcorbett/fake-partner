@@ -1,5 +1,5 @@
 angular
-  .module('FakePOSApp')
+  .module('FakePartnerApp')
   .controller('TableAllocationCtrl', [
     '$scope', '$http', '$modalInstance', 'consumer', TableAllocationCtrl
   ]);

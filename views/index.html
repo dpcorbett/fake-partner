@@ -11,7 +11,7 @@
 
             <div class="row">
                 <div class="large-12 columns">
-                    <label>POS API URL
+                    <label>Partner API URL
                         <select name="url" placeholder="Meerkat API URL root (default: http://localhost:3000/)">
                           <option value="http://localhost:3000/pos/api/v1">http://localhost:3000/pos/api/v1/</option>
                           <option value="https://alphasandbox.doshii.co/pos/api/v1">https://alphasandbox.doshii.co/pos/api/v1</option>
@@ -23,12 +23,20 @@
             </div>
 
             <div class="row">
-                <div class="large-6 columns">
-                    <label>Location Token
-                        <textarea type="text" placeholder="token" name="token"></textarea>
+                <div class="columns">
+                    <label>Client Id
+                        <input type="text" placeholder="client id" name="clientId" />
                     </label>
                 </div>
-
+            </div>
+            <div class="row">
+                <div class="columns">
+                    <label>Client Secret
+                        <input type="text" placeholder="client secret" name="clientSecret" />
+                    </label>
+                </div>
+            </div>
+            <div class="row">
                 <div class="large-6 columns">
                     <button class="button tiny postfix" type="submit">Go</button>
                 </div>

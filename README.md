@@ -1,4 +1,4 @@
-# Fake POS
+# Fake Partner
 
 ## Requirements
 
@@ -20,11 +20,11 @@
     │   └── index.js
     └── ...
 
-* Run fake-pos using `npm start`
-* Open Chrome and navigate to `http://localhost:3030/`
+* Run fake-partner using `npm start`
+* Open Chrome and navigate to `http://localhost:3031/`
 
 
 ## Getting started
-* Select `https://alphasandbox.doshii.co/pos/api/v1` from the dropdown list
-* In the location token field, paste the token received received when creating your venue.
+* Select `https://alphasandbox.doshii.co/partner/api/v1` from the dropdown list
+* Paste the ClientId and ClientSecret into the fields.
 * On successful connection, a connect event will be emitted in the console

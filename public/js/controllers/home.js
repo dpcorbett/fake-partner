@@ -1,5 +1,5 @@
 angular
-  .module('FakePOSApp')
+  .module('FakePartnerApp')
   .config(['$stateProvider',  function($stateProvider)  {
     $stateProvider.state('root', {
       url: '/',
@@ -8,5 +8,5 @@ angular
     });
   }])
   .controller('HomeCtrl', ['$scope', '$state', function($scope, $state) {
-    $state.go('pos.home');
+    $state.go('partner.home');
   }]);

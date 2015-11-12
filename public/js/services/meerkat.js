@@ -1,6 +1,6 @@
 // Factory to share data between controllers
 angular
-  .module('FakePOSApp')
+  .module('FakePartnerApp')
   .factory('Meerkat', [
     '$http', '$q', '$modal', 'lodash', 'flash', 'OrderHelper', MeerkatService
   ]);

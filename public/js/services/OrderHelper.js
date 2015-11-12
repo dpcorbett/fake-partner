@@ -1,5 +1,5 @@
 angular
-  .module('FakePOSApp')
+  .module('FakePartnerApp')
   .factory('OrderHelper', [
     '$http', '$q', '$modal', 'lodash', OrderHelperService
   ]);

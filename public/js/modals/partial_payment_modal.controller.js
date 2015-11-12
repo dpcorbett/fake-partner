@@ -1,5 +1,5 @@
 angular
-  .module('FakePOSApp')
+  .module('FakePartnerApp')
   .controller('PartialPaymentCtrl', [
   '$scope', '$modalInstance', 'lodash', 'OrderHelper', 'order', PartialPaymentCtrl
   ]);

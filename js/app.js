@@ -45,7 +45,7 @@ let App = React.createClass({
         ],
         "surcounts": [],
         "updatedAt": "2015-05-20T06:15:45.882Z",
-        "uri": "https://localhost/pos/api/v1/orders/46"
+        "uri": "https://localhost/partner/api/v1/orders/46"
     },
       forms: {
         connect: {
