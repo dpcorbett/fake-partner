@@ -1,0 +1,179 @@
+<div flash-alert active-class="in" class="alert fade">
+  <strong class="alert-heading"></strong>
+  <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
+</div>
+
+<a class="button small secondary" ui-sref="pos.home">Home</a>
+
+<div class="panel panel-default">
+
+  <div class="panel-body">
+
+    <wizard>
+
+      <wz-step title="Table Allocation">
+        <h2>Table Allocation</h2>
+
+        <div>
+          The table allocation is optional and can be omitted from the final payload. <br/>
+          It is intended to be a convenience for the POS to send a single message containing all
+          of the context for this order.
+        </div>
+        <br/>
+        <br/>
+
+        <div>
+          <label>
+            Include table allocation:
+            <input type="checkbox" ng-model="orderMeta.includeTableAllocation"/>
+          </label>
+        </div>
+
+        <div ng-show="orderMeta.includeTableAllocation">
+          <div>
+            <label>
+              Name:
+              <input ng-model="table.name"/>
+            </label>
+          </div>
+
+          <div>
+            <label>
+              Status:
+              <select ng-model="table.status" style="width:250px;">
+                <option value="confirmed">confirmed</option>
+                <option value="waiting_for_confirmation">waiting_for_confirmation</option>
+              </select>
+            </label>
+          </div>
+
+          Result
+          <pre class="code-block"><code>{{formattedTable()}}</code></pre>
+
+          <br/>
+          <pre class="line">name</pre>
+          <div>
+            The unique string identifier for this table at the venue. <br/>
+            We recommend using the same identifier as the table layout (if available).
+          </div>
+
+          <br/>
+          <pre class="line">status</pre>
+          <div>
+            Either be 'confirmed' or 'waiting_for_confirmation'. <br/>
+            Since the POS is telling Doshii about a table allocation, we can assume it's 'confirmed'.
+          </div>
+        </div>
+
+        <br/>
+        <br/>
+        <a class="button small" wz-next>Next</a>
+      </wz-step>
+
+      <wz-step title="Order">
+        <h2>Order</h2>
+
+        <div>
+          <label>
+            Id:
+            <input ng-model="orderMeta.id"/>
+          </label>
+        </div>
+
+        <div>
+          <label>
+            Status:
+            <select ng-model="order.status" style="width:250px;">
+              <option value="accepted">accepted</option>
+              <option value="rejected">rejected</option>
+              <option disabled="disabled" value="waiting for payment">waiting for payment</option>
+              <option disabled="disabled" value="ready to pay">ready to pay</option>
+              <option value="paid">paid</option>
+              <option value="pending">pending</option>
+            </select>
+          </label>
+        </div>
+
+        Result
+        <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
+
+        <br/>
+        <pre class="line">id</pre>
+        <div>
+          The unique string identifier for this order at the venue.
+        </div>
+
+        <br/>
+        <pre class="line">status</pre>
+        <div>
+          Can be any of the following:
+          <table>
+            <thead>
+            <tr>
+              <th>Status</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>pending</td><td>All partner initiated orders will be 'pending' until the POS accepts or rejects</td>
+              </tr>
+              <tr>
+                <td>accepted</td><td>Indicates the POS has seen and approved the order</td>
+              </tr>
+              <tr>
+                <td>rejected</td><td>Indicates the POS has seen and rejects the order</td>
+              </tr>
+              <tr>
+                <td>ready to pay</td><td>Reserved for use by Partners, begins the external payment process</td>
+              </tr>
+              <tr>
+                <td>waiting for payment</td><td>Reserved for use by the POS, only available when progressing the payment process</td>
+              </tr>
+              <tr>
+                <td>paid</td><td>Marks the current order as paid and will no longer show in FakePOS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <br/>
+        <br/>
+        <a class="button small" wz-next>Next</a>
+      </wz-step>
+
+      <wz-step title="Send" canexit="sendOrder">
+        <h2>Send Preview</h2>
+
+        <div>
+          Now we send the payload to the Doshii endpoint.
+        </div>
+
+        <pre style="font-size:16px; display: inline-block;" class="line">PUT /order/{{orderMeta.id}}</pre>
+
+        <br/>
+        <br/>
+        Final payload
+        <pre class="code-block"><code>{{orderPostBody()}}</code></pre>
+
+        <br/>
+        <br/>
+        <a class="button small" wz-next="sendOrder">Send!</a>
+      </wz-step>
+
+      <wz-step title="Done">
+        <h2>You're done</h2>
+
+        <div>
+          The order {{orderMeta.id}} has been sent successfully.
+          You can now make further changes to this order on the home screen.
+        </div>
+
+        <br/>
+        <a class="button small" ng-click="goHome()">Go home</a>
+      </wz-step>
+    </wizard>
+  </div>
+</div>
+

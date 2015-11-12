@@ -7,7 +7,7 @@ let OrdersHandler = React.createClass({
 
     return <Order data={ order } />;
   }
-})
+});
 
 let Order = React.createClass({
 
@@ -34,14 +34,14 @@ let Order = React.createClass({
 
           <tr>
             <td>{ status} </td>
-            <td>  
+            <td>
                 { lineItems}
             </td>
             <td>
                 <input type="button" onClick={this.handleStatusChange} value="Paid"/>
             </td>
           </tr>
-          
+
         </table>
       </div>
     );

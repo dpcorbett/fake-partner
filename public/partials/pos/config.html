@@ -1,0 +1,137 @@
+<div flash-alert active-class="in" class="alert fade">
+  <strong class="alert-heading"></strong>
+  <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
+</div>
+
+<a class="button small secondary" ui-sref="pos.home">Home</a>
+
+<div class="panel panel-default">
+  <h2>Config</h2>
+
+  <label>
+    Automatically checkout consumer when order is paid
+    <input type="checkbox" ng-model="config.checkoutOnPaid" />
+  </label>
+
+  <label>
+    Automatically deallocate table when order is paid
+    <input type="checkbox" ng-model="config.deallocateTableOnPaid"/>
+  </label>
+
+  <pre style="font-size:16px; display: inline-block;" class="line">POST /config</pre>
+  <pre class="code-block"><code>{{formattedConfig()}}</code></pre>
+
+  <br/>
+  <pre class="line">restaurantMode</pre>
+  <div>
+    Currently unused.
+    <table>
+      <thead>
+      <tr>
+        <th>Value</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr>
+        <td>restaurant</td>
+        <td>Multiple orders can be placed on the same table for the same checkin. Payment is made at the end.</td>
+      </tr>
+      <tr>
+        <td>bistro</td>
+        <td>Each order is a new table and new checkin. Payment is made as the order is placed.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br/>
+  <pre class="line">tableMode</pre>
+  <div>
+    Currently unused.
+    <table>
+      <thead>
+      <tr>
+        <th>Value</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr>
+        <td>allocation</td>
+        <td>
+          Table allocation is made by the POS. EG: Consumer is handed a number when the order is placed.
+        </td>
+      </tr>
+      <tr>
+        <td>selection</td>
+        <td>
+          Table allocation is made by the consumer. EG: Consumer sits at table 11 and begins an order.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br/>
+  <pre class="line">checkoutOnPaid</pre>
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th>Value</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr>
+        <td>true</td>
+        <td>
+          Checkin is removed when the order is paid.
+        </td>
+      </tr>
+      <tr>
+        <td>false</td>
+        <td>
+          Checkin is remains after the order is paid and the POS will remove it when required.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br/>
+  <pre class="line">deallocateTableOnPaid</pre>
+  <div>
+    <table>
+      <thead>
+      <tr>
+        <th>Value</th>
+        <th>Description</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr>
+        <td>true</td>
+        <td>
+          Table allocation is removed when the order is paid.
+        </td>
+      </tr>
+      <tr>
+        <td>false</td>
+        <td>
+          Table allocation remains after the order is paid and the POS will remove it when required.
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="button small" ng-click="sendConfig()">Update</button>
+
+</div>
+

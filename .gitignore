@@ -1,1 +1,5 @@
 node_modules
+/public/vendor
+/config/development.js
+
+.sass-cache

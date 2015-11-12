@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+
+    <form action="/" method="post">
+
+        <fieldset>
+            <legend></legend>
+
+
+            <div class="row">
+                <div class="large-12 columns">
+                    <label>POS API URL
+                        <select name="url" placeholder="Meerkat API URL root (default: http://localhost:3000/)">
+                          <option value="http://localhost:3000/pos/api/v1">http://localhost:3000/pos/api/v1/</option>
+                          <option value="https://alphasandbox.doshii.co/pos/api/v1">https://alphasandbox.doshii.co/pos/api/v1</option>
+                          <option value="https://alpha.corp.doshii.co/pos/api/v1">http://alpha.corp.doshii.co/pos/api/v1</option>
+                          <option value="https://beta.doshii.co/pos/api/v1">https://beta.doshii.co/pos/api/v1</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="large-6 columns">
+                    <label>Location Token
+                        <textarea type="text" placeholder="token" name="token"></textarea>
+                    </label>
+                </div>
+
+                <div class="large-6 columns">
+                    <button class="button tiny postfix" type="submit">Go</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+
+{% endblock%}

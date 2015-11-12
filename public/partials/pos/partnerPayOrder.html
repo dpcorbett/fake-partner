@@ -1,0 +1,162 @@
+<div flash-alert active-class="in" class="alert fade">
+  <strong class="alert-heading"></strong>
+  <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
+</div>
+
+<a class="button small secondary" ui-sref="pos.home">Home</a>
+
+<div class="panel panel-default">
+
+  <div class="panel-body">
+    <wizard>
+      <wz-step title="Start" canexit="order() && order().status === 'ready to pay'">
+        <h2>Partner Initiated Payments</h2>
+
+        <div>
+          Some integration partners can perform payments outside of the POS and will notify when payment is complete. <br/>
+          The POS will always have the opportunity to prevent payments from proceeding and will also be notified after they occur, succeed or fail.
+          This means the POS doesn't ever have to reject a payment or force a refund.
+          It will simply stop any problematic payment before it occurs.
+        </div>
+        <br/>
+        <div>
+          See the sequence diagrams regarding partner payments for detailed information.
+        </div>
+
+        <br/>
+        <br/>
+        <h3 ng-if="!order()">
+          Order {{orderId}} not found. <br/>
+          Have you fetched the orders yet?
+        </h3>
+
+        <div ng-if="order() && order().status !== 'ready to pay'">
+          <img src="images/loader.gif" style="display: block; margin-left:auto;margin-right:auto;">
+          <br/>
+          <br/>
+          The "Next" button will become active when the Partner app sets this order's status to 'ready to pay'.
+        </div>
+
+        <div ng-if="order() && order().status === 'ready to pay'">
+          The "Next" button is active. You can continue now.
+        </div>
+
+        <br/>
+        <br/>
+        <a class="button small" wz-next ng-disabled="!order() || order().status !== 'ready to pay'">Next</a>
+      </wz-step>
+
+      <wz-step title="ready to pay" canexit="statusFunctions[updatedOrder.status]">
+        <h2>Ready To Pay</h2>
+
+        <div>
+          Right now, a Partner has registered their interest in paying this order.
+          <br/>
+          <br/>
+          The POS has a couple of options each represented by a status transition:
+          <table>
+            <thead>
+            <tr>
+              <th>Status</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+              <td>waiting for payment</td>
+              <td>Respond to the Partner and tell them to go ahead and accept payment</td>
+            </tr>
+            <tr>
+              <td>accepted</td>
+              <td>Cancel the Partner's payment attempt for the order</td>
+            </tr>
+            <tr>
+              <td>paid</td>
+              <td>Ignore the Partner and take payment for the order at the POS</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <br/>
+          New status:<br/>
+          <select ng-model="updatedOrder.status" style="width: 250px;">
+            <option value="waiting for payment">waiting for payment</option>
+            <option value="accepted">accepted</option>
+            <option value="paid">paid</option>
+          </select>
+        </div>
+
+        <br/>
+        <br/>
+        <a class="button small" wz-next ng-disabled="order().status !== 'ready to pay'">Next</a>
+      </wz-step>
+
+      <wz-step title="waiting for payment" wz-disabled="{{wfpDisabled()}}">
+        <h2>Waiting For Payment</h2>
+
+        <br/>
+        <br/>
+        <div>
+          <b>This status has a 30 second timeout.</b> <br/>
+          If the Partner doesn't complete or cancel the payment within the time limit then
+          Doshii will revert the order back to the 'accepted' status.<br/>
+          In any of these cases the POS will be notified of the result.
+        </div>
+
+        <br/>
+        <br/>
+        <div ng-if="!accepted() && !paid()">
+          <img src="images/loader.gif" style="display: block; margin-left:auto;margin-right:auto;">
+          <br/>
+          <br/>
+          You'll be able to continue when payment is completed, cancelled or timed out.
+        </div>
+
+        <div ng-if="accepted()">
+          The payment has been cancelled or timed out. The order status has been set back to 'accepted'.<br/>
+          You can perform further action on this order by going home.
+        </div>
+
+        <div ng-if="paid()">
+          The Partner's payment was successful and the order has been marked as 'paid'. <br/>
+          You can now go home but the order will no longer be visible as it is paid.
+        </div>
+
+        <br/>
+        <a class="button small" ng-click="goHome()" ng-disabled="!accepted() && !paid()">Go home</a>
+
+      </wz-step>
+
+      <wz-step title="accepted" wz-disabled="{{acceptedDisabled()}}">
+        <h2>Accepted</h2>
+
+        <br/>
+        <br/>
+        <div>
+          You've cancelled the Partner's payment attempt and the order status has been set back to 'accepted'. <br/>
+          You can perform further action on this order by going home.
+        </div>
+
+        <br/>
+        <a class="button small" ui-sref="pos.home">Go home</a>
+      </wz-step>
+
+      <wz-step title="paid" wz-disabled="{{paidDisabled()}}">
+        <h2>Paid</h2>
+
+        <br/>
+        <br/>
+        <div>
+          You've cancelled the Partner's payment attempt and marked the order as 'paid'. <br/>
+          You can now go home but the order will no longer be visible as it is paid.
+        </div>
+
+        <br/>
+        <a class="button small" ui-sref="pos.home">Go home</a>
+      </wz-step>
+
+    </wizard>
+  </div>
+</div>
+
