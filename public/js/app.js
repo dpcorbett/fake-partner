@@ -31,7 +31,7 @@ window.app = angular.module('FakePartnerApp', [
   return host;
 })
 .constant('lodash', window._)
-.run(['$http', 'Socket', 'token', 'primusUrl', fakePosRun]);
+.run(['$http', 'token', 'primusUrl', fakePosRun]);
 
 // Load some constants into ng
 ['meerkatHost', 'token', 'primusUrl', 'apiVersion'].forEach(function(v){
@@ -39,7 +39,7 @@ window.app = angular.module('FakePartnerApp', [
 });
 
 
-function fakePosRun($http, Socket, token, primusUrl){
+function fakePosRun($http, token, primusUrl){
   var auth = {
     token: token,
     url: primusUrl
@@ -49,5 +49,5 @@ function fakePosRun($http, Socket, token, primusUrl){
   $http.defaults.headers.common.Authorization = auth.token;
 
   // Initialize the Socket
-  Socket.init(auth);
+  //Socket.init(auth);
 }

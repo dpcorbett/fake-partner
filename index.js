@@ -42,7 +42,7 @@ app.post('/', function(req, res){
 
   var url = req.body.url;
 
-  res.render('index.html', {
+  res.render('partner.html', {
     meerkatHost: url,
     title: 'Doshii Test Partner',
     token: req.body.token,

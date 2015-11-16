@@ -1,7 +1,7 @@
 angular
   .module('FakePartnerApp')
-  .controller('PartnerCtrl', [ '$scope', 'Meerkat', 'OrderHelper', PartnerCtrl ]);
+  .controller('PartnerCtrl', [ '$scope', PartnerCtrl ]);
 
-function PartnerCtrl($scope, Meerkat, OrderHelper) {
+function PartnerCtrl($scope) {
   console.log('loaded partner ctrl');
 }
