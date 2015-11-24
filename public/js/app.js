@@ -4,13 +4,12 @@ window.app = angular.module('FakePartnerApp', [
   'ui.router',
   'angular-flash.service',
   'angular-flash.flash-alert-directive',
-  'primus',
   'ui.select2',
   'mm.foundation',
   'mgo-angular-wizard'
 ])
 .constant('lodash', window._)
-.run(['$http', 'Socket', 'clientId', 'clientSecret', fakePosRun]);
+.run(['$state', '$http', 'Socket', 'clientId', 'clientSecret', fakePosRun]);
 
 // Load some constants into ng
 ['primusUrl', 'clientId', 'clientSecret', 'meerkatHost', 'apiVersion', 'websocketUrl'].forEach(function(v){
@@ -18,10 +17,13 @@ window.app = angular.module('FakePartnerApp', [
 });
 
 
-function fakePosRun($http, Socket, clientId, clientSecret){
+function fakePosRun($state, $http, Socket, clientId, clientSecret){
   //Set Authorization header
   $http.defaults.headers.common.Authorization = 'Basic ' + btoa(clientId + ':' + clientSecret);
 
   // Initialize the Socket
   Socket.init();
+
+  // Navigate to the landing page
+  $state.go('partner.home');
 }

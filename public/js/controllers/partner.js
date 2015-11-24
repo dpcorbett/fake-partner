@@ -1,7 +1,7 @@
 angular
   .module('FakePartnerApp')
-  .controller('PartnerCtrl', [ '$scope', PartnerCtrl ]);
+  .controller('PartnerCtrl', [ PartnerCtrl ]);
 
-function PartnerCtrl($scope) {
+function PartnerCtrl() {
   console.log('loaded partner ctrl');
 }

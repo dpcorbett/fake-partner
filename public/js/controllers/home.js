@@ -8,6 +8,5 @@ angular
     });
   }])
   .controller('HomeCtrl', ['$scope', '$state', 'Socket', function($scope, $state, Socket) {
-    $state.go('partner.home');
-    Socket.init();
+    console.log('loaded home ctrl');
   }]);
