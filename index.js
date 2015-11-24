@@ -45,7 +45,8 @@ app.post('/', function(req, res){
   res.render('partner.html', {
     meerkatHost: url,
     title: 'Doshii Test Partner',
-    token: req.body.token,
+    clientId: req.body.clientId,
+    clientSecret: req.body.clientSecret,
     primusUrl: url + '/socket/primus.js?v=' + new Date().getTime(),
     apiVersion: config.meerkat.apiVersion
   });

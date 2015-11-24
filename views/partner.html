@@ -17,7 +17,9 @@
 {% block body %}
 
       <script>
-          window.token = "{{token}}";
+          window.clientId = "{{clientId}}";
+          window.clientSecret = "{{clientSecret}}";
+          window.clientAuth = btoa(window.clientId + ":" + window.clientSecret);
           window.primusUrl = "{{primusUrl}}"
       </script>
 
