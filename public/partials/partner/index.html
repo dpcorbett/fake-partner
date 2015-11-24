@@ -5,13 +5,11 @@
     <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
   </div>
 
-  <div>
-    <h4>Actions</h4>
-    <!--<a class="button small" ui-sref="partner.products">Load Products</a>-->
-    <!--<a class="button small" ui-sref="pos.createOrder">Create Order</a>-->
-  </div>
 
-
-  <h1>Features here!</h1>
+  <h2>Locations</h2>
+  <button ng-click="getLocations()">Refresh</button>
+  <ul>
+    <li ng-repeat="location in locations">{{location.name}}</li>
+  </ul>
 
 </div>
