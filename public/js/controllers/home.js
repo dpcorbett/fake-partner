@@ -7,6 +7,7 @@ angular
       controller: 'HomeCtrl'
     });
   }])
-  .controller('HomeCtrl', ['$scope', '$state', function($scope, $state) {
+  .controller('HomeCtrl', ['$scope', '$state', 'Socket', function($scope, $state, Socket) {
     $state.go('partner.home');
+    Socket.init();
   }]);

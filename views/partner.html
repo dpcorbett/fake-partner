@@ -16,17 +16,24 @@
 
 {% block body %}
 
-      <script>
-          window.clientId = "{{clientId}}";
-          window.clientSecret = "{{clientSecret}}";
-          window.clientAuth = btoa(window.clientId + ":" + window.clientSecret);
-          window.primusUrl = "{{primusUrl}}"
-      </script>
+  <script>
+      window.clientId = "{{clientId}}";
+      window.clientSecret = "{{clientSecret}}";
+      window.primusUrl = "{{primusUrl}}";
+      window.websocketUrl = "{{websocketUrl}}";
+  </script>
 
-      <div ui-view></div>
+  <div ui-view></div>
 
-      <script src="js/app.js"></script>
-      <script src="js/routes.js"></script>
-      <script src="js/controllers/home.js"></script>
-      <script src="js/controllers/partner.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/services/socket.js"></script>
+
+
+  <script src="js/routes.js"></script>
+
+
+  <script src="js/controllers/home.js"></script>
+  <script src="js/controllers/partner.js"></script>
+
+
 {% endblock %}

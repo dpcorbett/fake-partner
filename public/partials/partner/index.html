@@ -1,137 +1,17 @@
 <div class="pos">
 
-    <div flash-alert active-class="in" class="alert fade">
-      <strong class="alert-heading"></strong>
-      <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
-    </div>
+  <div flash-alert active-class="in" class="alert fade">
+    <strong class="alert-heading"></strong>
+    <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
+  </div>
 
-    <div>
-      <h4>Actions</h4>
-      <!--<a class="button small" ui-sref="partner.products">Load Products</a>-->
-      <a class="button small" ui-sref="pos.createOrder">Create Order</a>
-      <a class="button small" ui-sref="pos.config">Update Config</a>
-    </div>
-
-    <!--<div class="consumer-container ">-->
-      <!--<h4> Checked-in consumers </h4>-->
-      <!--<a class="button small" ng-click="getConsumers()">Get Checkins</a>-->
-      <!--<table>-->
-        <!--<thead>-->
-        <!--<th> Id </th>-->
-        <!--<th> Name </th>-->
-        <!--<th> Allocate Table </th>-->
-        <!--</thead>-->
-        <!--<tbody>-->
-        <!--<tr ng-repeat="consumer in consumers">-->
-          <!--<td>-->
-            <!--{{consumer.meerkatConsumerId}}-->
-          <!--</td>-->
-          <!--<td>-->
-            <!--{{consumer.name}}-->
-          <!--</td>-->
-
-          <!--<td>-->
-            <!--<button class="button tiny round"-->
-                <!--ng-click="Meerkat.showTableAllocationModal(consumer)"-->
-                <!--ng-disabled="Meerkat.hasTableAllocation(consumer)">-->
-                    <!--<i class="fa fa-spoon"></i>-->
-            <!--</button>-->
-          <!--</td>-->
-        <!--</tr>-->
-        <!--</tbody>-->
-      <!--</table>-->
-    <!--</div>-->
-
-    <div class="table-allocation">
-      <h4 class="inline"> Table Allocations </h4>
-      <a class="button small refresh" ng-click="getTableAllocations()">⟲</a>
-
-      <table>
-        <thead>
-        <th> Table </th>
-        <th> Consumer ID </th>
-        <th> Status </th>
-        <th> Actions </th>
-        </thead>
-        <tbody>
-        <tr ng-repeat="table in tableAllocations">
-          <td>
-            {{table.name}}
-          </td>
-
-          <td>
-            {{table.meerkatConsumerId}}
-          </td>
-
-          <td>
-            {{table.status}}
-          </td>
-
-          <td>
-            <div class="btn-group">
-              <button class="button tiny"
-                      ng-if="table.status !== 'confirmed'"
-                      ng-click="Meerkat.allowTableSelection(table)">Confirm</button>
-
-              <a class="button tiny" dropdown-toggle="#disallowDrop">Disallow &raquo;</a>
-              <ul id="disallowDrop" class="f-dropdown">
-                <li>
-                <li><a ng-click="Meerkat.disallowTableSelection(table, 1)">Invalid table number</a></li>
-                <li><a ng-click="Meerkat.disallowTableSelection(table, 2)">Table not available</a></li>
-                <li><a ng-click="Meerkat.disallowTableSelection(table, 3)">Remove from table</a></li>
-                <li><a ng-click="Meerkat.disallowTableSelection(table, 4)">Please try again</a></li>
-                <li><a ng-click="Meerkat.disallowTableSelection(table, 5)">Please check into the venue again</a></li>
-                </li>
-              </ul>
-            </div>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+  <div>
+    <h4>Actions</h4>
+    <!--<a class="button small" ui-sref="partner.products">Load Products</a>-->
+    <!--<a class="button small" ui-sref="pos.createOrder">Create Order</a>-->
+  </div>
 
 
-    <div class="current-orders">
-      <h4 class="inline">Orders</h4>
-      <a class="button small refresh" ng-click="getOrders()">⟲</a>
-      <!--<label>-->
-        <!--<input type="checkbox" ng-model="deallocateTable"/>-->
-        <!--Deallocate table when order is paid-->
-      <!--</label>-->
-      <!--<label>-->
-        <!--<input type="checkbox" ng-model="checkoutConsumer"/>-->
-        <!--Checkout consumer when order is paid-->
-      <!--</label>-->
-      <table>
-        <thead>
-          <th>Id</th>
-          <th>Status</th>
-          <th>Items</th>
-          <th>Remaining Total</th>
-          <th>Actions</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="order in orders">
-            <td>{{order.id}}</td>
-            <td>{{order.status}}</td>
-            <td>
-              <div ng-repeat="item in order.items">{{item.name}}</div>
-            </td>
-            <td> ${{OrderHelper.getTotalMinusPayments(order)}} </td>
+  <h1>Features here!</h1>
 
-
-            <td>
-              <div class="btn-group">
-                <button ng-if="OrderHelper.isOrderPending(order)" class="btn btn-default tiny" ng-click="Meerkat.acceptOrder(order)">Accept</button>
-                <button ng-if="OrderHelper.isOrderPending(order)" class="btn btn-default tiny" ng-click="Meerkat.rejectOrder(order)">Reject</button>
-                <button ng-if="OrderHelper.isOrderAccepted(order) || OrderHelper.isOrderReadyToPay(order) || OrderHelper.isOrderWaitingForPayment(order)" class="btn btn-default tiny"
-                        ng-click="addPayment(order)">Pay from POS</button>
-                <button ng-if="OrderHelper.isOrderAccepted(order) || OrderHelper.isOrderReadyToPay(order) || OrderHelper.isOrderWaitingForPayment(order)" class="btn btn-default tiny"
-                        ui-sref="pos.partnerPayOrder({orderId: order.id})">Pay from Partner</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
 </div>

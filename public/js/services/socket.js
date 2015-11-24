@@ -1,14 +1,13 @@
 angular
   .module('FakePartnerApp')
   .service('Socket', [
-    '$q', '$http', '$log', 'flash',
-    'lodash', 'primus', 'primusUrl', 'Meerkat', SocketService
+    'flash', 'clientId', 'clientSecret', 'websocketUrl', SocketService
   ]);
 
-function SocketService($q, $http, $log, flash, _, primus, primusUrl, Meerkat){
+function SocketService(flash, clientId, clientSecret, websocketUrl){
   var client = null;
 
-  function init(){
+  function init2(){
     if (client) {
       return client;
     }
@@ -87,6 +86,38 @@ function SocketService($q, $http, $log, flash, _, primus, primusUrl, Meerkat){
     });
 
     return client;
+  }
+
+
+  function init() {
+    // btoa is supported by modern browsers
+    var auth = btoa(clientId + ':' + clientSecret);
+
+    // WebSocket is supported by most modern browsers
+    var ws = new WebSocket(websocketUrl + '?auth=' + auth);
+
+    // After connecting we need to send heartbeats
+    ws.onopen = function(event) {
+
+      function heartbeat() {
+        var time = (new Date()).getTime();
+        ws.send('"primus::ping::' + time + '"');
+      }
+
+      heartbeat(); // Send one immediately to complete the handshake
+      setInterval(heartbeat, 5000); // Then one every few seconds thereafter to keep alive
+    };
+
+    // handle the events
+    ws.onmessage = function(event) {
+      if (!event) return;
+
+      var data = JSON.parse(event.data);
+
+      if (!data.emit) return;
+
+      console.log(data.emit);
+    };
   }
 
   return {

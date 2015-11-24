@@ -47,7 +47,7 @@ app.post('/', function(req, res){
     title: 'Doshii Test Partner',
     clientId: req.body.clientId,
     clientSecret: req.body.clientSecret,
-    primusUrl: url + '/socket/primus.js?v=' + new Date().getTime(),
+    websocketUrl: url.replace(/^http/, 'ws') + '/socket',
     apiVersion: config.meerkat.apiVersion
   });
 });
