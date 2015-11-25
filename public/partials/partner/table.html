@@ -1,0 +1,19 @@
+<div flash-alert active-class="in" class="alert fade">
+  <strong class="alert-heading"></strong>
+  <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
+</div>
+
+<a ui-sref="partner.home">Home</a>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Table</div>
+  <div class="panel-body">
+    <input type="text" class="form-control" ng-model="tableName"/>
+    <div class="btn-group">
+      <button class="btn btn-default" ng-click="getTable()">Get Table</button>
+    </div>
+  </div>
+
+  <div>{{ table.name }}</div>
+
+</div>

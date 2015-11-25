@@ -12,4 +12,10 @@ angular
       templateUrl: 'partials/partner/index.html',
       controller: 'PartnerCtrl'
     });
+
+    $stateProvider.state('partner.table', {
+      url: '/table',
+      templateUrl: 'partials/partner/table.html',
+      controller: 'TableCtrl'
+    });
   }]);
