@@ -26,5 +26,18 @@ function MeerkatService($http, flash){
       .catch(err => flash.error = 'Getting locations failed');
   };
 
+  Meerkat.getTableFor = function(tableName, locationId) {
+
+    var req = {
+      method: 'GET',
+      url: '/tables/' + tableName,
+      headers: {
+        'doshii-location-id': locationId
+      }
+    };
+
+    return $http(req).catch(err => flash.error = 'Getting table info failed.');
+  };
+
   return Meerkat;
 }

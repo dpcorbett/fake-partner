@@ -6,7 +6,6 @@
   </div>
 
 
-  <button ui-sref="partner.table">Tables</button>
 
 
   <h2>Locations</h2>
@@ -16,6 +15,7 @@
       <th>id</th>
       <th>name</th>
       <th>address</th>
+      <th>actions</th>
     </thead>
     <tbody>
       <tr ng-repeat="location in locations">
@@ -26,8 +26,37 @@
           {{location.city}} <br/>
           {{location.state}} <br/>
         </td>
+        <td>
+        </td>
       </tr>
     </tbody>
   </table>
 
+  <h2>Table Info</h2>
+  <label>Table Name
+    <input type="text" ng-model="tableName" placeholder="table name"/>
+  </label>
+  <label>Location Id
+    <input type="text" ng-model="locationId" placeholder="location id"/>
+  </label>
+  <button class="button tiny" ng-click="getTableFor(tableName, locationId)">Get Table</button>
+
+  <table>
+    <thead>
+      <th>order id</th>
+      <th>table name</th>
+      <th>consumer id</th>
+      <th>status</th>
+      <th>updatedAt</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="table in tableInfo">
+        <td>{{ table.id }}</td>
+        <td>{{ table.name }}</td>
+        <td>{{ table.consumerId }}</td>
+        <td>{{ table.status }}</td>
+        <td>{{ table.updatedAt }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
