@@ -1,0 +1,16 @@
+<div flash-alert active-class="in" class="alert fade">
+  <strong class="alert-heading"></strong>
+  <span class="alert-message">{{flash.message}}</span>
+</div>
+
+<a ui-sref="pos.home">Home</a>
+
+<div class="panel panel-default">
+  <div class="panel-heading">Products (as JSON)</div>
+  <div class="panel-body">
+    <textarea rows="20" class="form-control" ng-model="products"/>
+    <div class="btn-group">
+      <button class="btn btn-default" ng-click="loadProducts()">Load</button>
+    </div>
+  </div>
+</div>

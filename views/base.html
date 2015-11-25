@@ -1,0 +1,38 @@
+<!doctype html>
+<html ng-app="FakePartnerApp">
+    <head>
+
+        <script src="vendor/jquery/dist/jquery.min.js"></script>
+        <script src="vendor/lodash/dist/lodash.js"></script>
+        <script src="vendor/foundation/js/foundation.js"></script>
+        <script src="vendor/select2/select2.js"></script>
+
+        {% block javascript %}
+        {% endblock %}
+
+
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:200,400,600,800' rel='stylesheet' type='text/css'>
+        <link rel='stylesheet' href='vendor/font-awesome/css/font-awesome.css' media="all" type="text/css"/>
+        <link rel='stylesheet' href='vendor/foundation/css/foundation.css' media="all" type="text/css"/>
+        <link rel="stylesheet" href="vendor/angular-wizard/dist/angular-wizard.css" media="all" type="text/css"/>
+
+        <link rel="stylesheet" href="/vendor/select2/select2.css" media="all" type="text/css"/>
+        <link rel="stylesheet" href="/vendor/select2-bootstrap3-css/select2-bootstrap.css" media="all" type="text/css"/>
+        <link rel="stylesheet" href="/stylesheets/app.css" media="all" type="text/css"/>
+
+        <title>{{ title }}</title>
+    </head>
+  <body>
+      <h1> {{title}} </h1>
+
+      <script type="text/javascript">
+          window.meerkatHost = '{{meerkatHost}}';
+          window.apiVersion = '{{apiVersion}}';
+          $(document).foundation();
+      </script>
+
+      {% block body %}
+      {% endblock %}
+
+  </body>
+</html>

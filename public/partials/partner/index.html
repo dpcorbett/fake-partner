@@ -1,0 +1,30 @@
+<div class="pos">
+
+  <div flash-alert active-class="in" class="alert fade">
+    <strong class="alert-heading"></strong>
+    <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
+  </div>
+
+
+  <h2>Locations</h2>
+  <button ng-click="getLocations()">Refresh</button>
+  <table>
+    <thead>
+      <th>id</th>
+      <th>name</th>
+      <th>address</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="location in locations">
+        <td>{{location.id}}</td>
+        <td>{{location.name}}</td>
+        <td>
+          {{location.address_line1}} <br/>
+          {{location.city}} <br/>
+          {{location.state}} <br/>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

@@ -1,0 +1,44 @@
+{
+  "name": "meerkat",
+  "version": "0.0.0",
+  "authors": [
+    "meerkat"
+  ],
+  "license": "proprietary",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "countries": "mledoze/countries",
+    "angular-flash": "~0.1.13",
+    "lodash": "~2.4.1",
+    "angular-ui-router": "~0.2.11",
+    "angular-ui-select2": "~0.0.5",
+    "select2-bootstrap3-css": "~1.2.0",
+    "foundation": "~5.2.3",
+    "angular-foundation": "~0.2.2",
+    "font-awesome": "^4.1.0",
+    "jquery": "~2.1.1",
+    "angular-primus": "~0.2.2",
+    "primus.io": "~3.1.2",
+    "primus": "~2.4.3",
+    "localforage": "~0.9.1",
+    "angular-localForage": "~0.2.8",
+    "angular-wizard": "~0.5.5"
+  },
+  "resolutions": {
+    "angular": "~1.3.7"
+  },
+  "devDependencies": {
+    "mocha": "~1.20.1",
+    "chai": "~1.9.1",
+    "chai-as-promised": "~4.1.1",
+    "angular-mocks": "~1.2.18"
+  }
+}

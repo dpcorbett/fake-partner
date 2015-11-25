@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+
+    <form action="/" method="post">
+
+        <fieldset>
+            <legend></legend>
+
+
+            <div class="row">
+                <div class="large-12 columns">
+                    <label>Partner API URL
+                        <select name="url" placeholder="Meerkat API URL root (default: http://localhost:3000/)">
+                          <option value="http://localhost:3000/partner/api/v1">http://localhost:3000/partner/api/v1/</option>
+                          <option value="https://alphasandbox.doshii.co/partner/api/v1">https://alphasandbox.doshii.co/partner/api/v1</option>
+                          <option value="https://alpha.corp.doshii.co/partner/api/v1">http://alpha.corp.doshii.co/partner/api/v1</option>
+                          <option value="https://beta.doshii.co/partner/api/v1">https://beta.doshii.co/partner/api/v1</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="columns">
+                    <label>Client Id
+                        <input type="text" placeholder="client id" name="clientId" />
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns">
+                    <label>Client Secret
+                        <input type="text" placeholder="client secret" name="clientSecret" />
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="large-6 columns">
+                    <button class="button tiny postfix" type="submit">Go</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+
+{% endblock%}

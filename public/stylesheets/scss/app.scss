@@ -1,0 +1,169 @@
+@import "global";
+@import "variables";
+
+body {
+  background-color: $appBackground;
+  font-family: $fake-pos-font;
+  padding: 50px;
+  width: 65%;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.2;
+}
+
+.button.refresh {
+  font-size: 22px;
+  padding: 5px;
+  width: 45px;
+  height: 45px;
+}
+
+.bold {
+  font-weight: $fake-pos-font-bold;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.titlecase {
+  text-transform: capitalize;
+}
+
+.config-container {
+  div {
+    padding-bottom: 5px;
+  }
+
+  .select2-container {
+    width: 300px;
+  }
+
+  .location-token input {
+    width: 300px;
+    height: 33px;
+    line-height: 16px;
+  }
+
+}
+
+.fade {
+  opacity: 0;
+  -webkit-transition: opacity .15s linear;
+  transition: opacity .15s linear;
+}
+
+.fade.in {
+  opacity: 1;
+}
+
+.alert-flash {
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid transparent;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+
+  min-height: 43px;
+
+  /* change transition property to all */
+  -webkit-transition-property: all;
+  transition-property: all;
+}
+
+.alert-flash .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  line-height: 20px;
+}
+
+/* add warning colors to warn class */
+.alert-warn {
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+}
+
+.alert-warn,
+.alert-warn h4 {
+  color: #c09853;
+}
+
+.alert-flash .close {
+  position: relative;
+  top: -2px;
+  right: -21px;
+  line-height: 20px;
+}
+
+/* add warning colors to warn class */
+.alert-warn {
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+}
+
+.alert-warn,
+.alert-warn h4 {
+  color: #c09853;
+}
+
+.alert-box.error {
+  background-color: #f04124;
+  border-color: #de2b0f;
+  color: #fff;
+}
+
+#partial-payment-modal {
+  button {
+
+  }
+
+  li {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.steps-indicator {
+  height: 45px;
+}
+
+.panel-default {
+  background-color: #ffffff;
+}
+
+pre {
+  font-size: 85%;
+  padding: 16px;
+  overflow: auto;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+pre.line {
+  font-size: 85%;
+  padding: 3px;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.code-block {
+  max-height: 400px;
+  overflow: scroll;
+  //border: 1px solid black;
+}
+
+@import 'angular_foundation_transitions';

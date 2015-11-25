@@ -1,0 +1,19 @@
+
+<div class="config-container">
+
+    <div class="socket-href">
+        <select ui-select2="select2Options" placeholder="Meerkat API URL root (default: http://localhost:3000/)" ng-model="apiUrl">
+          <option value="http://meerkat.staging.dev.impos.com.au:80">http://meerkat.staging.dev.impos.com.au</option>
+          <option value="http://localhost:3000">http://localhost:3000</option>
+        </select>
+    </div>
+
+    <div class="location-token">
+        <input placeholder="Location Token" ng-model="token"> </input>
+    </div>
+
+    <div class="">
+        <button ng-click="getToken()"> Connect </button>
+    </div>
+
+</div>
