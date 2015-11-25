@@ -8,8 +8,23 @@
 
   <h2>Locations</h2>
   <button ng-click="getLocations()">Refresh</button>
-  <ul>
-    <li ng-repeat="location in locations">{{location.name}}</li>
-  </ul>
+  <table>
+    <thead>
+      <th>id</th>
+      <th>name</th>
+      <th>address</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="location in locations">
+        <td>{{location.id}}</td>
+        <td>{{location.name}}</td>
+        <td>
+          {{location.address_line1}} <br/>
+          {{location.city}} <br/>
+          {{location.state}} <br/>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
 </div>
