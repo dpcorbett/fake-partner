@@ -9,7 +9,7 @@
 
 
   <h2>Locations</h2>
-  <button ng-click="getLocations()">Refresh</button>
+  <button class="tiny" ng-click="getLocations()">Refresh</button>
   <table>
     <thead>
       <th>id</th>
@@ -39,15 +39,16 @@
   <label>Location Id
     <input type="text" ng-model="locationId" placeholder="location id"/>
   </label>
-  <button class="button tiny" ng-click="getTableFor(tableName, locationId)">Get Table</button>
+  <button class="tiny" ng-click="getTableFor(tableName, locationId)">Get Table</button>
 
-  <table>
+  <table ng-if="tableInfo.length">
     <thead>
       <th>order id</th>
       <th>table name</th>
       <th>consumer id</th>
       <th>status</th>
       <th>updatedAt</th>
+      <th>actions</th>
     </thead>
     <tbody>
       <tr ng-repeat="table in tableInfo">
@@ -56,7 +57,20 @@
         <td>{{ table.consumerId }}</td>
         <td>{{ table.status }}</td>
         <td>{{ table.updatedAt }}</td>
+        <td>
+          <button class="tiny" ng-click="getOrder(table.id)">Get Order</button>
+        </td>
       </tr>
     </tbody>
   </table>
+
+
+  <div ng-if="order.id">
+    <h2>Order Info</h2>
+    <div>id: {{ order.id }}</div>
+    <div>status: {{ order.status }}</div>
+    <div>updatedAt: {{ order.updatedAt }}</div>
+    <div>uri: {{ order.uri }}</div>
+  </div>
+
 </div>

@@ -26,6 +26,11 @@ function MeerkatService($http, flash){
       .catch(err => flash.error = 'Getting locations failed');
   };
 
+  Meerkat.getOrder = function(orderId) {
+    return $http.get('/orders/' + orderId)
+      .catch(err => flash.error = 'Getting order "' + orderId + '" failed');
+  };
+
   Meerkat.getTableFor = function(tableName, locationId) {
 
     var req = {

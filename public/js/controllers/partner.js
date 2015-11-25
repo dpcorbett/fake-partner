@@ -8,7 +8,7 @@ function PartnerCtrl($scope, Meerkat) {
   $scope.tableName = "";
   $scope.locationId = "";
   $scope.tableInfo = [];
-
+  $scope.order = {};
 
   $scope.getLocations = Meerkat.getLocations;
   $scope.getTableFor = (tableName, locationId) => {
@@ -17,6 +17,9 @@ function PartnerCtrl($scope, Meerkat) {
       Array.prototype.push.apply($scope.tableInfo, res.data)
     });
   };
+
+  $scope.getOrder = orderId => Meerkat.getOrder(orderId)
+    .then(res => $scope.order = res.data);
 
   Meerkat.getLocations();
 }
