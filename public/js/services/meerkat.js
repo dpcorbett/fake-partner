@@ -1,9 +1,7 @@
 // Factory to share data between controllers
 angular
   .module('FakePartnerApp')
-  .factory('Meerkat', [
-    '$http', 'flash', MeerkatService
-  ]);
+  .factory('Meerkat', [ '$http', 'flash', MeerkatService ]);
 
 function MeerkatService($http, flash){
 
@@ -42,6 +40,37 @@ function MeerkatService($http, flash){
     };
 
     return $http(req).catch(err => flash.error = 'Getting table info failed.');
+  };
+
+  Meerkat.readyToPay = function(order) {
+    var req = {
+      method: 'PUT',
+      url: '/orders/' + order.id,
+      data: {
+        tip: '0',
+        status: 'ready to pay',
+        updatedAt: order.updatedAt
+      }
+    };
+
+    return $http(req).catch(err => flash.error = 'Updating order failed.');
+  };
+
+
+  Meerkat.paid = function(order) {
+    var req = {
+      method: 'PUT',
+      url: '/orders/' + order.id,
+      data: {
+        tip: '0',
+        status: 'paid',
+        updatedAt: order.updatedAt,
+        transactionId: "123",
+        invoiceId: "123"
+      }
+    };
+
+    return $http(req).catch(err => flash.error = 'Updating order failed.');
   };
 
   return Meerkat;

@@ -1,10 +1,10 @@
 angular
   .module('FakePartnerApp')
   .service('Socket', [
-    'flash', 'clientId', 'clientSecret', 'websocketUrl', SocketService
+    'clientId', 'clientSecret', 'websocketUrl', 'doshiiEmitter', SocketService
   ]);
 
-function SocketService(flash, clientId, clientSecret, websocketUrl){
+function SocketService(clientId, clientSecret, websocketUrl, doshiiEmitter){
   var ws = null;
 
   function init() {
@@ -43,7 +43,7 @@ function SocketService(flash, clientId, clientSecret, websocketUrl){
         return console.debug('received ' + '"' + data + '"');
       }
 
-      console.log(data.emit);
+      doshiiEmitter.emit(data.emit[0], data.emit[1]);
     };
   }
 

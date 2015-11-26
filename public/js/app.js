@@ -6,7 +6,8 @@ window.app = angular.module('FakePartnerApp', [
   'angular-flash.flash-alert-directive',
   'ui.select2',
   'mm.foundation',
-  'mgo-angular-wizard'
+  'mgo-angular-wizard',
+  'rt.eventemitter'
 ])
 .constant('lodash', window._)
 .run(['$state', '$http', 'Socket', 'clientId', 'clientSecret', fakePosRun]);

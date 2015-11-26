@@ -108,7 +108,29 @@
       </div>
 
 
-      <button class="tiny" ng-click="startOver()">Done</button>
+      <button class="tiny" ng-click="sendReadyToPay()">Ready To Pay</button>
+    </wz-step>
+
+    <wz-step title="Order details">
+      <h2>Details for order "{{ order.id }}":</h2>
+
+      <div ng-if="order.status !== 'waiting for payment'">
+        The order is ready to pay, you'll be able to continue when the POS is waiting for payment.
+
+        <br/>
+        <br/>
+
+        <img src="images/loader.gif" width="200px" height="200px"/>
+      </div>
+
+
+      <div ng-if="order.status === 'waiting for payment'">
+        The order is now waiting for payment. Click "Pay" to continue.
+
+        <button class="tiny" ng-click="sendPaid()">Pay</button>
+      </div>
+
+
     </wz-step>
 
 
