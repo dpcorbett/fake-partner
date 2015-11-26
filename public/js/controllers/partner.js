@@ -1,25 +1,44 @@
 angular
   .module('FakePartnerApp')
-  .controller('PartnerCtrl', [ '$scope', 'Meerkat', PartnerCtrl ]);
+  .controller('PartnerCtrl', [ '$scope', 'Meerkat', 'WizardHandler', PartnerCtrl ]);
 
-function PartnerCtrl($scope, Meerkat) {
+function PartnerCtrl($scope, Meerkat, WizardHandler) {
   console.log('loaded partner ctrl');
+  Meerkat.getLocations();
+
   $scope.locations = Meerkat.data.locations;
-  $scope.tableName = "";
-  $scope.locationId = "";
-  $scope.tableInfo = [];
+
   $scope.order = {};
+  $scope.tableInfo = [];
+  $scope.selectedLocation = {id: null};
+  $scope.selectedTable = {name: null};
 
   $scope.getLocations = Meerkat.getLocations;
-  $scope.getTableFor = (tableName, locationId) => {
-    Meerkat.getTableFor(tableName, locationId).then(res => {
-      $scope.tableInfo.length = 0;
-      Array.prototype.push.apply($scope.tableInfo, res.data)
-    });
+  $scope.startOver = () => WizardHandler.wizard().goTo(0);
+
+  $scope.selectLocationAndGo = (locId) => {
+    $scope.selectedLocation.id = locId;
+    WizardHandler.wizard().next();
   };
 
-  $scope.getOrder = orderId => Meerkat.getOrder(orderId)
-    .then(res => $scope.order = res.data);
+  $scope.fetchTableAndGo = () => {
+    Meerkat.getTableFor($scope.selectedTable.name, $scope.selectedLocation.id)
+      .then(res => {
+        $scope.tableInfo.length = 0;
+        Array.prototype.push.apply($scope.tableInfo, res.data);
 
-  Meerkat.getLocations();
+        if($scope.tableInfo.length > 0) {
+          WizardHandler.wizard().next();
+        }
+      });
+  };
+
+  $scope.getOrderAndGo = orderId => Meerkat.getOrder(orderId)
+    .then(res => {
+      $scope.order = res.data;
+
+      if ($scope.order.id) {
+        WizardHandler.wizard().next();
+      }
+    });
 }

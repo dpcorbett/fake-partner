@@ -6,71 +6,112 @@
   </div>
 
 
+  <wizard hide-indicators="true">
+
+    <wz-step title="Picking a location">
+      <h2>Pick a location:</h2>
+      <button class="tiny" ng-click="getLocations()">Refresh</button>
+
+      <table>
+        <thead>
+        <th>id</th>
+        <th>name</th>
+        <th>address</th>
+        <th></th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="location in locations">
+          <td>{{location.id}}</td>
+          <td>{{location.name}}</td>
+          <td>
+            {{location.address_line1}} <br/>
+            {{location.city}} <br/>
+            {{location.state}} <br/>
+          </td>
+          <td>
+            <button class="tiny" ng-click="selectLocationAndGo(location.id)">
+              Select
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </wz-step>
+
+    <wz-step title="Picking a table">
+      <h2>Select a table:</h2>
+
+      <div>
+        Enter a table name with some orders on it
+      </div>
+
+      <input type="text" ng-model="selectedTable.name"/>
+
+      <button class="tiny" ng-click="fetchTableAndGo()">
+        Fetch table
+      </button>
+    </wz-step>
+
+    <wz-step title="Fetching an order">
+      <h2>Orders for table "{{ selectedTable.name }}":</h2>
+
+      <table>
+        <thead>
+        <th>order id</th>
+        <th>table name</th>
+        <th>consumer id</th>
+        <th>status</th>
+        <th>updatedAt</th>
+        <th>actions</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="table in tableInfo">
+          <td>{{ table.id }}</td>
+          <td>{{ table.name }}</td>
+          <td>{{ table.consumerId }}</td>
+          <td>{{ table.status }}</td>
+          <td>{{ table.updatedAt }}</td>
+          <td>
+            <button class="tiny" ng-click="getOrderAndGo(table.id)">Get Order</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </wz-step>
+
+    <wz-step title="Order details">
+      <h2>Details for order "{{ order.id }}":</h2>
+
+      <div><b>id:</b> {{ order.id }}</div>
+      <div><b>status:</b> {{ order.status }}</div>
+      <div><b>updatedAt:</b> {{ order.updatedAt }}</div>
+      <div><b>uri:</b> {{ order.uri }}</div>
+      <div>
+        <b>items:</b> <br/>
+
+        <table>
+          <thead>
+            <th>pos_id</th>
+            <th>name</th>
+            <th>price</th>
+            <th>description</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in order.items">
+              <td>{{ item.pos_id }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.description }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
 
-  <h2>Locations</h2>
-  <button class="tiny" ng-click="getLocations()">Refresh</button>
-  <table>
-    <thead>
-      <th>id</th>
-      <th>name</th>
-      <th>address</th>
-      <th>actions</th>
-    </thead>
-    <tbody>
-      <tr ng-repeat="location in locations">
-        <td>{{location.id}}</td>
-        <td>{{location.name}}</td>
-        <td>
-          {{location.address_line1}} <br/>
-          {{location.city}} <br/>
-          {{location.state}} <br/>
-        </td>
-        <td>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h2>Table Info</h2>
-  <label>Table Name
-    <input type="text" ng-model="tableName" placeholder="table name"/>
-  </label>
-  <label>Location Id
-    <input type="text" ng-model="locationId" placeholder="location id"/>
-  </label>
-  <button class="tiny" ng-click="getTableFor(tableName, locationId)">Get Table</button>
-
-  <table ng-if="tableInfo.length">
-    <thead>
-      <th>order id</th>
-      <th>table name</th>
-      <th>consumer id</th>
-      <th>status</th>
-      <th>updatedAt</th>
-      <th>actions</th>
-    </thead>
-    <tbody>
-      <tr ng-repeat="table in tableInfo">
-        <td>{{ table.id }}</td>
-        <td>{{ table.name }}</td>
-        <td>{{ table.consumerId }}</td>
-        <td>{{ table.status }}</td>
-        <td>{{ table.updatedAt }}</td>
-        <td>
-          <button class="tiny" ng-click="getOrder(table.id)">Get Order</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <button class="tiny" ng-click="startOver()">Done</button>
+    </wz-step>
 
 
-  <div ng-if="order.id">
-    <h2>Order Info</h2>
-    <div>id: {{ order.id }}</div>
-    <div>status: {{ order.status }}</div>
-    <div>updatedAt: {{ order.updatedAt }}</div>
-    <div>uri: {{ order.uri }}</div>
-  </div>
+  </wizard>
 
 </div>
