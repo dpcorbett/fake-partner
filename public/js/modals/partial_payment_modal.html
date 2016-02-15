@@ -1,0 +1,106 @@
+<div id="partial-payment-modal">
+
+  <div class="modal-header">
+    <h2>Add transactions for order {{order.id}}</h2>
+  </div>
+
+  <div class="modal-desc">
+    Here you begin the transaction process from the partner. <br/>
+    <b>For now you can only attempt one new transaction at a time.</b>
+  </div>
+
+  <div class="presets panel panel-default">
+    <h5>Cash payment</h5>
+    <ul class="small-block-grid-4 medium-block-grid-4 large-block-grid-4">
+      <li>
+        <button class="button tiny success" ng-click="add({reference: 'cash', amount: '100'})">
+          1.00
+        </button>
+      </li>
+
+      <li>
+        <button class="button tiny success" ng-click="add({reference: 'cash', amount: '500'})">
+          5.00
+        </button>
+      </li>
+
+      <li>
+        <button class="button tiny success" ng-click="add({reference: 'cash', amount: '1000'})">
+          10.00
+        </button>
+      </li>
+
+      <li>
+        <button class="button tiny success" ng-click="add({reference: 'cash', amount: '2000'})">
+          20.00
+        </button>
+      </li>
+
+      <li>
+        <button class="button tiny success" ng-click="add({reference: 'cash', amount: '5000'})">
+          50.00
+        </button>
+      </li>
+
+      <li>
+        <button class="button tiny success" ng-click="add({reference: 'cash', amount: '10000'})">
+          100.00
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="panel panel-default">
+    <div>
+      <h5>Existing Transactions</h5>
+      <table>
+        <thead>
+        <th>Id</th>
+        <th>Status</th>
+        <th>Amount</th>
+        <th>Reference</th>
+        <th>Invoice</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="transaction in existingTransactions">
+          <td>{{transaction.id}}</td>
+          <td>{{transaction.status}}</td>
+          <td>${{getInDollars(transaction.amount)}}</td>
+          <td>{{transaction.reference}}</td>
+          <td>{{transaction.invoice}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div>
+      <h5>New Transactions</h5>
+      <table>
+        <thead>
+        <th>Amount</th>
+        <th>Reference</th>
+        <th>Invoice</th>
+        <th>Remove</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="transaction in newTransactions">
+          <td>${{getInDollars(transaction.amount)}}</td>
+          <td><input type="text" name="ref" ng-model="transaction.reference" style="margin: 0; width: 100px"></td>
+          <td><input type="text" name="inv" ng-model="transaction.invoice" style="margin: 0; width: 100px"></td>
+          <td>
+            <i ng-click="remove(transaction)" class="fa fa-eraser pointer"></i>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <button class="button btn-confirm" id="btn-ok"
+          ng-disabled="disableSaveButton()"
+          ng-click="close()">
+    Send
+  </button>
+</div>

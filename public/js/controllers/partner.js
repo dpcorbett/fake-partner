@@ -7,6 +7,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   Meerkat.getLocations();
 
   $scope.locations = Meerkat.data.locations;
+  $scope.Meerkat = Meerkat;
 
   $scope.order = {};
   $scope.tableOrders = [];
@@ -21,11 +22,17 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     WizardHandler.wizard().next();
   };
 
-  doshiiEmitter.on('order_change', updateOrder);
+  doshiiEmitter.on('order_updated', updateOrder);
+  doshiiEmitter.on('transaction_updated', updateTransaction);
+
   function updateOrder(event) {
     if(event.orderId === $scope.order.id) {
       Meerkat.getOrder($scope.order.id).then(res => $scope.order = res.data)
     }
+  }
+
+  function updateTransaction(event) {
+    Meerkat.updateTransaction(event.uri);
   }
 
   $scope.fetchTableAndGo = () => {
@@ -36,6 +43,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
         if($scope.tableOrders.length > 0) {
           WizardHandler.wizard().next();
+        } else {
+          flash.error = 'No orders on table ' + $scope.selectedTable.name;
         }
       });
   };
@@ -49,18 +58,17 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
       }
     });
 
-  $scope.sendReadyToPay = () => {
+  $scope.addPayments = () => {
 
-    Meerkat.getOrder($scope.order.id)
-      .then(res => Meerkat.readyToPay(res.data))
+    Meerkat.addPayment($scope.order)
       .then(() => WizardHandler.wizard().next());
   };
 
-  $scope.sendPaid = () => {
-    Meerkat.paid($scope.order)
+  $scope.complete = () => {
+    Meerkat.complete(Meerkat.data.pendingTransactions[0])
       .then(() => {
         $scope.startOver();
-        flash.success = 'Order paid successfully';
+        flash.success = 'Transaction completed successfully';
         $scope.order = {};
       });
   };

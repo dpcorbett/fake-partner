@@ -1,13 +1,14 @@
 // Factory to share data between controllers
 angular
   .module('FakePartnerApp')
-  .factory('Meerkat', [ '$http', 'flash', MeerkatService ]);
+  .factory('Meerkat', [ '$http', '$modal', 'flash', MeerkatService ]);
 
-function MeerkatService($http, flash){
+function MeerkatService($http, $modal, flash){
 
   var Meerkat = {
     data: {
-      locations: []
+      locations: [],
+      pendingTransactions: []
     }
   };
 
@@ -27,6 +28,17 @@ function MeerkatService($http, flash){
   Meerkat.getOrder = function(orderId) {
     return $http.get('/orders/' + orderId)
       .catch(err => flash.error = 'Getting order "' + orderId + '" failed');
+  };
+
+
+  Meerkat.updateTransaction = function(transactionUri) {
+    return $http.get(transactionUri)
+      .then(res => {
+        if (res.data.id === Meerkat.data.pendingTransactions[0].id) {
+          Meerkat.data.pendingTransactions[0] = res.data;
+        }
+      })
+      .catch(err => flash.error = 'Updating transaction failed');
   };
 
   Meerkat.getOrdersForTable = function(tableName, locationId) {
@@ -54,20 +66,41 @@ function MeerkatService($http, flash){
     return $http(req).catch(err => flash.error = 'Getting table info failed.');
   };
 
-  Meerkat.readyToPay = function(order) {
-    var req = {
-      method: 'PUT',
-      url: '/orders/' + order.id,
-      data: {
-        tip: '0',
-        status: 'ready to pay',
-        updatedAt: order.updatedAt
+  Meerkat.showPartialPaymentModal = function showPartialPaymentModal(order) {
+    return $modal.open({
+      templateUrl: 'js/modals/partial_payment_modal.html',
+      controller: 'PartialPaymentCtrl',
+      resolve: {
+        order: _.partial(_.identity, order)
       }
-    };
-
-    return $http(req).catch(err => flash.error = 'Updating order failed.');
+    });
   };
 
+  Meerkat.addPayment = function addPayment(order) {
+    var modalInstance = Meerkat.showPartialPaymentModal(order);
+    var payments;
+
+    return modalInstance.result.then(function(_payments) {
+      if (!_payments) {
+        console.error('No payments selected.');
+        return;
+      }
+
+      payments = _payments;
+
+      return _payments.map(p => $http.post(order.uri + '/transactions', p)
+        .then(res => Meerkat.data.pendingTransactions.push(res.data))
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }));
+    })
+      .then(() => flash.success = 'Transaction(s) sent');
+  };
+
+  Meerkat.getTransactionsForOrder = function getTransactionsForOrder(order) {
+    return $http.get(`/orders/${order.id}/transactions`).then(res => res.data);
+  };
 
   Meerkat.paid = function(order) {
     var req = {
@@ -83,6 +116,22 @@ function MeerkatService($http, flash){
     };
 
     return $http(req).catch(err => flash.error = 'Updating order failed.');
+  };
+
+  Meerkat.complete = function(transaction) {
+    var req = {
+      method: 'PUT',
+      url: transaction.uri,
+      data: {
+        amount: transaction.amount,
+        version: transaction.version,
+        status: 'complete',
+        reference: 'FakePartnerCash',
+        invoice: 'invoice no.'
+      }
+    };
+
+    return $http(req).catch(err => flash.error = 'Failed to complete transaction: ' + err.message || err);
   };
 
   return Meerkat;

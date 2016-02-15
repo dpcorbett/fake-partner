@@ -17,7 +17,8 @@ function SocketService(clientId, clientSecret, websocketUrl, doshiiEmitter){
     var auth = btoa(clientId + ':' + clientSecret);
 
     // WebSocket is supported by most modern browsers
-    ws = new WebSocket(websocketUrl + '?auth=' + auth);
+    var url = websocketUrl.replace(/api\/v.\//, '');
+    ws = new WebSocket(url + '?auth=' + auth);
 
     // After connecting we need to send heartbeats
     ws.onopen = function(event) {
@@ -43,6 +44,7 @@ function SocketService(clientId, clientSecret, websocketUrl, doshiiEmitter){
         return console.debug('received ' + '"' + data + '"');
       }
 
+      console.debug(data.emit[0], data.emit[1]);
       doshiiEmitter.emit(data.emit[0], data.emit[1]);
     };
   }

@@ -109,13 +109,13 @@
 
       <p ng-show="order.status !== 'accepted'">You cannot pay for an order that hasn't been accepted.</p>
 
-      <button class="tiny" ng-click="sendReadyToPay()">Ready To Pay</button>
+      <button class="tiny" ng-click="addPayments()" ng-disabled="order.status !== 'accepted'">Add Payments</button>
     </wz-step>
 
-    <wz-step title="Order details">
-      <h2>Details for order "{{ order.id }}":</h2>
+    <wz-step title="Transaction details">
+      <h2>Details for transaction "{{ Meerkat.data.pendingTransactions[0].id }}":</h2>
 
-      <div ng-if="order.status !== 'waiting for payment'">
+      <div ng-if="Meerkat.data.pendingTransactions[0].status !== 'waiting'">
         The order is ready to pay, you'll be able to continue when the POS is waiting for payment.
 
         <br/>
@@ -125,13 +125,15 @@
       </div>
 
 
-      <div ng-if="order.status === 'waiting for payment'">
-        The order is now waiting for payment. Click "Pay" to continue.
-
-        <button class="tiny" ng-click="sendPaid()">Pay</button>
+      <div ng-if="Meerkat.data.pendingTransactions[0].status === 'waiting'">
+        The transaction is now waiting for payment. Click "Pay" to complete the transaction.
+        <button class="tiny" ng-click="complete()">Pay</button>
       </div>
 
-
+      <div ng-if="Meerkat.data.pendingTransactions[0].status === 'rejected'">
+        The POS has rejected the transaction.
+        <a class="button small" ng-click="startOver()">Go home</a>
+      </div>
     </wz-step>
 
 
