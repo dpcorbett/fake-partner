@@ -9,7 +9,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.locations = Meerkat.data.locations;
 
   $scope.order = {};
-  $scope.tableInfo = [];
+  $scope.tableOrders = [];
   $scope.selectedLocation = {id: null};
   $scope.selectedTable = {name: null};
 
@@ -29,12 +29,12 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   }
 
   $scope.fetchTableAndGo = () => {
-    Meerkat.getTableFor($scope.selectedTable.name, $scope.selectedLocation.id)
+    Meerkat.getOrdersForTable($scope.selectedTable.name, $scope.selectedLocation.id)
       .then(res => {
-        $scope.tableInfo.length = 0;
-        Array.prototype.push.apply($scope.tableInfo, res.data);
+        $scope.tableOrders.length = 0;
+        Array.prototype.push.apply($scope.tableOrders, res.data);
 
-        if($scope.tableInfo.length > 0) {
+        if($scope.tableOrders.length > 0) {
           WizardHandler.wizard().next();
         }
       });

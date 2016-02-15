@@ -57,22 +57,20 @@
 
       <table>
         <thead>
-        <th>order id</th>
-        <th>table name</th>
-        <th>consumer id</th>
+        <th>order Id</th>
+        <th>checkin id</th>
         <th>status</th>
-        <th>updatedAt</th>
+        <th>version</th>
         <th>actions</th>
         </thead>
         <tbody>
-        <tr ng-repeat="table in tableInfo">
-          <td>{{ table.id }}</td>
-          <td>{{ table.name }}</td>
-          <td>{{ table.consumerId }}</td>
-          <td>{{ table.status }}</td>
-          <td>{{ table.updatedAt }}</td>
+        <tr ng-repeat="order in tableOrders">
+          <td>{{ order.id }}</td>
+          <td>{{ order.checkinId }}</td>
+          <td>{{ order.status }}</td>
+          <td>{{ order.version }}</td>
           <td>
-            <button class="tiny" ng-click="getOrderAndGo(table.id)">Get Order</button>
+            <button class="tiny" ng-click="getOrderAndGo(order.id)">Get Order</button>
           </td>
         </tr>
         </tbody>
@@ -84,29 +82,32 @@
 
       <div><b>id:</b> {{ order.id }}</div>
       <div><b>status:</b> {{ order.status }}</div>
-      <div><b>updatedAt:</b> {{ order.updatedAt }}</div>
+      <div><b>version:</b> {{ order.version }}</div>
       <div><b>uri:</b> {{ order.uri }}</div>
       <div>
         <b>items:</b> <br/>
 
         <table>
           <thead>
-            <th>pos_id</th>
+            <th>posId</th>
             <th>name</th>
-            <th>price</th>
             <th>description</th>
+            <th>price</th>
+            <th>quantity</th>
           </thead>
           <tbody>
             <tr ng-repeat="item in order.items">
-              <td>{{ item.pos_id }}</td>
+              <td>{{ item.posId }}</td>
               <td>{{ item.name }}</td>
-              <td>{{ item.price }}</td>
               <td>{{ item.description }}</td>
+              <td>{{ item.price }}</td>
+              <td>{{ item.quantity }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
+      <p ng-show="order.status !== 'accepted'">You cannot pay for an order that hasn't been accepted.</p>
 
       <button class="tiny" ng-click="sendReadyToPay()">Ready To Pay</button>
     </wz-step>
