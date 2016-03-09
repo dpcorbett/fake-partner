@@ -7,3 +7,4 @@ node_modules
 bin
 obj
 /.ntvs_analysis.dat
+/fake-partner.v12.suo
