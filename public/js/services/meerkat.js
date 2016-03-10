@@ -161,8 +161,10 @@ function MeerkatService($http, $modal, flash){
         invoice: 'invoice no.'
       }
     };
-
-    return $http(req).catch(err => flash.error = 'Failed to complete transaction: ' + err.message || err);
+    
+    return $http(req)
+      .then(() => Meerkat.data.pendingTransactions.length = 0)
+      .catch(err => flash.error = 'Failed to complete transaction: ' + err.message || err);
   };
 
   return Meerkat;
