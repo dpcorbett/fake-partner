@@ -3,3 +3,8 @@ node_modules
 /config/development.js
 
 .sass-cache
+/*.njsproj
+bin
+obj
+/.ntvs_analysis.dat
+/fake-partner.v12.suo
