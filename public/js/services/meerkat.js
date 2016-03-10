@@ -30,6 +30,37 @@ function MeerkatService($http, $modal, flash){
       .catch(err => flash.error = 'Getting order "' + orderId + '" failed');
   };
 
+  Meerkat.sendOrder = function(postBody, locationId) {
+    var parsedBody = {};
+
+    try {
+      parsedBody.order = JSON.parse(postBody)
+    } catch (e) {
+      flash.error = 'Invalid order JSON: ' + e;
+      return;
+    }
+
+    var req = {
+      method: 'POST',
+      url: '/orders',
+      data: parsedBody,
+      headers: {
+        'doshii-location-id': locationId
+      }
+    };
+
+    return $http(req)
+      .then(res => {
+        var order = angular.copy(res.data);
+        console.log(order);
+        flash.success = 'Order sent';
+        return order;
+      })
+      .catch(err => {
+        flash.error = 'Order not sent: ' + err.statusText + getErrorMessage(err.data);
+        throw err;
+      });
+  };
 
   Meerkat.updateTransaction = function(transactionUri) {
     return $http.get(transactionUri)

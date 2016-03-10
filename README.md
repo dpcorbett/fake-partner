@@ -25,6 +25,6 @@
 
 
 ## Getting started
-* Select `https://alphasandbox.doshii.co/partner/api/v1` from the dropdown list
+* Select `https://sandbox.doshii.co/partner/api/v2` from the dropdown list
 * Paste the ClientId and ClientSecret into the fields.
 * On successful connection, a connect event will be emitted in the console
