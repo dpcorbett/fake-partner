@@ -6,9 +6,9 @@
   </div>
 
 
-  <wizard hide-indicators="true">
+  <wizard>
 
-    <wz-step title="Picking a location">
+    <wz-step title="Location">
       <h2>Pick a location:</h2>
       <button class="tiny" ng-click="getLocations()">Refresh</button>
 
@@ -38,21 +38,40 @@
       </table>
     </wz-step>
 
-    <wz-step title="Picking a table">
-      <h2>Select a table:</h2>
+    <wz-step title="Integration type">
 
-      <div>
-        Enter a table name with some orders on it
-      </div>
+      <tabset>
+        <tab heading="Pay@Table" select="selectTab('pay-at-table')">
+          <h2>Pay@Table:</h2>
 
-      <input type="text" ng-model="selectedTable.name"/>
+          <div>
+            Enter a table name with some orders on it
+          </div>
 
-      <button class="tiny" ng-click="fetchTableAndGo()">
-        Fetch table
-      </button>
+          <input type="text" ng-model="selectedTable.name"/>
+
+          <button class="tiny" ng-click="fetchTableAndGo()">
+            Fetch table
+          </button>
+        </tab>
+        <tab heading="Order Ahead" select="selectTab('order-ahead')">
+          <h2>Order Ahead</h2>
+
+          <div>
+            Create a new order for location: {{location.id}}
+          </div>
+
+          <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
+
+          <button class="tiny" ng-click="sendOrderAndGo()">
+            Next
+          </button>
+        </tab>
+      </tabset>
+
     </wz-step>
 
-    <wz-step title="Fetching an order">
+    <wz-step title="Table Orders" wz-disabled="{{ selectedTab === 'order-ahead' }}">
       <h2>Orders for table "{{ selectedTable.name }}":</h2>
 
       <table>
@@ -76,8 +95,7 @@
         </tbody>
       </table>
     </wz-step>
-
-    <wz-step title="Order details">
+    <wz-step title="Order Details" wz-disabled="{{ selectedTab === 'order-ahead' }}">
       <h2>Details for order "{{ order.id }}":</h2>
 
       <div><b>id:</b> {{ order.id }}</div>
@@ -111,8 +129,7 @@
 
       <button class="tiny" ng-click="addPayments()" ng-disabled="order.status !== 'accepted'">Add Payments</button>
     </wz-step>
-
-    <wz-step title="Transaction details">
+    <wz-step title="Transaction" wz-disabled="{{ selectedTab === 'order-ahead' }}">
       <h2>Details for transaction "{{ Meerkat.data.pendingTransactions[0].id }}":</h2>
 
       <div ng-if="Meerkat.data.pendingTransactions[0].status !== 'waiting'">
@@ -132,10 +149,26 @@
 
       <div ng-if="Meerkat.data.pendingTransactions[0].status === 'rejected'">
         The POS has rejected the transaction.
-        <a class="button small" ng-click="startOver()">Go home</a>
+        <a class="button small" wz-next>Next</a>
       </div>
     </wz-step>
 
+
+
+    <wz-step title="Consumer" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
+
+      <a class="button small" wz-next>Next</a>
+    </wz-step>
+
+    <wz-step title="Transactions" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
+
+      <a class="button small" wz-next>Next</a>
+    </wz-step>
+
+    <wz-step title="Done">
+      You're done! You can start over by pressing "Go home".
+      <a class="button small" ng-click="startOver()">Go home</a>
+    </wz-step>
 
   </wizard>
 

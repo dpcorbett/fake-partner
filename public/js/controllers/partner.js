@@ -13,6 +13,31 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.tableOrders = [];
   $scope.selectedLocation = {id: null};
   $scope.selectedTable = {name: null};
+  $scope.selectedTab = 'pay-at-table';
+
+  $scope.orderPayload = {
+    "type": "pickup",
+    "surcounts": [],
+    "items": [
+      {
+        "name": "Pepperoni Pizza",
+        "description": "Yum",
+        "unitPrice": '1000',
+        "totalBeforeSurcounts": '1000',
+        "totalAfterSurcounts": '1000',
+        "posId": "pep_pizza",
+        "surcounts": [],
+        "options": [],
+        "quantity": 1
+      }
+    ]
+  };
+
+  $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2);
+
+  $scope.selectTab = function(tabName) {
+    $scope.selectedTab = tabName;
+  };
 
   $scope.getLocations = Meerkat.getLocations;
   $scope.startOver = () => WizardHandler.wizard().goTo(0);
@@ -46,6 +71,20 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         } else {
           flash.error = 'No orders on table ' + $scope.selectedTable.name;
         }
+      });
+  };
+
+  $scope.sendOrderAndGo = () => {
+    Meerkat.sendOrder(JSON.stringify($scope.orderPayload), $scope.selectedLocation.id)
+      .then(res => {
+        //$scope.tableOrders.length = 0;
+        //Array.prototype.push.apply($scope.tableOrders, res.data);
+
+        //if(true) {
+          WizardHandler.wizard().next();
+        //} else {
+        //  flash.error = 'No orders on table ' + $scope.selectedTable.name;
+        //}
       });
   };
 
