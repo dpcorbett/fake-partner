@@ -62,11 +62,31 @@
           </div>
 
           <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
+            <div>
+                Item Pos Id:
+                <input type="text" name="itemPosId" ng-model="itemPosId" ng-change="setPosId({{'itemPosId'}})">
+                Varient Pos Id:
+                <input type="text" name="varientPosId" ng-model="varientId" ng-change="setVarientId(test2)">
+            </div>
+            <div>
+                <button class="tiny" ng-click="makeDelivery()">
+                    Delivery
+                </button>
+                <button class="tiny" ng-click="makePickup()">
+                    Pickup
+                </button>
+                <button class="tiny" ng-click="addSurcount()">
+                    Surcount
+                </button>
+                <button class="tiny" ng-click="addOptions()">
+                    Options
+                </button>
+            </div>
+            <button class="tiny" ng-click="sendOrderAndGo()">
+                Send Order
+            </button>
 
-          <button class="tiny" ng-click="sendOrderAndGo()">
-            Next
-          </button>
-        </tab>
+    </tab>
       </tabset>
 
     </wz-step>

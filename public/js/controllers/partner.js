@@ -13,7 +13,9 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.tableOrders = [];
   $scope.selectedLocation = {id: null};
   $scope.selectedTable = {name: null};
-  $scope.selectedTab = 'pay-at-table';
+    $scope.selectedTab = 'pay-at-table';
+    $scope.itemPosId = "34";
+    $scope.varientId = "35";
 
   $scope.orderPayload = {
     "type": "pickup",
@@ -25,19 +27,107 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         "unitPrice": '1000',
         "totalBeforeSurcounts": '1000',
         "totalAfterSurcounts": '1000',
-        "posId": "pep_pizza",
+        "posId": "",
         "surcounts": [],
         "options": [],
         "quantity": 1
       }
     ]
   };
+    
+  $scope.setPosId = function(posId) {
+        $scope.itemPosId = posId;
+  }  
+    
+  function setVarientId(varientId) {
+      $scope.varientId = varientId;
+  }  
 
   $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2);
 
   $scope.selectTab = function(tabName) {
     $scope.selectedTab = tabName;
   };
+    
+    $scope.makeDelivery = function (posid, varientId) {
+        $scope.orderPayload = {
+            "type": "delivery",
+            "surcounts": [],
+            "items": [
+                {
+                    "name": "Pepperoni Pizza",
+                    "description": "Yum",
+                    "unitPrice": '1000',
+                    "totalBeforeSurcounts": '1000',
+                    "totalAfterSurcounts": '1000',
+                    "posId": $scope.itemPosId,
+                    "surcounts": [],
+                    "options": [],
+                    "quantity": 1
+                }
+            ]
+        };
+    };
+    
+    $scope.makePickup = function (posId, varientId) {
+        $scope.orderPayload = {
+            "type": "pickup",
+            "surcounts": [],
+            "items": [
+                {
+                    "name": "Pepperoni Pizza",
+                    "description": "Yum",
+                    "unitPrice": '1000',
+                    "totalBeforeSurcounts": '1000',
+                    "totalAfterSurcounts": '1000',
+                    "posId": $scope.itemPosId,
+                    "surcounts": [],
+                    "options": [],
+                    "quantity": 1
+                }
+            ]
+        };
+    };  
+    
+    $scope.addSurcount = function (posId, varientId) {
+        $scope.orderPayload = {
+            "type": "pickup",
+            "surcounts": [],
+            "items": [
+                {
+                    "name": "Pepperoni Pizza",
+                    "description": "Yum",
+                    "unitPrice": '1000',
+                    "totalBeforeSurcounts": '1000',
+                    "totalAfterSurcounts": '1000',
+                    "posId": $scope.itemPosId,
+                    "surcounts": [],
+                    "options": [],
+                    "quantity": 1
+                }
+            ]
+        };
+    };
+
+    $scope.addOptions = function (posid, varientId) {
+        $scope.orderPayload = {
+            "type": "pickup",
+            "surcounts": [],
+            "items": [
+                {
+                    "name": "Pepperoni Pizza",
+                    "description": "Yum",
+                    "unitPrice": '1000',
+                    "totalBeforeSurcounts": '1000',
+                    "totalAfterSurcounts": '1000',
+                    "posId": $scope.itemPosId,
+                    "surcounts": [],
+                    "options": [],
+                    "quantity": 1
+                }
+            ]
+        };
+    };
 
   $scope.getLocations = Meerkat.getLocations;
   $scope.startOver = () => WizardHandler.wizard().goTo(0);
@@ -59,7 +149,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   function updateTransaction(event) {
     Meerkat.updateTransaction(event.uri);
   }
-
+    
   $scope.fetchTableAndGo = () => {
     Meerkat.getOrdersForTable($scope.selectedTable.name, $scope.selectedLocation.id)
       .then(res => {
