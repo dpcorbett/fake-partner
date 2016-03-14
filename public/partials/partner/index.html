@@ -60,14 +60,58 @@
           <div>
             Create a new order for location: {{location.id}}
           </div>
-
-          <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
+            <br/>
             <div>
+                <div>
+                    Order Type:
+                    <div class="pickup">
+                        <label>
+                            <input type="radio" name="orderOfType" value="pickup" ng-model="orderType" ng-change='setOrderType("pickup")'>
+                            Pickup
+                        </label>
+                    </div>
+                    <div class="delivery">
+                        <label>
+                            <input type="radio" name="orderOfType" value="delivery" ng-model="orderType" ng-change='setOrderType("delivery")'>
+                            Delivery
+                        </label>
+                    </div>
+                </div>
                 Item Pos Id:
                 <input type="text" name="itemPosId" ng-model="itemPosId" ng-change="setPosId({{'itemPosId'}})">
+                Item Price:
+                <input type="text" name="itemPrice" ng-model="itemPrice" ng-change="setItemPrice({{'itemPrice'}})">
+                <div>
+                    Include Varient
+                    <input type="checkbox" ng-model="includeVarient" mg-model="includeVarient" ng-change="setIncludeVarient({{'includeVarient'}})" />
+                </div>
                 Varient Pos Id:
-                <input type="text" name="varientPosId" ng-model="varientId" ng-change="setVarientId(test2)">
+                <input type="text" name="varientPosId" ng-model="varientId" ng-change="setVarientId({{'varientPosId'}})">
+                Varient Price:
+                <input type="text" name="varientPrice" ng-model="varientPrice" ng-change="setVarientPrice({{'varientPrice'}})">
+                <div>
+                    Include Order surcount
+                    <input type="checkbox" ng-model="includeOrderSurcount" mg-model="includeOrderSurcount" ng-change="setIncludeOrderSurcount({{'includeOrderSurcount'}})" />
+                </div>
+                Order surcount Pos Id:
+                <input type="text" name="orderSurcountPosId" ng-model="orderSurcountPosId" ng-change="setOrderSurcountPosId({{'orderSurcountPosId'}})">
+                Order Surcount Price:
+                <input type="text" name="orderSurcountPrice" ng-model="orderSurcountPrice" ng-change="setOrderSurcountPrice({{'orderSurcountPrice'}})">
+                <div>
+                    Include Item surcount
+                    <input type="checkbox" ng-model="includeItemSurcount" mg-model="includeOrderSurcount" ng-change="setIncludeItemSurcount({{'includeItemSurcount'}})" />
+                </div>
+                Item surcount Pos Id:
+                <input type="text" name="itemSurcountPosId" ng-model="itemSurcountPosId" ng-change="setItemSurcountPosId({{'itemSurcountPosId'}})">
+                Item Surcount Price:
+                <input type="text" name="itemSurcountPrice" ng-model="itemSurcountPrice" ng-change="setItemSurcountPrice({{'itemSurcountPrice'}})">
+                <div>
+                    Include Transaction
+                    <input type="checkbox" ng-model="includeTransaction" mg-model="includeTransaction" ng-change="setIncludeTransaction({{'includeTransaction'}})" />
+                </div>
             </div>
+          <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
+            
             <div>
                 <button class="tiny" ng-click="makeDelivery()">
                     Delivery
