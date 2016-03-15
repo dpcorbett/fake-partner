@@ -34,25 +34,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.itemOptionjson = [];
     $scope.transactionjson = "";
     $scope.orderTotal = "0";
-    
-    
-  $scope.orderPayload = {
-    "type": "pickup",
-    "surcounts": $scope.orderSurcountJson,
-    "items": [
-      {
-        "name": "Pepperoni Pizza",
-        "description": "Yum",
-        "unitPrice": $scope.itemPrice,
-        "totalBeforeSurcounts": '1000',
-        "totalAfterSurcounts": '1000',
-        "posId": $scope.itemPosId,
-        "surcounts": $scope.itemSurcountJson,
-        "options": [],
-        "quantity": 1
-      }
-    ]
-};
+
+    $scope.orderPayload = "";
 
     function generateOrderSurcount() {
         if ($scope.includeOrderSurcount) {
@@ -78,7 +61,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                 }
             ];
         } else {
-            $scope.orderSurcountJson = [];
+            $scope.itemSurcountJson = [];
         }
     }
     
@@ -142,70 +125,15 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         }
     }
 
-    $scope.setPosId = function(posId) {
-        $scope.itemPosId = posId;
-    }
-    
-    $scope.setItemPrice = function (itemPrice) {
-        $scope.itemPrice = itemPrice;
-    }  
-    
-    $scope.setVarientId = function(varientId) {
-        $scope.varientId = varientId;
-    }  
-    
-    $scope.setVarientPrice = function (varientPrice) {
-        $scope.varientPrice = varientPrice;
-    }
-    
-    $scope.setOrderSurcountPosId = function (orderSurcountPosId) {
-        $scope.orderSurcountPosId = orderSurcountPosId;
-    }
-    
-    $scope.setOrderSurcountPrice = function (orderSurcountPrice) {
-        $scope.orderSurcountPrice = orderSurcountPrice;
-    }
-    
-    $scope.setItemSurcountPosId = function (itemSurcountPosId) {
-        $scope.itemSurcountPosId = itemSurcountPosId;
-    }
-    
-    $scope.setItemSurcountPrice = function (itemSurcountPrice) {
-        $scope.itemSurcountPrice = itemSurcountPrice;
-    }
-    
-    $scope.setIncludeTransaction = function (includeTransaction) {
-        $scope.includeTransaction = includeTransaction;
-    }
-    
-    $scope.setIncludeItemSurcount = function (includeItemSurcount) {
-        $scope.includeItemSurcount = includeItemSurcount;
-    }
-    
-    $scope.setIncludeOrderSurcount = function (includeOrderSurcount) {
-        $scope.includeOrderSurcount = includeOrderSurcount;
-    }
-    
-    $scope.setIncludeVarient = function (includeVarient) {
-        $scope.includeVarient = includeVarient;
-    }
-    
-    $scope.setOrderType = function (type) {
-        $scope.orderType = type;
-    }  
-    
-    $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2)    ;
-
-    $scope.selectTab = function(tabName) {
-        $scope.selectedTab = tabName;
-    };
-    
-    $scope.makeDelivery = function () {
+    function calculateOrderDetails() {
         generateOrderSurcount();
         generateItemSurcount();
         generateItemPriceAfterSurcount();
         generateItemOptions();
         generateTransactionJson();
+    }
+    
+    function generateOrderJson() {
         $scope.orderPayload = {
             "Consumer" : {
                 "name" : "john Doe",
@@ -237,72 +165,90 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                 ]
             }
         };
-    };
+    }
     
-    $scope.makePickup = function () {
-        $scope.orderPayload = {
-            "type": "pickup",
-            "surcounts": [],
-            "items": [
-                {
-                    "name": "Pepperoni Pizza",
-                    "description": "Yum",
-                    "unitPrice": '1000',
-                    "totalBeforeSurcounts": '1000',
-                    "totalAfterSurcounts": '1000',
-                    "posId": $scope.itemPosId,
-                    "surcounts": [],
-                    "options": [],
-                    "quantity": 1
-                }
-            ]
-        };
-    };  
+    function setOrderJson() {
+        calculateOrderDetails();
+        generateOrderJson();
+    }
+
+    setOrderJson();
+
+    $scope.setPosId = function(posId) {
+        $scope.itemPosId = posId;
+        setOrderJson();
+    }
     
-    $scope.addSurcount = function () {
-        $scope.orderPayload = {
-            "type": "pickup",
-            "surcounts": [],
-            "items": [
-                {
-                    "name": "Pepperoni Pizza",
-                    "description": "Yum",
-                    "unitPrice": '1000',
-                    "totalBeforeSurcounts": '1000',
-                    "totalAfterSurcounts": '1000',
-                    "posId": $scope.itemPosId,
-                    "surcounts": [{
-                            "name": "Free Item",
-                            "amount": "-100",
-                            "type": "percentage"
-                        }],
-                    "options": [],
-                    "quantity": 1
-                }
-            ]
-        };
-    };
+    $scope.setItemPrice = function (itemPrice) {
+        $scope.itemPrice = itemPrice;
+        setOrderJson();
+    }  
+    
+    $scope.setVarientId = function(varientId) {
+        $scope.varientId = varientId;
+        setOrderJson();
+    }  
+    
+    $scope.setVarientPrice = function (varientPrice) {
+        $scope.varientPrice = varientPrice;
+        setOrderJson();
+    }
+    
+    $scope.setOrderSurcountPosId = function (orderSurcountPosId) {
+        $scope.orderSurcountPosId = orderSurcountPosId;
+        setOrderJson();
+    }
+    
+    $scope.setOrderSurcountPrice = function (orderSurcountPrice) {
+        $scope.orderSurcountPrice = orderSurcountPrice;
+        setOrderJson();
+    }
+    
+    $scope.setItemSurcountPosId = function (itemSurcountPosId) {
+        $scope.itemSurcountPosId = itemSurcountPosId;
+        setOrderJson();
+    }
+    
+    $scope.setItemSurcountPrice = function (itemSurcountPrice) {
+        $scope.itemSurcountPrice = itemSurcountPrice;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeTransaction = function (includeTransaction) {
+        $scope.includeTransaction = includeTransaction;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeItemSurcount = function (includeItemSurcount) {
+        $scope.includeItemSurcount = includeItemSurcount;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeOrderSurcount = function (includeOrderSurcount) {
+        $scope.includeOrderSurcount = includeOrderSurcount;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeVarient = function (includeVarient) {
+        $scope.includeVarient = includeVarient;
+        setOrderJson();
+    }
+    
+    $scope.setOrderType = function (type) {
+        $scope.orderType = type;
+        setOrderJson();
+    }  
+    
+    $scope.generateOrder = function() {
+        setOrderJson();
+    }
 
-    $scope.addOptions = function () {
-        $scope.orderPayload = {
-            "type": "pickup",
-            "surcounts": [],
-            "items": [
-                {
-                    "name": "Pepperoni Pizza",
-                    "description": "Yum",
-                    "unitPrice": '1000',
-                    "totalBeforeSurcounts": '1000',
-                    "totalAfterSurcounts": '1000',
-                    "posId": $scope.itemPosId,
-                    "surcounts": [],
-                    "options": [],
-                    "quantity": 1
-                }
-            ]
-        };
-    };
+    $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2)    ;
 
+    $scope.selectTab = function(tabName) {
+        $scope.selectedTab = tabName;
+    };
+        
   $scope.getLocations = Meerkat.getLocations;
   $scope.startOver = () => WizardHandler.wizard().goTo(0);
 
