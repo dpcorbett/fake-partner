@@ -16,7 +16,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.selectedTab = 'pay-at-table';
     $scope.itemPosId = "100";
     $scope.itemPrice = "1000";
-    $scope.varientId = "";
+    $scope.varientId = "200";
     $scope.varientPrice = "200";
     $scope.includeTransaction = false;
     $scope.includeVarient = false;
@@ -174,8 +174,12 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
     setOrderJson();
 
-    $scope.setPosId = function(posId) {
-        $scope.itemPosId = posId;
+    $scope.setPosId = function (posId) {
+        if (posId) {
+            $scope.itemPosId = posId;
+        } else {
+            $scope.itemPosId = undefined;
+        }
         setOrderJson();
     }
     
@@ -184,8 +188,12 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         setOrderJson();
     }  
     
-    $scope.setVarientId = function(varientId) {
-        $scope.varientId = varientId;
+    $scope.setVarientId = function(newVarientId) {
+        if (newVarientId) {
+            $scope.varientId = newVarientId;
+        } else {
+            $scope.varientId = undefined;
+        }
         setOrderJson();
     }  
     
