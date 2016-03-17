@@ -43,7 +43,7 @@ function MeerkatService($http, $modal, flash){
     var req = {
       method: 'POST',
       url: '/orders',
-      data: parsedBody,
+      data: postBody,
       headers: {
         'doshii-location-id': locationId
       }

@@ -14,7 +14,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.selectedLocation = {id: null};
   $scope.selectedTable = {name: null};
     $scope.selectedTab = 'pay-at-table';
-    $scope.itemPosId = "";
+    $scope.itemPosId = "100";
     $scope.itemPrice = "1000";
     $scope.varientId = "";
     $scope.varientPrice = "200";
@@ -135,7 +135,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     
     function generateOrderJson() {
         $scope.orderPayload = {
-            "Consumer" : {
+            "consumer" : {
                 "name" : "john Doe",
                 "phoneNumber" : "0404040404",
                 "addressLine1" : "616 St Kilda Road",
@@ -143,7 +143,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                 "city" : "Melbourne",
                 "state" : "victoria",
                 "postalCode" : "3003",
-                "country" : "Australia",
+                "country" : "AU",
                 "notes" : "some notes for the order"
             },
             "transactions" : $scope.transactionjson,
