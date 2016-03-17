@@ -14,18 +14,18 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.selectedLocation = {id: null};
   $scope.selectedTable = {name: null};
     $scope.selectedTab = 'pay-at-table';
-    $scope.itemPosId = "100";
+    $scope.itemPosId = undefined;
     $scope.itemPrice = "1000";
-    $scope.varientId = "200";
+    $scope.varientId = undefined;
     $scope.varientPrice = "200";
     $scope.includeTransaction = false;
     $scope.includeVarient = false;
     $scope.orderType = 'pickup';
     $scope.includeOrderSurcount = false;
     $scope.includeItemSurcount = false;
-    $scope.orderSurcountPosId = "";
+    $scope.orderSurcountPosId = undefined;
     $scope.orderSurcountPrice = "100";
-    $scope.itemSurcountPosId = "";
+    $scope.itemSurcountPosId = undefined;
     $scope.itemSurcountPrice = "100";
     $scope.orderSurcountJson = [];
     $scope.itemSurcountJson = [];
@@ -43,7 +43,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                 {
                     "posId": $scope.orderSurcountPosId,
                     "name": "order surcount",
-                    "price": $scope.orderSurcountPrice
+                    "amount": $scope.orderSurcountPrice,
+                    "type" : "absolute"
                 }
             ];
         } else {
@@ -57,7 +58,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                 {
                     "posId": $scope.itemSurcountPosId,
                     "name": "item surcount",
-                    "price": $scope.itemSurcountPrice
+                    "amount": $scope.itemSurcountPrice,
+                    "type" : "absolute"
                 }
             ];
         } else {
@@ -203,7 +205,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     }
     
     $scope.setOrderSurcountPosId = function (orderSurcountPosId) {
-        $scope.orderSurcountPosId = orderSurcountPosId;
+        if (orderSurcountPosId) {
+            $scope.orderSurcountPosId = orderSurcountPosId;
+        } else {
+            $scope.orderSurcountPosId = undefined;
+        }
         setOrderJson();
     }
     
@@ -213,7 +219,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     }
     
     $scope.setItemSurcountPosId = function (itemSurcountPosId) {
-        $scope.itemSurcountPosId = itemSurcountPosId;
+        if (itemSurcountPosId) {
+            $scope.itemSurcountPosId = itemSurcountPosId;
+        } else {
+            $scope.itemSurcountPosId = undefined;
+        }
         setOrderJson();
     }
     
