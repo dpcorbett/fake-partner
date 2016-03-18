@@ -123,7 +123,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         } else {
             $scope.orderTotal = $scope.itemPriceAfterSurcount;
         }
-        if ($scope.PayFullAmount) {
+        if ($scope.payFullAmount) {
             $scope.transactionTotal = $scope.orderTotal;
         } else {
             $scope.transactionTotal = (parseInt($scope.orderTotal) / 2).toString();
@@ -279,7 +279,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     }  
     
     $scope.setPayFullAmount = function(shouldPayAll) {
-        $scope.PayFullAmount = shouldPayAll;
+        $scope.payFullAmount = shouldPayAll;
         setOrderJson();
     }
     
@@ -287,7 +287,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         $scope.transacitonInvoice = invoiceString;
         setOrderJson();
     }
-    //////////////////
+    
     $scope.setConsumerName = function (nameString) {
         $scope.consumerName = nameString;
         setOrderJson();
@@ -387,7 +387,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   };
 
   $scope.sendOrderAndGo = () => {
-    Meerkat.sendOrder($scope.formattedJsonToSend, $scope.selectedLocation.id)
+    Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
       .then(res => {
         //$scope.tableOrders.length = 0;
         //Array.prototype.push.apply($scope.tableOrders, res.data);

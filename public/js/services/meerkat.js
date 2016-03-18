@@ -31,16 +31,16 @@ function MeerkatService($http, $modal, flash){
   };
 
   Meerkat.sendOrder = function(jsonToSend, locationId) {
-    var parsedBody = {};
+    //var parsedBody = {};
 
-    try {
-        parsedBody.consumer = JSON.parse(consumerBody);
-        parsedBody.transactions = JSON.parse(transactionBody);
-        parsedBody.order = JSON.parse(orderBody);
-    } catch (e) {
-      flash.error = 'Invalid order JSON: ' + e;
-      return;
-    }
+    //try {
+    //    parsedBody.consumer = JSON.parse(consumerBody);
+    //    parsedBody.transactions = JSON.parse(transactionBody);
+    //    parsedBody.order = JSON.parse(orderBody);
+    //} catch (e) {
+    //  flash.error = 'Invalid order JSON: ' + e;
+    //  return;
+    //}
 
     var req = {
       method: 'POST',
