@@ -13,32 +13,344 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.tableOrders = [];
   $scope.selectedLocation = {id: null};
   $scope.selectedTable = {name: null};
-  $scope.selectedTab = 'pay-at-table';
+    $scope.selectedTab = 'pay-at-table';
+    $scope.itemPosId = undefined;
+    $scope.itemPrice = "1000";
+    $scope.varientId = undefined;
+    $scope.varientPrice = "200";
+    $scope.includeTransaction = false;
+    $scope.includeVarient = false;
+    $scope.orderType = 'pickup';
+    $scope.includeOrderSurcount = false;
+    $scope.includeItemSurcount = false;
+    $scope.orderSurcountPosId = undefined;
+    $scope.orderSurcountPrice = "100";
+    $scope.itemSurcountPosId = undefined;
+    $scope.itemSurcountPrice = "100";
+    $scope.orderSurcountJson = [];
+    $scope.itemSurcountJson = [];
+    $scope.itemPriceAfterSurcount = "0";
+    $scope.itemPriceBeforeSurcount = "0";
+    $scope.itemOptionjson = [];
+    $scope.payFullAmount = true;
+    $scope.transactionTotal = 0;
+    $scope.transacitonInvoice = "Inv010101";
+    $scope.consumerName = "John Doe";
+    $scope.consumerPhoneNumber = "0404040404";
+    $scope.consumerAddressLine1 = "616 St Kilda Road";
+    $scope.consumerAddressLine2 = "2/8";
+    $scope.consumerCity = "Melbourne";
+    $scope.consumerState = "Victoria";
+    $scope.consumerPostalCode = "3004";
+    $scope.consumerNotes = "some notes to test";
+    
+    $scope.orderTotal = "0";
 
-  $scope.orderPayload = {
-    "type": "pickup",
-    "surcounts": [],
-    "items": [
-      {
-        "name": "Pepperoni Pizza",
-        "description": "Yum",
-        "unitPrice": '1000',
-        "totalBeforeSurcounts": '1000',
-        "totalAfterSurcounts": '1000',
-        "posId": "pep_pizza",
-        "surcounts": [],
-        "options": [],
-        "quantity": 1
-      }
-    ]
-  };
+    $scope.orderPayload = "";
+    $scope.transactionPayload = "";
+    $scope.consumerPayload = "";
 
-  $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2);
+    function generateOrderSurcount() {
+        if ($scope.includeOrderSurcount) {
+            $scope.orderSurcountJson = [
+                {
+                    "posId": $scope.orderSurcountPosId,
+                    "name": "order surcount",
+                    "amount": $scope.orderSurcountPrice,
+                    "type" : "absolute"
+                }
+            ];
+        } else {
+            $scope.orderSurcountJson = [];
+        }
+    }
+    
+    function generateItemSurcount() {
+        if ($scope.includeItemSurcount) {
+            $scope.itemSurcountJson = [
+                {
+                    "posId": $scope.itemSurcountPosId,
+                    "name": "item surcount",
+                    "amount": $scope.itemSurcountPrice,
+                    "type" : "absolute"
+                }
+            ];
+        } else {
+            $scope.itemSurcountJson = [];
+        }
+    }
+    
+    function generateItemOptions() {
+        if ($scope.includeVarient) {
+            $scope.itemOptionJson = [
+                {
+                    "posId": "Pos Option List",
+                    "name": "Pos Option List",
+                    "variants": [
+                    {
+                        "posId" : $scope.varientId,
+                        "name" : "item varient",
+                        "price" : $scope.varientPrice
+                    }]
+                }
+            ];
+        } else {
+            $scope.itemOptionJson = [];
+        }
+    }
+    
+    function generateItemPriceBeforeSurcount() {
+        if ($scope.includeVarient) {
+            $scope.itemPriceBeforeSurcount = (parseInt($scope.itemPrice) + parseInt($scope.varientPrice)).toString();
+        } else {
+            $scope.itemPriceBeforeSurcount = $scope.itemPrice;
+        }
+    }
+    
+    function generateItemPriceAfterSurcount() {
+        generateItemPriceBeforeSurcount();
+        if ($scope.includeItemSurcount) {
+            $scope.itemPriceAfterSurcount = (parseInt($scope.itemPriceBeforeSurcount) + parseInt($scope.itemSurcountPrice)).toString();
+        } else {
+            $scope.itemPriceAfterSurcount = $scope.itemPriceBeforeSurcount;
+        }
+    }
+    
+    function generateOrderTotal() {
+        generateItemPriceAfterSurcount();
+        if ($scope.includeOrderSurcount) {
+            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountPrice)).toString();
+        } else {
+            $scope.orderTotal = $scope.itemPriceAfterSurcount;
+        }
+        if ($scope.payFullAmount) {
+            $scope.transactionTotal = $scope.orderTotal;
+        } else {
+            $scope.transactionTotal = (parseInt($scope.orderTotal) / 2).toString();
+        }
+    }
+    
+    function calculateOrderDetails() {
+        generateOrderSurcount();
+        generateItemSurcount();
+        generateItemPriceAfterSurcount();
+        generateItemOptions();
+        generateOrderTotal();
+    }
+    
+    function generateConsumerJson() {
+        $scope.consumerPayload = {
+            "name" : $scope.consumerName,
+            "phoneNumber" : $scope.consumerPhoneNumber,
+            "addressLine1" : $scope.consumerAddressLine1,
+            "addressLine2" : $scope.consumerAddressLine2,
+            "city" : $scope.consumerCity,
+            "state" : $scope.consumerState,
+            "postalCode" : $scope.consumerPostalCode,
+            "country" : "AU",
+            "notes" : $scope.consumerNotes
+        }
+    }
+    
+    function generateTransactionJson() {
+        generateOrderTotal();
+        if ($scope.includeTransaction) {
+            $scope.transactionPayload = [
+                {
+                    "amount": $scope.transactionTotal,
+                    "prepaid": true,
+                    "invoice": $scope.transacitonInvoice
+                }
+            ];
+        } else {
+            $scope.transactionPayload = [];
+        }
+        
+    }
 
-  $scope.selectTab = function(tabName) {
-    $scope.selectedTab = tabName;
-  };
+    function generateOrderJson() {
+        $scope.orderPayload = {
+            "type": $scope.orderType,
+            "surcounts": $scope.orderSurcountJson,
+            "items": [
+                {
+                    "name": "Pepperoni Pizza",
+                    "description": "Yum",
+                    "unitPrice": $scope.itemPrice,
+                    "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                    "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                    "posId": $scope.itemPosId,
+                    "surcounts": $scope.itemSurcountJson,
+                    "options": $scope.itemOptionJson,
+                    "quantity": 1
+                }
+            ]
+        }
+    }
+    
+    function setOrderJson() {
+        calculateOrderDetails();
+        generateOrderJson();
+        generateConsumerJson();
+        generateTransactionJson();
+    }
 
+    setOrderJson();
+    
+    $scope.setPosId = function (posId) {
+        if (posId) {
+            $scope.itemPosId = posId;
+        } else {
+            $scope.itemPosId = undefined;
+        }
+        setOrderJson();
+    }
+    
+    $scope.setItemPrice = function (itemPrice) {
+        $scope.itemPrice = itemPrice;
+        setOrderJson();
+    }  
+    
+    $scope.setVarientId = function(newVarientId) {
+        if (newVarientId) {
+            $scope.varientId = newVarientId;
+        } else {
+            $scope.varientId = undefined;
+        }
+        setOrderJson();
+    }  
+    
+    $scope.setVarientPrice = function (varientPrice) {
+        $scope.varientPrice = varientPrice;
+        setOrderJson();
+    }
+    
+    $scope.setOrderSurcountPosId = function (orderSurcountPosId) {
+        if (orderSurcountPosId) {
+            $scope.orderSurcountPosId = orderSurcountPosId;
+        } else {
+            $scope.orderSurcountPosId = undefined;
+        }
+        setOrderJson();
+    }
+    
+    $scope.setOrderSurcountPrice = function (orderSurcountPrice) {
+        $scope.orderSurcountPrice = orderSurcountPrice;
+        setOrderJson();
+    }
+    
+    $scope.setItemSurcountPosId = function (itemSurcountPosId) {
+        if (itemSurcountPosId) {
+            $scope.itemSurcountPosId = itemSurcountPosId;
+        } else {
+            $scope.itemSurcountPosId = undefined;
+        }
+        setOrderJson();
+    }
+    
+    $scope.setItemSurcountPrice = function (itemSurcountPrice) {
+        $scope.itemSurcountPrice = itemSurcountPrice;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeTransaction = function (includeTransaction) {
+        $scope.includeTransaction = includeTransaction;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeItemSurcount = function (includeItemSurcount) {
+        $scope.includeItemSurcount = includeItemSurcount;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeOrderSurcount = function (includeOrderSurcount) {
+        $scope.includeOrderSurcount = includeOrderSurcount;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeVarient = function (includeVarient) {
+        $scope.includeVarient = includeVarient;
+        setOrderJson();
+    }
+    
+    $scope.setOrderType = function (type) {
+        $scope.orderType = type;
+        setOrderJson();
+    }  
+    
+    $scope.setPayFullAmount = function(shouldPayAll) {
+        $scope.payFullAmount = shouldPayAll;
+        setOrderJson();
+    }
+    
+    $scope.setTransactionInvoice = function (invoiceString) {
+        $scope.transacitonInvoice = invoiceString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerName = function (nameString) {
+        $scope.consumerName = nameString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerPhoneNumber = function (phoneNumberString) {
+        $scope.consumerPhoneNumber = phoneNumberString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerAddressLine1 = function (invoiceString) {
+        $scope.consumerAddressLine1 = invoiceString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerAddressLine2 = function (invoiceString) {
+        $scope.consumerAddressLine2 = invoiceString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerCity = function (invoiceString) {
+        $scope.consumerCity = invoiceString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerState = function (invoiceString) {
+        $scope.consumerState = invoiceString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerPostalCode = function (invoiceString) {
+        $scope.consumerPostalCode = invoiceString;
+        setOrderJson();
+    }
+    
+    $scope.setConsumerNotes = function (invoiceString) {
+        $scope.consumerNotes = invoiceString;
+        setOrderJson();
+    }
+
+    $scope.generateOrder = function() {
+        setOrderJson();
+    }
+
+    $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2);
+    $scope.formattedTransaction = () => JSON.stringify($scope.transactionPayload, undefined, 2);
+    $scope.formattedConsumer = () => JSON.stringify($scope.consumerPayload, undefined, 2);
+
+
+    $scope.formattedJsonToSend = () => {
+        var sendBody = {};
+        sendBody.consumer = $scope.consumerPayload;
+        sendBody.transactions = $scope.transactionPayload;
+        sendBody.order = $scope.orderPayload;
+
+        return JSON.stringify(sendBody, undefined, 2);
+
+    };
+    
+    $scope.selectTab = function (tabName) {
+        $scope.selectedTab = tabName;
+    };
+        
   $scope.getLocations = Meerkat.getLocations;
   $scope.startOver = () => WizardHandler.wizard().goTo(0);
 
@@ -59,7 +371,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   function updateTransaction(event) {
     Meerkat.updateTransaction(event.uri);
   }
-
+    
   $scope.fetchTableAndGo = () => {
     Meerkat.getOrdersForTable($scope.selectedTable.name, $scope.selectedLocation.id)
       .then(res => {
@@ -75,7 +387,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   };
 
   $scope.sendOrderAndGo = () => {
-    Meerkat.sendOrder(JSON.stringify($scope.orderPayload), $scope.selectedLocation.id)
+    Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
       .then(res => {
         //$scope.tableOrders.length = 0;
         //Array.prototype.push.apply($scope.tableOrders, res.data);
