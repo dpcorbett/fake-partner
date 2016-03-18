@@ -30,11 +30,13 @@ function MeerkatService($http, $modal, flash){
       .catch(err => flash.error = 'Getting order "' + orderId + '" failed');
   };
 
-  Meerkat.sendOrder = function(postBody, locationId) {
+  Meerkat.sendOrder = function(jsonToSend, locationId) {
     var parsedBody = {};
 
     try {
-      parsedBody.order = JSON.parse(postBody)
+        parsedBody.consumer = JSON.parse(consumerBody);
+        parsedBody.transactions = JSON.parse(transactionBody);
+        parsedBody.order = JSON.parse(orderBody);
     } catch (e) {
       flash.error = 'Invalid order JSON: ' + e;
       return;
@@ -43,7 +45,7 @@ function MeerkatService($http, $modal, flash){
     var req = {
       method: 'POST',
       url: '/orders',
-      data: postBody,
+      data: jsonToSend,
       headers: {
         'doshii-location-id': locationId
       }

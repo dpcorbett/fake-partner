@@ -136,26 +136,9 @@
                                     <input type="text" name="itemSurcountPrice" ng-model="itemSurcountPrice" ng-change="setItemSurcountPrice({{'itemSurcountPrice'}})">
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    Transactions:
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Include Transaction
-                                    <input type="checkbox" ng-model="includeTransaction" ng-change="setIncludeTransaction({{'includeTransaction'}})"/>
-                                </td>
-                            </tr>
+                            
                         </table>
-                        <div>
-                            <button class="tiny" ng-click="generateOrder()">
-                                Generate Order
-                            </button>
-                        </div>
-                        <button class="tiny" ng-click="sendOrderAndGo()">
-                            Send Order
-                        </button>
+                        <a class="button small" wz-next>Next</a>
                     </td>
                     <td>
                         Order JSON
@@ -163,8 +146,6 @@
                     </td>
                 </tr>
             </table>
-            
-
     </tab>
       </tabset>
 
@@ -255,14 +236,121 @@
 
 
     <wz-step title="Consumer" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
-
-      <a class="button small" wz-next>Next</a>
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                Consumer:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Name:
+                                <input type="text" name="consumerName" ng-model="consumerName" ng-change="setConsumerName({{'consumerName'}})">
+                            </td>
+                            <td>
+                                Phone:
+                                <input type="text" name="consumerPhoneNumber" ng-model="consumerPhoneNumber" ng-change="setConsumerPhoneNumber({{'consumerPhoneNumber'}})">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Address Line 1:
+                                <input type="text" name="consumerAddressLine1" ng-model="consumerAddressLine1" ng-change="setConsumerAddressLine1({{'consumerAddressLine1'}})">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Address Line 2:
+                                <input type="text" name="consumerAddressLine2" ng-model="consumerAddressLine2" ng-change="setConsumerAddressLine2({{'consumerAddressLine2'}})">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                City:
+                                <input type="text" name="consumerCity" ng-model="consumerCity" ng-change="setConsumerCity({{'consumerCity'}})">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                State:
+                                <input type="text" name="consumerState" ng-model="consumerState" ng-change="setConsumerState({{'consumerState'}})">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Post Code:
+                                <input type="text" name="consumerPostalCode" ng-model="consumerPostalCode" ng-change="setConsumerPostalCode({{'consumerPostalCode'}})">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Notes:
+                                <input type="text" name="consumerNotes" ng-model="consumerNotes" ng-change="setConsumerNotes({{'consumerNotes'}})">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    Transaction JSON
+                    <pre class="code-block"><code>{{formattedConsumer()}}</code></pre>
+                </td>
+            </tr>
+        </table>
+        
+        <a class="button small" wz-previous>Previous</a>
+        <a class="button small" wz-next>Next</a>
     </wz-step>
 
     <wz-step title="Transactions" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
-
-      <a class="button small" wz-next>Next</a>
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                Transactions:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Include Transaction
+                                <input type="checkbox" ng-model="includeTransaction" ng-change="setIncludeTransaction({{'includeTransaction'}})" />
+                            </td>
+                            <td>
+                                Pay Full Amount
+                                <input type="checkbox" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Transaction Invoice
+                                <input type="text" name="transacitonInvoice" ng-model="transacitonInvoice" ng-change="setTransactionInvoice({{'transacitonInvoice'}})">
+                            </td>
+                        </tr>
+                    </table> 
+                </td>
+                <td>
+                    Transaction JSON
+                    <pre class="code-block"><code>{{formattedTransaction()}}</code></pre>
+                </td>
+            </tr>
+        </table>
+        <a class="button small" wz-previous>Previous</a>
+        <a class="button small" wz-next>Next</a>
+        
     </wz-step>
+
+  <wz-step title="Send" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
+      Json Payload
+      <pre class="code-block"><code>{{formattedJsonToSend()}}</code></pre>
+      <a class="button small" wz-previous>Previous</a>
+      <button class="tiny" ng-click="sendOrderAndGo()">
+          Send Order
+      </button>
+  </wz-step>
 
     <wz-step title="Done">
       You're done! You can start over by pressing "Go home".
