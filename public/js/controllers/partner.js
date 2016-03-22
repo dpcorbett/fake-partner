@@ -43,6 +43,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.consumerState = "Victoria";
     $scope.consumerPostalCode = "3004";
     $scope.consumerNotes = "some notes to test";
+    $scope.orderRequiredAt = undefined;
     
     $scope.orderTotal = "0";
 
@@ -172,6 +173,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         $scope.orderPayload = {
             "type": $scope.orderType,
             "surcounts": $scope.orderSurcountJson,
+            "requiredAt" : $scope.orderRequiredAt,
             "items": [
                 {
                     "name": "Pepperoni Pizza",
@@ -183,6 +185,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                     "surcounts": $scope.itemSurcountJson,
                     "options": $scope.itemOptionJson,
                     "quantity": 1
+                    
                 }
             ]
         }
@@ -202,6 +205,15 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
             $scope.itemPosId = posId;
         } else {
             $scope.itemPosId = undefined;
+        }
+        setOrderJson();
+    }
+    
+    $scope.setOrderRequiredAt = function (requiredAt) {
+        if (requiredAt) {
+            $scope.orderRequiredAt = requiredAt;
+        } else {
+            $scope.orderRequiredAt = undefined;
         }
         setOrderJson();
     }
