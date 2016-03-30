@@ -107,12 +107,19 @@
                                     Item Unit Price:
                                     <input type="text" name="itemPrice" ng-model="itemPrice" ng-change="setItemPrice({{'itemPrice'}})">
                                 </td>
+                                <td>
+                                    Item Name:
+                                    <input type="text" name="itemName" ng-model="itemName" ng-change="setItemName({{'itemName'}})">
+                                </td>
                             </tr>
                             <tr>
                                 <td>
                                     Include Varient
-                                    <input type="checkbox" ng-model="includeVarient" ng-change="setIncludeVarient({{'includeVarient'}})" />
+                                    <input type="checkbox" ng-model="includeVarient" ng-change="setIncludeVarient({{'includeVarient'}})"/>
                                 </td>
+                                
+                            </tr>
+                            <tr>
                                 <td>
                                     Varient Pos Id:
                                     <input type="text" name="varientId" ng-model="varientId" ng-change="setVarientId({{'varientId'}})">
@@ -120,6 +127,10 @@
                                 <td>
                                     Varient Price:
                                     <input type="text" name="varientPrice" ng-model="varientPrice" ng-change="setVarientPrice({{'varientPrice'}})">
+                                </td>
+                                <td>
+                                    Varient Name:
+                                    <input type="text" name="varientName" ng-model="varientName" ng-change="setVarientName({{'varientName'}})">
                                 </td>
                             </tr>
                             <tr>

@@ -44,6 +44,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.consumerPostalCode = "3004";
     $scope.consumerNotes = "some notes to test";
     $scope.orderRequiredAt = undefined;
+    $scope.varientName = "item varient";
+    $scope.itemName = "Pepperoni Pizza"
     
     $scope.orderTotal = "0";
 
@@ -90,7 +92,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                     "variants": [
                     {
                         "posId" : $scope.varientId,
-                        "name" : "item varient",
+                        "name" : $scope.varientName,
                         "price" : $scope.varientPrice
                     }]
                 }
@@ -176,7 +178,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
             "requiredAt" : $scope.orderRequiredAt,
             "items": [
                 {
-                    "name": "Pepperoni Pizza",
+                    "name": $scope.itemName,
                     "description": "Yum",
                     "unitPrice": $scope.itemPrice,
                     "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
@@ -220,6 +222,16 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     
     $scope.setItemPrice = function (itemPrice) {
         $scope.itemPrice = itemPrice;
+        setOrderJson();
+    }
+    
+    $scope.setItemName = function (itemName) {
+        $scope.itemName = itemName;
+        setOrderJson();
+    }
+    
+    $scope.setVarientName = function (varientPrice) {
+        $scope.varientName = varientPrice;
         setOrderJson();
     }  
     
