@@ -8,7 +8,9 @@ function MeerkatService($http, $modal, flash){
   var Meerkat = {
     data: {
       locations: [],
-      pendingTransactions: []
+      pendingTransactions: [],
+      products: [],
+      surcounts: []
     }
   };
 
@@ -24,6 +26,21 @@ function MeerkatService($http, $modal, flash){
       })
       .catch(err => flash.error = 'Getting locations failed');
   };
+
+Meerkat.getMenu = function (locationId) {
+    return $http.get('/locations/' + locationId + '/menu')
+      .then(res => {
+        Meerkat.data.products.length = 0;
+        Meerkat.data.surcounts.length = 0;
+        
+        Array.prototype.push.apply(Meerkat.data.products, res.data.products);
+        Array.prototype.push.apply(Meerkat.data.surcounts, res.data.surcounts);
+        flash.success = 'Updated Menu';
+        
+        return Meerkat.data.products;
+    })
+      .catch(err=> flash.error = 'Getting Menu failed');
+};
 
   Meerkat.getOrder = function(orderId) {
     return $http.get('/orders/' + orderId)

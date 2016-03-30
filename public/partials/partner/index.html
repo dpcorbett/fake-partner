@@ -54,115 +54,174 @@
             Fetch table
           </button>
         </tab>
-        <tab heading="Order Ahead" select="selectTab('order-ahead')">
-          <h2>Order Ahead</h2>
+          <tab heading="Order Ahead" select="selectTab('order-ahead')">
+              <h2>Order Ahead</h2>
 
-            <table>
-                <tr>
-                    <td>
-                        <table>
-                            <caption>Create a new order for location: {{location.id}}</caption>
-                            <tr>
-                                <td>Order Details:</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label>
-                                        <input type="radio" name="orderOfType" value="pickup" ng-model="orderType" ng-change='setOrderType("pickup")'>
-                                        Pickup
-                                    </label>
-                                </td>
-                                <td>
-                                    <label>
-                                        <input type="radio" name="orderOfType" value="delivery" ng-model="orderType" ng-change='setOrderType("delivery")'>
-                                        Delivery
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Include Order surcount
-                                    <input type="checkbox" ng-model="includeOrderSurcount" ng-change="setIncludeOrderSurcount({{'includeOrderSurcount'}})"/>
-                                </td>
-                                <td>
-                                    Order surcount Pos Id:
-                                    <input type="text" name="orderSurcountPosId" ng-model="orderSurcountPosId" ng-change="setOrderSurcountPosId({{'orderSurcountPosId'}})">
-                                </td>
-                                <td>
-                                    Order Surcount Price:
-                                    <input type="text" name="orderSurcountPrice" ng-model="orderSurcountPrice" ng-change="setOrderSurcountPrice({{'orderSurcountPrice'}})">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Item Details:
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Item Pos Id:
-                                    <input type="text" name="itemPosId" ng-model="itemPosId" ng-change="setPosId({{'itemPosId'}})">
-                                </td>
-                                <td>
-                                    Item Unit Price:
-                                    <input type="text" name="itemPrice" ng-model="itemPrice" ng-change="setItemPrice({{'itemPrice'}})">
-                                </td>
-                                <td>
-                                    Item Name:
-                                    <input type="text" name="itemName" ng-model="itemName" ng-change="setItemName({{'itemName'}})">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Include Varient
-                                    <input type="checkbox" ng-model="includeVarient" ng-change="setIncludeVarient({{'includeVarient'}})"/>
-                                </td>
-                                
-                            </tr>
-                            <tr>
-                                <td>
-                                    Varient Pos Id:
-                                    <input type="text" name="varientId" ng-model="varientId" ng-change="setVarientId({{'varientId'}})">
-                                </td>
-                                <td>
-                                    Varient Price:
-                                    <input type="text" name="varientPrice" ng-model="varientPrice" ng-change="setVarientPrice({{'varientPrice'}})">
-                                </td>
-                                <td>
-                                    Varient Name:
-                                    <input type="text" name="varientName" ng-model="varientName" ng-change="setVarientName({{'varientName'}})">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Include Item surcount
-                                    <input type="checkbox" ng-model="includeItemSurcount" ng-change="setIncludeItemSurcount({{'includeItemSurcount'}})"/>
-                                </td>
-                                <td>
-                                    Item surcount Pos Id:
-                                    <input type="text" name="itemSurcountPosId" ng-model="itemSurcountPosId" ng-change="setItemSurcountPosId({{'itemSurcountPosId'}})">
-                                </td>
-                                <td>
-                                    Item Surcount Price:
-                                    <input type="text" name="itemSurcountPrice" ng-model="itemSurcountPrice" ng-change="setItemSurcountPrice({{'itemSurcountPrice'}})">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Required At
-                                    <input type="text" name="orderRequiredAt" ng-model="orderRequiredAt" ng-change="setOrderRequiredAt({{'orderRequiredAt'}})">
-                                </td>
-                            </tr>
-                        </table>
-                        <a class="button small" wz-next>Next</a>
-                    </td>
-                    <td>
-                        Order JSON
-                        <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
-                    </td>
-                </tr>
-            </table>
-    </tab>
+              <table>
+                  <tr>
+                      <td>
+                          <table>
+                              <caption>Create a new order for location: {{location.id}}</caption>
+                              <tr>
+                                  <td>Order Details:</td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      <label>
+                                          <input type="radio" name="orderOfType" value="pickup" ng-model="orderType" ng-change='setOrderType("pickup")'>
+                                          Pickup
+                                      </label>
+                                  </td>
+                                  <td>
+                                      <label>
+                                          <input type="radio" name="orderOfType" value="delivery" ng-model="orderType" ng-change='setOrderType("delivery")'>
+                                          Delivery
+                                      </label>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      Include Order surcount
+                                      <input type="checkbox" ng-model="includeOrderSurcount" ng-change="setIncludeOrderSurcount({{'includeOrderSurcount'}})"/>
+                                  </td>
+                                  <td>
+                                      Order surcount Pos Id:
+                                      <input type="text" name="orderSurcountPosId" ng-model="orderSurcountPosId" ng-change="setOrderSurcountPosId({{'orderSurcountPosId'}})">
+                                  </td>
+                                  <td>
+                                      Order Surcount Price:
+                                      <input type="text" name="orderSurcountPrice" ng-model="orderSurcountPrice" ng-change="setOrderSurcountPrice({{'orderSurcountPrice'}})">
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      Item Details:
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      Item Pos Id:
+                                      <input type="text" name="itemPosId" ng-model="itemPosId" ng-change="setPosId({{'itemPosId'}})">
+                                  </td>
+                                  <td>
+                                      Item Unit Price:
+                                      <input type="text" name="itemPrice" ng-model="itemPrice" ng-change="setItemPrice({{'itemPrice'}})">
+                                  </td>
+                                  <td>
+                                      Item Name:
+                                      <input type="text" name="itemName" ng-model="itemName" ng-change="setItemName({{'itemName'}})">
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      Include Varient
+                                      <input type="checkbox" ng-model="includeVarient" ng-change="setIncludeVarient({{'includeVarient'}})"/>
+                                  </td>
+
+                              </tr>
+                              <tr>
+                                  <td>
+                                      Varient Pos Id:
+                                      <input type="text" name="varientId" ng-model="varientId" ng-change="setVarientId({{'varientId'}})">
+                                  </td>
+                                  <td>
+                                      Varient Price:
+                                      <input type="text" name="varientPrice" ng-model="varientPrice" ng-change="setVarientPrice({{'varientPrice'}})">
+                                  </td>
+                                  <td>
+                                      Varient Name:
+                                      <input type="text" name="varientName" ng-model="varientName" ng-change="setVarientName({{'varientName'}})">
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      Include Item surcount
+                                      <input type="checkbox" ng-model="includeItemSurcount" ng-change="setIncludeItemSurcount({{'includeItemSurcount'}})"/>
+                                  </td>
+                                  <td>
+                                      Item surcount Pos Id:
+                                      <input type="text" name="itemSurcountPosId" ng-model="itemSurcountPosId" ng-change="setItemSurcountPosId({{'itemSurcountPosId'}})">
+                                  </td>
+                                  <td>
+                                      Item Surcount Price:
+                                      <input type="text" name="itemSurcountPrice" ng-model="itemSurcountPrice" ng-change="setItemSurcountPrice({{'itemSurcountPrice'}})">
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      Required At
+                                      <input type="text" name="orderRequiredAt" ng-model="orderRequiredAt" ng-change="setOrderRequiredAt({{'orderRequiredAt'}})">
+                                  </td>
+                              </tr>
+                          </table>
+                          <a class="button small" wz-next>Next</a>
+                      </td>
+                      <td>
+                          Order JSON
+                          <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
+                      </td>
+                  </tr>
+              </table>
+          </tab>
+          <tab heading="Pos Menu" select="selectTab('pos-menu')">
+              <h2>Pos Menu:</h2>
+              <button class="tiny" ng-click="getMenu()">Refresh</button>
+              
+              <table>
+                  <thead>
+                  <th>PosId</th>
+                  <th>Name</th>
+                  <th>description</th>
+                  <th>price</th>
+                  <th>tags</th>
+                  <th>Options</th>
+                  </thead>
+                  <tbody>
+                      <tr ng-repeat="product in products">
+                          <td>{{product.posId}}</td>
+                          <td>{{product.name}}</td>
+                          <td>{{product.description}}</td>
+                          <td>{{product.price}}</td>
+                          <td>{{product.tags}}</td>
+                          <td>
+                              <table>
+                                  <thead>
+                                  <th>min</th>
+                                  <th>max</th>
+                                  <th>name</th>
+                                  <th>Varients</th>
+                                  </thead>
+                                  <tbody>
+                                  <tr ng-repeat="option in product.options">
+                                      <td>{{option.max}}</td>
+                                      <td>{{option.min}}</td>
+                                      <td>{{option.name}}</td>
+                                      <td>
+                                          <table>
+                                              <thead>
+                                              <th>name</th>
+                                              <th>posId</th>
+                                              <th>price</th>
+                                              <th>selectedOptionalVariant</th>
+                                              </thead>
+                                              <tbody>
+                                              <tr ng-repeat="varient in option.variants">
+                                                  <td>{{varient.name}}</td>
+                                                  <td>{{varient.posId}}</td>
+                                                  <td>{{varient.price}}</td>
+                                                  <td>{{varient.selectedOptionalVariant}}</td>
+                                              </tr>
+                                              </tbody>
+                                          </table>
+                                      </td>
+                                  </tr>
+                                  </tbody>
+                              </table>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </tab>
       </tabset>
 
     </wz-step>

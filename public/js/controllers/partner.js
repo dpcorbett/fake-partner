@@ -7,6 +7,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   Meerkat.getLocations();
 
   $scope.locations = Meerkat.data.locations;
+  $scope.products = Meerkat.data.products;
+  $scope.surcounts = Meerkat.data.surcounts;
   $scope.Meerkat = Meerkat;
 
   $scope.order = {};
@@ -408,7 +410,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
           flash.error = 'No orders on table ' + $scope.selectedTable.name;
         }
       });
-  };
+};
+
+$scope.getMenu = () => {
+    Meerkat.getMenu($scope.selectedLocation.id);
+};
 
   $scope.sendOrderAndGo = () => {
     Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
