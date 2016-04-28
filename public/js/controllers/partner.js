@@ -47,7 +47,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.consumerNotes = "some notes to test";
     $scope.orderRequiredAt = undefined;
     $scope.varientName = "item varient";
-    $scope.itemName = "Pepperoni Pizza"
+    $scope.itemName = "Pepperoni Pizza";
+    $scope.itemQuantity = "1";
     
     $scope.orderTotal = "0";
 
@@ -106,9 +107,9 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     
     function generateItemPriceBeforeSurcount() {
         if ($scope.includeVarient) {
-            $scope.itemPriceBeforeSurcount = (parseInt($scope.itemPrice) + parseInt($scope.varientPrice)).toString();
+            $scope.itemPriceBeforeSurcount = (parseInt($scope.itemPrice) * parseInt($scope.itemQuantity) + parseInt($scope.varientPrice) * parseInt($scope.itemQuantity)).toString();
         } else {
-            $scope.itemPriceBeforeSurcount = $scope.itemPrice;
+            $scope.itemPriceBeforeSurcount = $scope.itemPrice * parseInt($scope.itemQuantity);
         }
     }
     
@@ -188,7 +189,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                     "posId": $scope.itemPosId,
                     "surcounts": $scope.itemSurcountJson,
                     "options": $scope.itemOptionJson,
-                    "quantity": 1
+                    "quantity": $scope.itemQuantity
                     
                 }
             ]
@@ -226,6 +227,12 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         $scope.itemPrice = itemPrice;
         setOrderJson();
     }
+    
+    $scope.setitemQuantity = function (itemQuantity) {
+        $scope.itemQuantity = itemQuantity;
+        setOrderJson();
+    }
+    
     
     $scope.setItemName = function (itemName) {
         $scope.itemName = itemName;
