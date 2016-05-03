@@ -49,6 +49,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.varientName = "item varient";
     $scope.itemName = "Pepperoni Pizza";
     $scope.itemQuantity = "1";
+    $scope.manualPaymentTotal = 0;
     
     $scope.orderTotal = "0";
 
@@ -130,7 +131,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
             $scope.orderTotal = $scope.itemPriceAfterSurcount;
         }
         if ($scope.payFullAmount) {
-            $scope.transactionTotal = $scope.orderTotal;
+            $scope.transactionTotal = parseInt($scope.orderTotal).toString();
         } else {
             $scope.transactionTotal = (parseInt($scope.orderTotal) / 2).toString();
         }
@@ -160,18 +161,27 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     
     function generateTransactionJson() {
         generateOrderTotal();
-        if ($scope.includeTransaction) {
+        if ($scope.manualPaymentTotal) {
             $scope.transactionPayload = [
                 {
-                    "amount": $scope.transactionTotal,
+                    "amount": parseInt($scope.manualPaymentTotal).toString(),
                     "prepaid": true,
                     "invoice": $scope.transacitonInvoice
                 }
             ];
         } else {
-            $scope.transactionPayload = [];
+            if ($scope.includeTransaction) {
+                $scope.transactionPayload = [
+                    {
+                        "amount": $scope.transactionTotal,
+                        "prepaid": true,
+                        "invoice": $scope.transacitonInvoice
+                    }
+                ];
+            } else {
+                $scope.transactionPayload = [];
+            }
         }
-        
     }
 
     function generateOrderJson() {
@@ -362,6 +372,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     }
 
     $scope.generateOrder = function() {
+        setOrderJson();
+    }
+    
+    $scope.setManualPaymentTotal = function (manualPaymentAmount) {
+        $scope.manualPaymentTotal = manualPaymentAmount;
         setOrderJson();
     }
 

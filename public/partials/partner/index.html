@@ -400,7 +400,11 @@
                             </td>
                             <td>
                                 Pay Full Amount
-                                <input type="checkbox" name="payFullAmount" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})" />
+                                <input type="checkbox" name="payFullAmount" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})"/>
+                            </td>
+                            <td>
+                                Override Transaction With Amount
+                                <input type="text" name="manualPaymentTotal" ng-model="manualPaymentTotal" ng-change="setManualPaymentTotal({{'manualPaymentTotal'}})">
                             </td>
                         </tr>
                         <tr>
