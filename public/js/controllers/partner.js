@@ -18,6 +18,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.selectedTab = 'pay-at-table';
     $scope.itemPosId = undefined;
     $scope.itemPrice = "1000";
+    $scope.optionsListId = "Pos Option List Id";
+    $scope.optionsListName = "Pos Option List Name";
     $scope.varientId = undefined;
     $scope.varientPrice = "200";
     $scope.includeTransaction = false;
@@ -91,8 +93,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         if ($scope.includeVarient) {
             $scope.itemOptionJson = [
                 {
-                    "posId": "Pos Option List",
-                    "name": "Pos Option List",
+                    "posId": $scope.optionsListId,
+                    "name": $scope.optionsListName,
                     "variants": [
                     {
                         "posId" : $scope.varientId,
@@ -259,6 +261,24 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
             $scope.varientId = newVarientId;
         } else {
             $scope.varientId = undefined;
+        }
+        setOrderJson();
+    }
+    
+    $scope.setOptionListId = function (newOptionListId) {
+        if (newOptionListId) {
+            $scope.optionsListId = newOptionListId;
+        } else {
+            $scope.optionsListId = "Pos Option List Id";
+        }
+        setOrderJson();
+    }
+    
+    $scope.setOptionsListName = function (newOptionListName) {
+        if (newOptionListName) {
+            $scope.optionsListName = newOptionListName;
+        } else {
+            $scope.optionsListName = "Pos Option List Name";
         }
         setOrderJson();
     }  
