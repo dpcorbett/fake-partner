@@ -26,9 +26,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.includeVarient = false;
     $scope.orderType = 'pickup';
     $scope.includeOrderSurcount = false;
+    $scope.orderSurcountIsPercentage = false;
     $scope.includeItemSurcount = false;
     $scope.orderSurcountPosId = undefined;
-    $scope.orderSurcountPrice = "100";
+    $scope.orderSurcountAmount = "100";
+    $scope.orderSurcountValue = "100";
     $scope.itemSurcountPosId = undefined;
     $scope.itemSurcountPrice = "100";
     $scope.orderSurcountJson = [];
@@ -61,14 +63,29 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
     function generateOrderSurcount() {
         if ($scope.includeOrderSurcount) {
-            $scope.orderSurcountJson = [
-                {
-                    "posId": $scope.orderSurcountPosId,
-                    "name": "order surcount",
-                    "amount": $scope.orderSurcountPrice,
-                    "type" : "absolute"
-                }
-            ];
+            if ($scope.orderSurcountIsPercentage) {
+                $scope.orderSurcountJson = [
+                    {
+                        "posId": $scope.orderSurcountPosId,
+                        "name": "order surcount",
+                        "amount": $scope.orderSurcountAmount,
+                        "value": $scope.orderSurcountValue,
+                        "type" : "percentage"
+                    }
+                ];
+            } else {
+                $scope.orderSurcountJson = [
+                    {
+                        "posId": $scope.orderSurcountPosId,
+                        "name": "order surcount",
+                        "amount": $scope.orderSurcountAmount,
+                        "value": $scope.orderSurcountValue,
+                        "type" : "absolute"
+                    }
+                ];
+            }
+            
+            
         } else {
             $scope.orderSurcountJson = [];
         }
@@ -128,7 +145,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     function generateOrderTotal() {
         generateItemPriceAfterSurcount();
         if ($scope.includeOrderSurcount) {
-            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountPrice)).toString();
+            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue)).toString();
         } else {
             $scope.orderTotal = $scope.itemPriceAfterSurcount;
         }
@@ -297,8 +314,13 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         setOrderJson();
     }
     
-    $scope.setOrderSurcountPrice = function (orderSurcountPrice) {
-        $scope.orderSurcountPrice = orderSurcountPrice;
+    $scope.setOrderSurcountAmount = function (orderSurcountAmount) {
+        $scope.orderSurcountAmount = orderSurcountAmount;
+        setOrderJson();
+    }
+    
+    $scope.setOrderSurcountValue = function (orderSurcountValue) {
+        $scope.orderSurcountValue = orderSurcountValue;
         setOrderJson();
     }
     
@@ -328,6 +350,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     
     $scope.setIncludeOrderSurcount = function (includeOrderSurcount) {
         $scope.includeOrderSurcount = includeOrderSurcount;
+        setOrderJson();
+    }
+    
+    $scope.setOrderSurcountIsPercentage = function (orderSurcountIsPercentage) {
+        $scope.orderSurcountIsPercentage = orderSurcountIsPercentage;
         setOrderJson();
     }
     
