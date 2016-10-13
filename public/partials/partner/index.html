@@ -85,12 +85,20 @@
                                       <input type="checkbox" ng-model="includeOrderSurcount" ng-change="setIncludeOrderSurcount({{'includeOrderSurcount'}})"/>
                                   </td>
                                   <td>
+                                      Include Order is percentage
+                                      <input type="checkbox" ng-model="orderSurcountIsPercentage" ng-change="setOrderSurcountIsPercentage({{'orderSurcountIsPercentage'}})" />
+                                  </td>
+                                  <td>
                                       Order surcount Pos Id:
                                       <input type="text" name="orderSurcountPosId" ng-model="orderSurcountPosId" ng-change="setOrderSurcountPosId({{'orderSurcountPosId'}})">
                                   </td>
                                   <td>
-                                      Order Surcount Price:
-                                      <input type="text" name="orderSurcountPrice" ng-model="orderSurcountPrice" ng-change="setOrderSurcountPrice({{'orderSurcountPrice'}})">
+                                      Order Surcount Amount:
+                                      <input type="text" name="orderSurcountAmount" ng-model="orderSurcountAmount" ng-change="setOrderSurcountAmount({{'orderSurcountAmount'}})">
+                                  </td>
+                                  <td>
+                                      Order Surcount Value:
+                                      <input type="text" name="orderSurcountValue" ng-model="orderSurcountValue" ng-change="setOrderSurcountValue({{'orderSurcountValue'}})">
                                   </td>
                               </tr>
                               <tr>
