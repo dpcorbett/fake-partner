@@ -10,7 +10,8 @@ function MeerkatService($http, $modal, flash){
       locations: [],
       pendingTransactions: [],
       products: [],
-      surcounts: []
+      surcounts: [],
+      members: []
     }
   };
 
@@ -40,6 +41,21 @@ Meerkat.getMenu = function (locationId) {
         return Meerkat.data.products;
     })
       .catch(err=> flash.error = 'Getting Menu failed');
+};
+
+Meerkat.getMembers = function (organisationId) {
+    return $http.get('/members', {
+        headers: { 'doshii-organisation-id': organisationId }
+    })
+      .then(res => {
+        Meerkat.data.members.length = 0;
+        
+        Array.prototype.push.apply(Meerkat.data.members, res.data);
+        flash.success = 'Updated Members';
+        
+        return Meerkat.data.members;
+    })
+      .catch(err=> flash.error = 'Getting Members failed ' + organisationId );
 };
 
   Meerkat.getOrder = function(orderId) {

@@ -4,11 +4,8 @@
     <strong class="alert-heading"></strong>
     <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
   </div>
-
-
   <wizard>
-
-    <wz-step title="Location">
+   <wz-step title="Location">
       <h2>Pick a location:</h2>
       <button class="tiny" ng-click="getLocations()">Refresh</button>
 
@@ -17,21 +14,22 @@
         <th>id</th>
         <th>name</th>
         <th>address</th>
-        <th></th>
+        <th>orgId</th>
         </thead>
         <tbody>
         <tr ng-repeat="location in locations">
           <td>{{location.id}}</td>
           <td>{{location.name}}</td>
+            <td>
+                {{location.address_line1}} <br/>
+                {{location.city}} <br/>
+                {{location.state}} <br/>
+            </td>
+            <td>{{location.organisationId}}</td>
           <td>
-            {{location.address_line1}} <br/>
-            {{location.city}} <br/>
-            {{location.state}} <br/>
-          </td>
-          <td>
-            <button class="tiny" ng-click="selectLocationAndGo(location.id)">
-              Select
-            </button>
+              <button class="tiny" ng-click="selectLocationAndGo(location.id, location.organisationId)">
+                  Select
+              </button>
           </td>
         </tr>
         </tbody>
@@ -185,62 +183,145 @@
                   </tr>
               </table>
           </tab>
-          <tab heading="Pos Menu" select="selectTab('pos-menu')">
-              <h2>Pos Menu:</h2>
-              <button class="tiny" ng-click="getMenu()">Refresh</button>
-              
+      <tab heading="Pos Menu" select="selectTab('pos-menu')">
+          <h2>Pos Menu:</h2>
+          <button class="tiny" ng-click="getMenu()">Refresh</button>
+
+          <table>
+              <thead>
+              <th>PosId</th>
+              <th>Name</th>
+              <th>description</th>
+              <th>price</th>
+              <th>tags</th>
+              <th>Options</th>
+              </thead>
+              <tbody>
+              <tr ng-repeat="product in products">
+                  <td>{{product.posId}}</td>
+                  <td>{{product.name}}</td>
+                  <td>{{product.description}}</td>
+                  <td>{{product.unitPrice}}</td>
+                  <td>{{product.tags}}</td>
+                  <td>
+                      <table>
+                          <thead>
+                          <th>min</th>
+                          <th>max</th>
+                          <th>name</th>
+                          <th>Varients</th>
+                          </thead>
+                          <tbody>
+                          <tr ng-repeat="option in product.options">
+                              <td>{{option.max}}</td>
+                              <td>{{option.min}}</td>
+                              <td>{{option.name}}</td>
+                              <td>
+                                  <table>
+                                      <thead>
+                                      <th>name</th>
+                                      <th>posId</th>
+                                      <th>price</th>
+                                      <th>selectedOptionalVariant</th>
+                                      </thead>
+                                      <tbody>
+                                      <tr ng-repeat="varient in option.variants">
+                                          <td>{{varient.name}}</td>
+                                          <td>{{varient.posId}}</td>
+                                          <td>{{varient.price}}</td>
+                                          <td>{{varient.selectedOptionalVariant}}</td>
+                                      </tr>
+                                      </tbody>
+                                  </table>
+                              </td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+      </tab>
+          <tab heading="Current Members" select="selectTab('current-Members')">
+              <h2>Current Members:</h2>
+              <button class="tiny" ng-click="getMembers()">Refresh</button>
+
               <table>
                   <thead>
-                  <th>PosId</th>
+                  <th>Id</th>
+                  <th>Ref</th>
                   <th>Name</th>
-                  <th>description</th>
-                  <th>price</th>
-                  <th>tags</th>
-                  <th>Options</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Points</th>
+                  <th>Address</th>
+                  <th>Pos Details</th>
                   </thead>
                   <tbody>
-                      <tr ng-repeat="product in products">
-                          <td>{{product.posId}}</td>
-                          <td>{{product.name}}</td>
-                          <td>{{product.description}}</td>
-                          <td>{{product.unitPrice}}</td>
-                          <td>{{product.tags}}</td>
-                          <td>
-                              <table>
-                                  <thead>
-                                  <th>min</th>
-                                  <th>max</th>
-                                  <th>name</th>
-                                  <th>Varients</th>
-                                  </thead>
-                                  <tbody>
-                                  <tr ng-repeat="option in product.options">
-                                      <td>{{option.max}}</td>
-                                      <td>{{option.min}}</td>
-                                      <td>{{option.name}}</td>
-                                      <td>
-                                          <table>
-                                              <thead>
-                                              <th>name</th>
-                                              <th>posId</th>
-                                              <th>price</th>
-                                              <th>selectedOptionalVariant</th>
-                                              </thead>
-                                              <tbody>
-                                              <tr ng-repeat="varient in option.variants">
-                                                  <td>{{varient.name}}</td>
-                                                  <td>{{varient.posId}}</td>
-                                                  <td>{{varient.price}}</td>
-                                                  <td>{{varient.selectedOptionalVariant}}</td>
-                                              </tr>
-                                              </tbody>
-                                          </table>
-                                      </td>
-                                  </tr>
-                                  </tbody>
-                              </table>
-                          </td>
-                      </tr>
+                  <tr ng-repeat="member in members">
+                      <td>{{member.id}}</td>
+                      <td>{{member.ref}}</td>
+                      <td>{{member.name}}</td>
+                      <td>{{member.phone}}</td>
+                      <td>{{member.email}}</td>
+                      <td>{{member.points}}</td>
+                      <td>
+                          <table>
+                              <thead>
+                              <th>Line1</th>
+                              <th>Line2</th>
+                              <th>City</th>
+                              <th>State</th>
+                              <th>PostalCode</th>
+                              <th>Country</th>
+                              </thead>
+                              <tbody>
+                              <td>{{member.address.line1}}</td>
+                              <td>{{member.address.line2}}</td>
+                              <td>{{member.address.city}}</td>
+                              <td>{{member.address.state}}</td>
+                              <td>{{member.address.email}}</td>
+                              <td>{{member.address.points}}</td>
+                              </tbody>
+                          </table>
+                      </td>
+                      <td>
+                          <table>
+                              <thead>
+                              <th>Name</th>
+                              <th>Email</th>
+                              <th>Phone</th>
+                              <th>Address</th>
+                              </thead>
+                              <tbody>
+                              <td>{{member.OrganisationMember.name}}</td>
+                              <td>{{member.OrganisationMember.email}}</td>
+                              <td>{{member.OrganisationMember.phone}}</td>
+                              <td>
+                                  <table>
+                                      <thead>
+                                      <th>Line1</th>
+                                      <th>Line2</th>
+                                      <th>City</th>
+                                      <th>State</th>
+                                      <th>PostalCode</th>
+                                      <th>Country</th>
+                                      </thead>
+                                      <tbody>
+                                      <td>{{member.OrganisationMember.address.line1}}</td>
+                                      <td>{{member.OrganisationMember.address.line2}}</td>
+                                      <td>{{member.OrganisationMember.address.city}}</td>
+                                      <td>{{member.OrganisationMember.address.state}}</td>
+                                      <td>{{member.OrganisationMember.address.email}}</td>
+                                      <td>{{member.OrganisationMember.address.points}}</td>
+                                      </tbody>
+                                  </table>
+                              </td>
+                              </tbody>
+                          </table>
+                      </td>
+                  </tr>
+                  
                   </tbody>
               </table>
           </tab>
@@ -351,6 +432,10 @@
                                 Phone:
                                 <input type="text" name="consumerPhoneNumber" ng-model="consumerPhoneNumber" ng-change="setConsumerPhoneNumber({{'consumerPhoneNumber'}})">
                             </td>
+                            <td>
+                                Email:
+                                <input type="text" name="consumerEmail" ng-model="consumerEmail" ng-change="setConsumerEmail({{'consumerEmail'}})">
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -382,12 +467,12 @@
                                 <input type="text" name="consumerPostalCode" ng-model="consumerPostalCode" ng-change="setConsumerPostalCode({{'consumerPostalCode'}})">
                             </td>
                         </tr>
-                        <tr>
+                        <!--<tr>
                             <td>
                                 Notes:
                                 <input type="text" name="consumerNotes" ng-model="consumerNotes" ng-change="setConsumerNotes({{'consumerNotes'}})">
                             </td>
-                        </tr>
+                        </tr>-->
                     </table>
                 </td>
                 <td>

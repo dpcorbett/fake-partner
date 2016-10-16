@@ -8,12 +8,14 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
   $scope.locations = Meerkat.data.locations;
   $scope.products = Meerkat.data.products;
-  $scope.surcounts = Meerkat.data.surcounts;
+    $scope.surcounts = Meerkat.data.surcounts;
+    $scope.members = Meerkat.data.members;
   $scope.Meerkat = Meerkat;
 
   $scope.order = {};
   $scope.tableOrders = [];
-  $scope.selectedLocation = {id: null};
+  $scope.selectedLocation = { id: null };
+  $scope.selectedOrginisation = { id: null };
   $scope.selectedTable = {name: null};
     $scope.selectedTab = 'pay-at-table';
     $scope.itemPosId = undefined;
@@ -43,6 +45,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.transacitonInvoice = "Inv010101";
     $scope.consumerName = "John Doe";
     $scope.consumerPhoneNumber = "0404040404";
+    $scope.consumerEmail = "testEmail@test.com.au";
     $scope.consumerAddressLine1 = "616 St Kilda Road";
     $scope.consumerAddressLine2 = "2/8";
     $scope.consumerCity = "Melbourne";
@@ -167,14 +170,18 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     function generateConsumerJson() {
         $scope.consumerPayload = {
             "name" : $scope.consumerName,
-            "phoneNumber" : $scope.consumerPhoneNumber,
-            "addressLine1" : $scope.consumerAddressLine1,
-            "addressLine2" : $scope.consumerAddressLine2,
-            "city" : $scope.consumerCity,
-            "state" : $scope.consumerState,
-            "postalCode" : $scope.consumerPostalCode,
-            "country" : "AU",
-            "notes" : $scope.consumerNotes
+            "phone" : $scope.consumerPhoneNumber,
+            "email" : $scope.consumerEmail,
+            "address" : {
+                "line1" : $scope.consumerAddressLine1,
+                "line2" : $scope.consumerAddressLine2,
+                "city" : $scope.consumerCity,
+                "state" : $scope.consumerState,
+                "postalCode" : $scope.consumerPostalCode,
+                "country" : "AU"
+            }
+            
+            //,"notes" : $scope.consumerNotes
         }
     }
     
@@ -413,6 +420,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         setOrderJson();
     }
     
+    $scope.setConsumerEmail = function (consumerEmail) {
+        $scope.consumerEmail = consumerEmail;
+        setOrderJson();
+    }
+    
     $scope.setConsumerNotes = function (invoiceString) {
         $scope.consumerNotes = invoiceString;
         setOrderJson();
@@ -449,7 +461,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.getLocations = Meerkat.getLocations;
   $scope.startOver = () => WizardHandler.wizard().goTo(0);
 
-  $scope.selectLocationAndGo = (locId) => {
+  $scope.selectLocationAndGo = (locId, orgId) => {
+    $scope.selectedOrginisation.id = orgId;
     $scope.selectedLocation.id = locId;
     WizardHandler.wizard().next();
   };
@@ -483,6 +496,10 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
 $scope.getMenu = () => {
     Meerkat.getMenu($scope.selectedLocation.id);
+};
+
+$scope.getMembers = () => {
+    Meerkat.getMembers($scope.selectedOrginisation.id);
 };
 
   $scope.sendOrderAndGo = () => {
