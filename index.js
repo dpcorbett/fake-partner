@@ -41,8 +41,8 @@ app.get('/', function(req, res){
 app.post('/', function(req, res){
 
   var url = req.body.url;
-  var socketUrl = url.replace(/^http/, 'ws').replace(/sandbox/, 'sandbox-socket').replace(/\/api\/v.\//, '') + '/socket';
-
+  var socketUrl = url.replace(/^http/, 'ws').replace(/sandbox/, 'sandbox-socket').replace(/\/partner\/v\d/, '/app/socket');
+    console.log(socketUrl);
   res.render('partner.html', {
     meerkatHost: url,
     title: 'Doshii Test Partner',

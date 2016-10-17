@@ -63,6 +63,17 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.orderPayload = "";
     $scope.transactionPayload = "";
     $scope.consumerPayload = "";
+    $scope.newMemberName = "John Doe";
+    $scope.newMemberEmail = "JohnDoe@test.com.au";
+    $scope.newMemberPhone = "0231658974";
+    $scope.newMemberPoints = 100;
+    $scope.newMemberAddressLine1 = "34 Member Street";
+    $scope.newMemberAddressLine2 = undefined;
+    $scope.newMemberCity = "Melbourne";
+    $scope.newMemberState = "Vic";
+    $scope.newMemberPostalCode = "3000";
+    $scope.newMemberCountry = "Au";
+    $scope.newMemberJson = "";
 
     function generateOrderSurcount() {
         if ($scope.includeOrderSurcount) {
@@ -238,8 +249,6 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         generateConsumerJson();
         generateTransactionJson();
     }
-
-    setOrderJson();
     
     $scope.setPosId = function (posId) {
         if (posId) {
@@ -443,29 +452,99 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.formattedTransaction = () => JSON.stringify($scope.transactionPayload, undefined, 2);
     $scope.formattedConsumer = () => JSON.stringify($scope.consumerPayload, undefined, 2);
     
-    $scope.setFive 
+    function setNewMemberJson(){
+        $scope.newMemberJson = {
+            "name": $scope.newMemberName,
+            "email": $scope.newMemberEmail,
+            "phone": $scope.newMemberPhone,
+            "points": $scope.newMemberPoints,
+            "address": {
+                    "line1": $scope.newMemberAddressLine1,
+                    "line2": $scope.newMemberAddressLine2,
+                    "city": $scope.newMemberCity,
+                    "state": $scope.newMemberState,
+                    "country": "Au",
+                    "postalCode": $scope.newMemberPostalCode
+                }
+            
+        }
+    }
+    
+    $scope.createMember = () => {
+        setNewMemberJson();
+        Meerkat.createMember($scope.newMemberJson, $scope.selectedOrginisation.id);
+    }
 
-    $scope.fiveDollerReward = {
-        "ref": $scope.orderType,
-        "name": $scope.orderSurcountJson,
-        "description" : $scope.orderRequiredAt,
+    $scope.setNewMemberName = (newMemberName) => {
+        $scope.newMemberName = newMemberName;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberEmail = (newMemberEmail) => {
+        $scope.newMemberEmail = newMemberEmail;
+        setNewMemberJson(); 
+    }
+    $scope.setNewMemberPhone = (newMemberPhone) => {
+        $scope.newMemberPhone = newMemberPhone;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberPoints = (newMemberPoints) => {
+        if (newMemberPoints) {
+            $scope.newMemberPoints = newMemberPoints;
+        } else {
+            $scope.newMemberPoints = undefined;
+        }
+        setNewMemberJson();
+    }
+    $scope.setNewMemberAddressLine1 = (newMemberAddressLine1) => {
+        if (newMemberAddressLine1) {
+            $scope.newMemberAddressLine1 = newMemberAddressLine1;
+        } else {
+            $scope.newMemberAddressLine1 = undefined;
+        }
+        setNewMemberJson();
+    }
+    $scope.setNewMemberAddressLine2 = (newMemberAddressLine2) => {
+        if (newMemberAddressLine2) {
+            $scope.newMemberAddressLine2 = newMemberAddressLine2;
+        } else {
+            $scope.newMemberAddressLine2 = undefined;
+        }
+        setNewMemberJson();
+    }
+    $scope.setNewMemberCity = (newMemberCity) => {
+        $scope.newMemberCity = newMemberCity;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberState = (newMemberState) => {
+        $scope.newMemberState = newMemberState;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberPostalCode = (newMemberPostalCode) => {
+        $scope.newMemberPostalCode = newMemberPostalCode;
+        setNewMemberJson();
+    } 
+
+    $scope.fiveDollerReward = [{
+        "ref": "1",
+        "name": "Five Dollar Reward",
+        "description" : "Five Dollars Off Check",
         "description" : "Five Dollar Reward",
         "surcountType" : "absolute",
         "surcountAmount" : "500"
-    }
+    }]
 
-    $scope.formattedFiveDollarRewardToSend = () => JSON.stringify($scope.fiveDollerReward, undefined, 2);
-    $scope.formattedFivePercentRewardToSend = () => JSON.stringify($scope.fivePercentReward, undefined, 2);
-
-
-    $scope.fivePercentReward = {
-        "ref": $scope.orderType,
-        "name": $scope.orderSurcountJson,
-        "description" : $scope.orderRequiredAt,
+    $scope.fivePercentReward = [{
+        "ref": "1",
+        "name": "Five Percent Reward",
+        "description" : "Five Percent Off Check",
         "description" : "Five Percent Reward",
         "surcountType" : "percentage",
         "surcountAmount" : "5"
-    }
+    }]
+    
+    $scope.formattedNewMember = () => JSON.stringify($scope.newMemberJson, undefined, 2);
+    $scope.formattedFiveDollarRewardToSend = () => JSON.stringify($scope.fiveDollerReward, undefined, 2);
+    $scope.formattedFivePercentRewardToSend = () => JSON.stringify($scope.fivePercentReward, undefined, 2);
 
     $scope.formattedJsonToSend = () => {
         var sendBody = {};
@@ -477,16 +556,16 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
     };
 
-    $scope.formattedFiveDollarRewardToSend = () => {
+    $scope.getFiveDollarRewardToSend = () => {
         var sendBody = {};
-        sendBody = $scope.fiveDollerReward;
-        return JSON.stringify(sendBody, undefined, 2);
+        sendBody = $scope.formattedFiveDollarRewardToSend();
+        return sendBody;
     };
 
-    $scope.formattedFivePercentRewardToSend = () => {
+    $scope.getFivePercentRewardToSend = () => {
         var sendBody = {};
-        sendBody = $scope.fivePercentReward;
-        return JSON.stringify(sendBody, undefined, 2);
+        sendBody = $scope.formattedFivePercentRewardToSend();
+        return sendBody;
     };
 
     $scope.selectTab = function (tabName) {
@@ -539,18 +618,23 @@ $scope.getMembers = () => {
 
 
 $scope.addFiveDollarReward = (memberId) => {
-
+    Meerkat.addFiveDollarReward(memberId, $scope.selectedOrginisation.id, $scope.getFiveDollarRewardToSend());
 };
 
 $scope.addFivePercentReward = (memberId) => {
-
+    Meerkat.addFivePercentReward(memberId, $scope.selectedOrginisation.id, $scope.getFivePercentRewardToSend());
 };
 
 $scope.deleteMember = (memberId) => {
-    Meerkat.deleteMember(memberId);
+    Meerkat.deleteMember(memberId, $scope.selectedOrginisation.id);
 }
 
-
+$scope.addFiftyPointsToMember = (member) => {
+member.points = member.points + 50;
+    
+    member.address.country = "Au";
+    Meerkat.updateMember(member.id, $scope.selectedOrginisation.id, member);
+}
 
   $scope.sendOrderAndGo = () => {
     Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)

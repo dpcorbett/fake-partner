@@ -59,7 +59,7 @@ Meerkat.addFiveDollarReward = function (memberId, organisationId, jsonToSend) {
         var response = angular.copy(res.data);
         console.log(response);
         flash.success = 'Reward $5 added';
-        return order;
+        return;
     })
     .catch(err => {
         flash.error = 'Reward $5 failed to add: ' + err.statusText + getErrorMessage(err.data);
@@ -91,9 +91,11 @@ Meerkat.addFivePercentReward = function (memberId, organisationId, jsonToSend) {
     });
 };
 
-Meerkat.deleteMember = function (memberId) {
+Meerkat.deleteMember = function (memberId, organisationId) {
     
-    return $http.delete('/members/' + memberId)
+    return $http.delete('/members/' + memberId, {
+        headers: { 'doshii-organisation-id': organisationId }
+    })
       .then(res => {
         var response = angular.copy(res.data);
         console.log(response);
@@ -103,6 +105,57 @@ Meerkat.deleteMember = function (memberId) {
       .catch(err=> flash.error = 'Member Delete failed' + err.statusText + getErrorMessage(err.data));
 };
 
+Meerkat.updateMember = function (memberId, organisationId, jsonToSend) {
+    delete jsonToSend.id;
+    delete jsonToSend.uri;
+    delete jsonToSend.updatedAt;
+    delete jsonToSend.createdAt;
+    delete jsonToSend.OrganisationMember;
+    delete jsonToSend.ref;
+    var req = {
+        method: 'PUT',
+        url: '/members/' + memberId,
+        data: jsonToSend,
+        headers: {
+        'doshii-organisation-id': organisationId
+        }
+        };
+
+        return $http(req)
+        .then(res => {
+        var response = angular.copy(res.data);
+        console.log(response);
+        flash.success = 'Added 50 points';
+        return;
+        })
+        .catch(err => {
+        flash.error = 'add fifty points failed: ' + err.statusText + getErrorMessage(err.data);
+        throw err;
+    });
+};
+
+Meerkat.createMember = function (jsonToSend, organisationId) {
+    var req = {
+        method: 'POST',
+        url: '/members',
+        data: jsonToSend,
+        headers: {
+        'doshii-organisation-id': organisationId
+        }
+    };
+
+    return $http(req)
+        .then(res => {
+        var response = angular.copy(res.data);
+        console.log(response);
+        flash.success = 'Member Created';
+        return;
+    })
+        .catch(err => {
+        flash.error = 'Member Create Failed ' + err.statusText + getErrorMessage(err.data);
+        throw err;
+    });
+};
 
   Meerkat.getOrder = function(orderId) {
     return $http.get('/orders/' + orderId)
