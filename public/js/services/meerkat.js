@@ -43,20 +43,66 @@ Meerkat.getMenu = function (locationId) {
       .catch(err=> flash.error = 'Getting Menu failed');
 };
 
-Meerkat.getMembers = function (organisationId) {
-    return $http.get('/members', {
-        headers: { 'doshii-organisation-id': organisationId }
+Meerkat.addFiveDollarReward = function (memberId, organisationId, jsonToSend) {
+    
+    var req = {
+        method: 'POST',
+        url: '/members/' + memberId + '/rewards',
+        data: jsonToSend,
+        headers: {
+            'doshii-organisation-id': organisationId
+        }
+    };
+    
+    return $http(req)
+        .then(res => {
+        var response = angular.copy(res.data);
+        console.log(response);
+        flash.success = 'Reward $5 added';
+        return order;
     })
-      .then(res => {
-        Meerkat.data.members.length = 0;
-        
-        Array.prototype.push.apply(Meerkat.data.members, res.data);
-        flash.success = 'Updated Members';
-        
-        return Meerkat.data.members;
-    })
-      .catch(err=> flash.error = 'Getting Members failed ' + organisationId );
+    .catch(err => {
+        flash.error = 'Reward $5 failed to add: ' + err.statusText + getErrorMessage(err.data);
+        throw err;
+    });
 };
+
+Meerkat.addFivePercentReward = function (memberId, organisationId, jsonToSend) {
+
+    var req = {
+    method: 'POST',
+    url: '/members/' + memberId + '/rewards',
+    data: jsonToSend,
+    headers: {
+    'doshii-organisation-id': organisationId
+    }
+    };
+
+    return $http(req)
+    .then(res => {
+    var response = angular.copy(res.data);
+    console.log(response);
+    flash.success = 'Reward $5 added';
+    return;
+    })
+    .catch(err => {
+    flash.error = 'Reward $5 failed to add: ' + err.statusText + getErrorMessage(err.data);
+    throw err;
+    });
+};
+
+Meerkat.deleteMember = function (memberId) {
+    
+    return $http.delete('/members/' + memberId)
+      .then(res => {
+        var response = angular.copy(res.data);
+        console.log(response);
+        flash.success = 'Member Deleted';
+            return;
+        })
+      .catch(err=> flash.error = 'Member Delete failed' + err.statusText + getErrorMessage(err.data));
+};
+
 
   Meerkat.getOrder = function(orderId) {
     return $http.get('/orders/' + orderId)
@@ -201,6 +247,21 @@ Meerkat.getMembers = function (organisationId) {
       .then(() => Meerkat.data.pendingTransactions.length = 0)
       .catch(err => flash.error = 'Failed to complete transaction: ' + err.message || err);
   };
+
+    Meerkat.getMembers = function (organisationId) {
+        return $http.get('/members', {
+            headers: { 'doshii-organisation-id': organisationId }
+        })
+            .then(res => {
+                Meerkat.data.members.length = 0;
+
+            Array.prototype.push.apply(Meerkat.data.members, res.data);
+            flash.success = 'Updated Members';
+
+            return Meerkat.data.members;
+        })
+            .catch(err=> flash.error = 'Getting Members failed ' + organisationId );
+    };
 
   return Meerkat;
 }

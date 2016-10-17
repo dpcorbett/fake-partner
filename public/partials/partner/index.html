@@ -4,8 +4,11 @@
     <strong class="alert-heading"></strong>
     <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
   </div>
+
+
   <wizard>
-   <wz-step title="Location">
+
+    <wz-step title="Location">
       <h2>Pick a location:</h2>
       <button class="tiny" ng-click="getLocations()">Refresh</button>
 
@@ -15,6 +18,7 @@
         <th>name</th>
         <th>address</th>
         <th>orgId</th>
+        <th></th>
         </thead>
         <tbody>
         <tr ng-repeat="location in locations">
@@ -320,6 +324,22 @@
                               </tbody>
                           </table>
                       </td>
+                      <td>
+                          <button class="tiny" ng-click="addFiveDollarReward(member.id)">
+                              Add $5 reward
+                          </button>
+                      </td>
+                      <td>
+                          <button class="tiny" ng-click="addFivePercentReward(member.id)">
+                              Add 5% reward
+                          </button>
+                      </td>
+                      <td>
+                          <button class="tiny" ng-click="deleteMember(member.id)">
+                              Delete
+                          </button>
+                      </td>
+
                   </tr>
                   
                   </tbody>

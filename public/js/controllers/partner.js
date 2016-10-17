@@ -442,7 +442,30 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2);
     $scope.formattedTransaction = () => JSON.stringify($scope.transactionPayload, undefined, 2);
     $scope.formattedConsumer = () => JSON.stringify($scope.consumerPayload, undefined, 2);
+    
+    $scope.setFive 
 
+    $scope.fiveDollerReward = {
+        "ref": $scope.orderType,
+        "name": $scope.orderSurcountJson,
+        "description" : $scope.orderRequiredAt,
+        "description" : "Five Dollar Reward",
+        "surcountType" : "absolute",
+        "surcountAmount" : "500"
+    }
+
+    $scope.formattedFiveDollarRewardToSend = () => JSON.stringify($scope.fiveDollerReward, undefined, 2);
+    $scope.formattedFivePercentRewardToSend = () => JSON.stringify($scope.fivePercentReward, undefined, 2);
+
+
+    $scope.fivePercentReward = {
+        "ref": $scope.orderType,
+        "name": $scope.orderSurcountJson,
+        "description" : $scope.orderRequiredAt,
+        "description" : "Five Percent Reward",
+        "surcountType" : "percentage",
+        "surcountAmount" : "5"
+    }
 
     $scope.formattedJsonToSend = () => {
         var sendBody = {};
@@ -453,7 +476,19 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         return JSON.stringify(sendBody, undefined, 2);
 
     };
-    
+
+    $scope.formattedFiveDollarRewardToSend = () => {
+        var sendBody = {};
+        sendBody = $scope.fiveDollerReward;
+        return JSON.stringify(sendBody, undefined, 2);
+    };
+
+    $scope.formattedFivePercentRewardToSend = () => {
+        var sendBody = {};
+        sendBody = $scope.fivePercentReward;
+        return JSON.stringify(sendBody, undefined, 2);
+    };
+
     $scope.selectTab = function (tabName) {
         $scope.selectedTab = tabName;
     };
@@ -501,6 +536,21 @@ $scope.getMenu = () => {
 $scope.getMembers = () => {
     Meerkat.getMembers($scope.selectedOrginisation.id);
 };
+
+
+$scope.addFiveDollarReward = (memberId) => {
+
+};
+
+$scope.addFivePercentReward = (memberId) => {
+
+};
+
+$scope.deleteMember = (memberId) => {
+    Meerkat.deleteMember(memberId);
+}
+
+
 
   $scope.sendOrderAndGo = () => {
     Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
