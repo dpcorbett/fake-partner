@@ -42,7 +42,6 @@ app.post('/', function(req, res){
 
   var url = req.body.url;
   var socketUrl = url.replace(/^http/, 'ws').replace(/sandbox/, 'sandbox-socket').replace(/\/partner\/v\d/, '/app/socket');
-    console.log(socketUrl);
   res.render('partner.html', {
     meerkatHost: url,
     title: 'Doshii Test Partner',

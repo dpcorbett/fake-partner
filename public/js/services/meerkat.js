@@ -3,17 +3,108 @@ angular
   .module('FakePartnerApp')
   .factory('Meerkat', [ '$http', '$modal', 'flash', MeerkatService ]);
 
-function MeerkatService($http, $modal, flash){
+function MeerkatService($http, $modal, flash) {
 
-  var Meerkat = {
-    data: {
-      locations: [],
-      pendingTransactions: [],
-      products: [],
-      surcounts: [],
-      members: []
-    }
+    var Meerkat = {
+        data: {
+            locations: [],
+            pendingTransactions: [],
+            products: [],
+            surcounts: [],
+            members: [],
+            acceptRewardsRedemptions: false,
+            acceptPointsRedemptions: false,
+            organisationId: ""
+        }
   };
+
+    Meerkat.processRewardsRedemption = function(memberId, rewardId) {
+        if (Meerkat.acceptRewardsRedemptions) {
+            var req = {
+                method: 'PUT',
+                url: '/members/' + memberId + '/rewards/' + rewardId + '/accept',
+                headers: {
+                    'doshii-organisation-id': Meerkat.organisationId
+                }
+            };
+
+            return $http(req)
+                .then(res => {
+                    var response = angular.copy(res.data);
+                    console.log(response);
+                    flash.success = 'Reward Accepted';
+                    return;
+                })
+                .catch(err => {
+                    flash.error = 'Reward Accept Failed: ' + err.statusText + getErrorMessage(err.data);
+                    throw err;
+                });
+        } else {
+            var req = {
+                method: 'PUT',
+                url: '/members/' + memberId + '/rewards/' + rewardId + '/reject',
+                headers: {
+                    'doshii-organisation-id': Meerkat.organisationId
+                }
+            };
+
+            return $http(req)
+                .then(res => {
+                    var response = angular.copy(res.data);
+                    console.log(response);
+                    flash.success = 'Reward Rejected';
+                    return;
+                })
+                .catch(err => {
+                    flash.error = 'Reward Redect Failed: ' + err.statusText + getErrorMessage(err.data);
+                    throw err;
+                });
+        }
+    };
+
+    Meerkat.processPointsRedemption = function(memberId) {
+        if (Meerkat.acceptPointsRedemptions) {
+            var req = {
+                method: 'PUT',
+                url: '/members/' + memberId + '/points/accept',
+                headers: {
+                    'doshii-organisation-id': Meerkat.organisationId
+                }
+            };
+
+            return $http(req)
+                .then(res => {
+                    var response = angular.copy(res.data);
+                    console.log(response);
+                    flash.success = 'Points Accepted';
+                    return;
+                })
+                .catch(err => {
+                    flash.error = 'Points Accept Failed: ' + err.statusText + getErrorMessage(err.data);
+                    throw err;
+                });
+        } else {
+            var req = {
+                method: 'PUT',
+                url: '/members/' + memberId + '/points/reject',
+                headers: {
+                    'doshii-organisation-id': Meerkat.organisationId
+                }
+            };
+
+            return $http(req)
+                .then(res => {
+                    var response = angular.copy(res.data);
+                    console.log(response);
+                    flash.success = 'Points rejected';
+                    return;
+                })
+                .catch(err => {
+                    flash.error = 'Points reject Failed: ' + err.statusText + getErrorMessage(err.data);
+                    throw err;
+                });
+        }
+    };
 
   Meerkat.getLocations = function() {
     return $http.get('/locations')

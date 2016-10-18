@@ -1,10 +1,10 @@
 angular
   .module('FakePartnerApp')
   .service('Socket', [
-    'clientId', 'clientSecret', 'websocketUrl', 'doshiiEmitter', SocketService
+    'clientId', 'clientSecret', 'websocketUrl', 'doshiiEmitter', 'Meerkat', SocketService
   ]);
 
-function SocketService(clientId, clientSecret, websocketUrl, doshiiEmitter){
+function SocketService(clientId, clientSecret, websocketUrl, doshiiEmitter, Meerkat){
   var ws = null;
 
   function init() {
@@ -43,7 +43,16 @@ function SocketService(clientId, clientSecret, websocketUrl, doshiiEmitter){
       if (!data.emit) {
         return console.debug('received ' + '"' + data + '"');
       }
-
+      if (data.emit[0].indexOf("points_redemption", 0) > -1){
+                //is a points redemption
+          console.debug("Process Points Redemption");
+                Meerkat.processPointsRedemption(data.emit[1].memberId);
+      }
+      if (data.emit[0].indexOf("reward_redemption", 0) > -1) {
+                //is a rewards redemption
+                console.debug("Process Rewards Redemption");
+                Meerkat.processRewardsRedemption(data.emit[1].memberId, data.emit[1].rewardId);
+      }
       console.debug(data.emit[0], data.emit[1]);
       doshiiEmitter.emit(data.emit[0], data.emit[1]);
     };

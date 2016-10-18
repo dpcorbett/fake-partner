@@ -6,6 +6,9 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   console.log('loaded partner ctrl');
   Meerkat.getLocations();
 
+
+    $scope.acceptRewardsRedemptions = false;
+    $scope.acceptPointsRedemptions = false;
   $scope.locations = Meerkat.data.locations;
   $scope.products = Meerkat.data.products;
     $scope.surcounts = Meerkat.data.surcounts;
@@ -250,6 +253,16 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         generateTransactionJson();
     }
     
+    $scope.setAcceptRewardsRedemptions = function (acceptRewardsRedemptions) {
+        $scope.acceptRewardsRedemptions = acceptRewardsRedemptions;
+        Meerkat.acceptRewardsRedemptions = acceptRewardsRedemptions;
+    }
+    
+    $scope.setAcceptPointsRedemptions = function (acceptPointsRedemptions) {
+        $scope.acceptPointsRedemptions = acceptPointsRedemptions;
+        Meerkat.acceptPointsRedemptions = acceptPointsRedemptions;
+    }
+
     $scope.setPosId = function (posId) {
         if (posId) {
             $scope.itemPosId = posId;
@@ -578,6 +591,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.selectLocationAndGo = (locId, orgId) => {
     $scope.selectedOrginisation.id = orgId;
     $scope.selectedLocation.id = locId;
+    Meerkat.organisationId = orgId;
     WizardHandler.wizard().next();
   };
 
