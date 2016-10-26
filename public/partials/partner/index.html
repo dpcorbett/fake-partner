@@ -582,12 +582,6 @@
                                 <input type="text" name="consumerPostalCode" ng-model="consumerPostalCode" ng-change="setConsumerPostalCode({{'consumerPostalCode'}})">
                             </td>
                         </tr>
-                        <!--<tr>
-                            <td>
-                                Notes:
-                                <input type="text" name="consumerNotes" ng-model="consumerNotes" ng-change="setConsumerNotes({{'consumerNotes'}})">
-                            </td>
-                        </tr>-->
                     </table>
                 </td>
                 <td>
@@ -623,6 +617,16 @@
                             <td>
                                 Override Transaction With Amount
                                 <input type="text" name="manualPaymentTotal" ng-model="manualPaymentTotal" ng-change="setManualPaymentTotal({{'manualPaymentTotal'}})">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Include Tips
+                                <input type="checkbox" name="includeTips" ng-model="includeTips" ng-change="setIncludeTips({{'includeTips'}})" />
+                            </td>
+                            <td>
+                                Tips Amount
+                                <input type="text" name="tipsAmount" ng-model="tipsAmount" ng-change="setTipsAmount({{'tipsAmount'}})">
                             </td>
                         </tr>
                         <tr>

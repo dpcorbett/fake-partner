@@ -77,6 +77,9 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.newMemberPostalCode = "3000";
     $scope.newMemberCountry = "Au";
     $scope.newMemberJson = "";
+    $scope.tipsAmount = 100;
+    $scope.includeTips = false;
+
 
     function generateOrderSurcount() {
         if ($scope.includeOrderSurcount) {
@@ -202,22 +205,46 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     function generateTransactionJson() {
         generateOrderTotal();
         if ($scope.manualPaymentTotal) {
-            $scope.transactionPayload = [
-                {
-                    "amount": parseInt($scope.manualPaymentTotal).toString(),
-                    "prepaid": true,
-                    "invoice": $scope.transacitonInvoice
-                }
-            ];
-        } else {
-            if ($scope.includeTransaction) {
+            if ($scope.includeTips) {
                 $scope.transactionPayload = [
                     {
-                        "amount": $scope.transactionTotal,
+                        "amount": parseInt($scope.manualPaymentTotal).toString(),
+                        "prepaid": true,
+                        "invoice": $scope.transacitonInvoice,
+                        "tip": $scope.tipsAmount
+                    }
+                ];
+            } else {
+                $scope.transactionPayload = [
+                    {
+                        "amount": parseInt($scope.manualPaymentTotal).toString(),
                         "prepaid": true,
                         "invoice": $scope.transacitonInvoice
                     }
                 ];
+            }
+            
+        } else {
+            if ($scope.includeTransaction) {
+                if ($scope.includeTips) {
+                    $scope.transactionPayload = [
+                        {
+                            "amount": $scope.transactionTotal,
+                            "prepaid": true,
+                            "invoice": $scope.transacitonInvoice,
+                            "tip": $scope.tipsAmount
+                        }
+                    ];
+                } else {
+                    $scope.transactionPayload = [
+                        {
+                            "amount": $scope.transactionTotal,
+                            "prepaid": true,
+                            "invoice": $scope.transacitonInvoice
+                        }
+                    ];
+                }
+                
             } else {
                 $scope.transactionPayload = [];
             }
@@ -458,6 +485,16 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     
     $scope.setManualPaymentTotal = function (manualPaymentAmount) {
         $scope.manualPaymentTotal = manualPaymentAmount;
+        setOrderJson();
+    }
+    
+    $scope.setTipsAmount = function (tipsAmount) {
+        $scope.tipsAmount = tipsAmount;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeTips = function (includeTips) {
+        $scope.includeTips = includeTips;
         setOrderJson();
     }
 
