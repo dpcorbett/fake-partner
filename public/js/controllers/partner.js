@@ -13,6 +13,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.products = Meerkat.data.products;
     $scope.surcounts = Meerkat.data.surcounts;
     $scope.members = Meerkat.data.members;
+    $scope.reserves = Meerkat.data.reserves;
   $scope.Meerkat = Meerkat;
 
   $scope.order = {};
@@ -79,7 +80,23 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.newMemberJson = "";
     $scope.tipsAmount = 100;
     $scope.includeTips = false;
-
+    
+    $scope.newReserveTableNames = "";
+    $scope.newReserveDate = "";
+    $scope.newReserveCovers = "2";
+    $scope.newReserveRef = "";
+    $scope.newReserveName = "John Doe";
+    $scope.newReserveEmail = "JohnDoe@test.com.au";
+    $scope.newReservePhone = "0231658974";
+    $scope.newReservePoints = 100;
+    $scope.newReserveAddressLine1 = "34 Member Street";
+    $scope.newReserveAddressLine2 = undefined;
+    $scope.newReserveCity = "Melbourne";
+    $scope.newReserveState = "Vic";
+    $scope.newReservePostalCode = "3000";
+    $scope.newReserveCountry = "Au";
+    $scope.newReserveJson = ""
+    $scope.reservationStartDate = new Date().toISOString().substring(0, 10);
 
     function generateOrderSurcount() {
         if ($scope.includeOrderSurcount) {
@@ -687,6 +704,92 @@ member.points = member.points + 50;
     Meerkat.updateMember(member.id, $scope.selectedOrginisation.id, member);
 }
 
+    $scope.getReservations = () => {
+        var f = new Date($scope.reservationStartDate);
+        var t = new Date().setDate(f.getDate() + 2);
+        
+        Meerkat.getReservations($scope.selectedLocation.id, Math.round(f.valueOf()/1000), Math.round(t.valueOf()/1000));
+    };
+    
+    function setNewReserveJson(){
+        $scope.newReserveJson = {
+            "tableNames": $scope.newReserveTableNames.split(','),
+            "date": $scope.newReserveDate,
+            "covers": $scope.newReserveCovers,
+            "ref": $scope.newReserveRef,
+            "consumer": {
+                "name": $scope.newReserveName,
+                "email": $scope.newReserveEmail,
+                "phone": $scope.newReservePhone,
+                "address": {
+                    "line1": $scope.newReserveAddressLine1,
+                    "line2": $scope.newReserveAddressLine2,
+                    "city": $scope.newReserveCity,
+                    "state": $scope.newReserveState,
+                    "country": "Au",
+                    "postalCode": $scope.newReservePostalCode
+                }
+            }
+            
+        }
+    }
+    $scope.setNewReserveTableNames = (newReserveTableNames) => {
+        $scope.newReserveTableNames = newReserveTableNames;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveDate = (newReserveDate) => {
+        $scope.newReserveDate = newReserveDate;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveCovers = (newReserveCovers) => {
+        $scope.newReserveCovers = newReserveCovers;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveRef = (newReserveRef) => {
+        $scope.newReserveRef = newReserveRef;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveName = (newReserveName) => {
+        $scope.newReserveName = newReserveName;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveEmail = (newReserveEmail) => {
+        $scope.newReserveEmail = newReserveEmail;
+        setNewReserveJson();
+    }
+    $scope.setNewReservePhone = (newReservePhone) => {
+        $scope.newReservePhone = newReservePhone;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressLine1 = (newReserveAddressLine1) => {
+        $scope.newReserveAddressLine1 = newReserveAddressLine1;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressLine2 = (newReserveAddressLine2) => {
+        $scope.newReserveAddressLine2 = newReserveAddressLine2;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressCity = (newReserveAddressCity) => {
+        $scope.setNewReserveAddressCity = newReserveAddressCity;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressState = (newReserveAddressState) => {
+        $scope.newReserveAddressState = newReserveAddressState;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressPostalCode = (newReserveAddressPostalCode) => {
+        $scope.newReserveAddressPostalCode = newReserveAddressPostalCode;
+        setNewReserveJson();
+    }
+    
+    $scope.createReservation = () => {
+        setNewReserveJson();
+        Meerkat.createReservation($scope.newReserveJson, $scope.selectedLocation.id);
+    }
+    
+    
+    $scope.formattedReservation = () => JSON.stringify($scope.newReserveJson, undefined, 2);
+    
   $scope.sendOrderAndGo = () => {
     Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
       .then(res => {
