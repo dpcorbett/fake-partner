@@ -440,6 +440,169 @@
         <button class="tiny" ng-click="createMember()">Create</button>
         <!--<a class="button small" wz-next>Next</a>-->
     </tab>
+    <tab heading="Current Reservations" select="selectTab('current-Reservations')">
+        <h2>Current Reservations:</h2>
+        <div>
+            Enter a start date (yyyy-mm-dd) to search for reservations
+        </div>
+        
+        <input type="text" ng-model="reservationStartDate"/>
+        
+        <button class="tiny" ng-click="getReservations()">Refresh</button>
+        <table>
+            <thead>
+                <th>Id</th>
+                <th>Ref</th>
+                <th>Table Names</th>
+                <th>Date</th>
+                <th>Covers</th>
+                <th>Checkin Id</th>
+                <th>Consumer</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="reserve in reserves">
+                    <td>{{reserve.id}}</td>
+                    <td>{{reserve.ref}}</td>
+                    <td>
+                        <table>
+                            <tbody>
+                                <tr ng-repeat="table in reserve.tableNames">
+                                    <td>{{table}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>{{reserve.date}}</td>
+                    <td>{{reserve.covers}}</td>
+                    <td>{{reserve.checkinId}}</td>
+                    <td>
+                        <table>
+                            <thead>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                            </thead>
+                            <tbody>
+                                <td>{{reserve.consumer.name}}</td>
+                                <td>{{reserve.consumer.email}}</td>
+                                <td>{{reserve.consumer.phone}}</td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                            <th>Line1</th>
+                                            <th>Line2</th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>PostalCode</th>
+                                            <th>Country</th>
+                                        </thead>
+                                        <tbody>
+                                            <td>{{reserve.consumer.address.line1}}</td>
+                                            <td>{{reserve.consumer.address.line2}}</td>
+                                            <td>{{reserve.consumer.address.city}}</td>
+                                            <td>{{reserve.consumer.address.state}}</td>
+                                            <td>{{reserve.consumer.address.postalCode}}</td>
+                                            <td>{{reserve.consumer.address.country}}</td>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </tab>
+    
+    <tab heading="Add Reservation" select="selectTab('add-reservation')">
+        <h2>Add Reservation:</h2>
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td>
+                                Table Names:
+                                <input type="text" name="newReserveTableNames" ng-model="newReserveTableNames" ng-change="setNewReserveTableNames({{'newReserveTableNames'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Booking Date:
+                                <input type="text" name="newReserveDate" ng-model="newReserveDate" ng-change="setNewReserveDate({{'newReserveDate'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Covers:
+                                <input type="text" name="newReserveCovers" ng-model="newReserveCovers" ng-change="setNewReserveCovers({{'newReserveCovers'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Ref:
+                                <input type="text" name="newReserveRef" ng-model="newReserveRef" ng-change="setNewReserveRef({{'newReserveRef'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Name:
+                                <input type="text" name="newReserveName" ng-model="newReserveName" ng-change="setNewReserveName({{'newReserveName'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Email:
+                                <input type="text" name="newReserveEmail" ng-model="newReserveEmail" ng-change="setNewReserveEmail({{'newReserveEmail'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Phone:
+                                <input type="text" name="newReservePhone" ng-model="newReservePhone" ng-change="setNewReservePhone({{'newReservePhone'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Address Line1:
+                                <input type="text" name="newReserveAddressLine1" ng-model="newReserveAddressLine1" ng-change="setNewReserveAddressLine1({{'newReserveAddressLine1'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Address Line2:
+                                <input type="text" name="newReserveAddressLine2" ng-model="newReserveAddressLine2" ng-change="setNewReserveAddressLine2({{'newReserveAddressLine2'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Address City:
+                                <input type="text" name="newReserveCity" ng-model="newReserveCity" ng-change="setNewReserveCity({{'newReserveCity'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Address State:
+                                <input type="text" name="newReserveState" ng-model="newReserveState" ng-change="setNewReserveState({{'newReserveState'}})">
+                                    </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Consumer Address PostalCode:
+                                <input type="text" name="newReservePostalCode" ng-model="newReservePostalCode" ng-change="setNewReservePostalCode({{'newReservePostalCode'}})">
+                                    </td>
+                        </tr>
+                    </table>
+                    <button class="tiny" ng-click="createReservation()">Create</button>
+                </td>
+                <td>
+                    Reservation JSON
+                    <pre class="code-block"><code>{{formattedReservation()}}</code></pre>
+                </td>
+            </tr>
+        </table>
+    </tab>
     </tabset>
 
     </wz-step>

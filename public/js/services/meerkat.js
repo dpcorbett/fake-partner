@@ -12,6 +12,7 @@ function MeerkatService($http, $modal, flash) {
             products: [],
             surcounts: [],
             members: [],
+            reserves: [],
             acceptRewardsRedemptions: false,
             acceptPointsRedemptions: false,
             organisationId: ""
@@ -407,5 +408,47 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
             .catch(err=> flash.error = 'Getting Members failed ' + organisationId );
     };
 
+    Meerkat.getReservations = function(locationId, fromDate, toDate) {
+        var req = {
+        method: 'GET',
+        url: '/bookings?from=' + fromDate + '&to=' + toDate,
+        headers: {
+            'doshii-location-id': locationId
+        }
+        };
+        console.debug(req);
+        return $http(req)
+        .then(res => {
+              Meerkat.data.reserves.length = 0;
+              Array.prototype.push.apply(Meerkat.data.reserves, res.data);
+              flash.success = 'Got Reservations';
+              return Meerkat.data.reserves;
+              })
+        .catch(err => flash.error = 'Getting Reservations failed ' + locationId );
+    };
+    
+    Meerkat.createReservation = function (jsonToSend, locationId) {
+        var req = {
+        method: 'POST',
+        url: '/bookings',
+        data: jsonToSend,
+        headers: {
+            'doshii-location-id': locationId
+        }
+        };
+        
+        return $http(req)
+        .then(res => {
+              var response = angular.copy(res.data);
+              console.log(response);
+              flash.success = 'Booking Created';
+              return;
+              })
+        .catch(err => {
+               flash.error = 'Booking Create Failed ' + err.statusText + getErrorMessage(err.data);
+               throw err;
+               });
+    };
+    
   return Meerkat;
 }
