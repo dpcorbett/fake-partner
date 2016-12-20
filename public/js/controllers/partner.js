@@ -6,14 +6,20 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   console.log('loaded partner ctrl');
   Meerkat.getLocations();
 
+
+    $scope.acceptRewardsRedemptions = false;
+    $scope.acceptPointsRedemptions = false;
   $scope.locations = Meerkat.data.locations;
   $scope.products = Meerkat.data.products;
-  $scope.surcounts = Meerkat.data.surcounts;
+    $scope.surcounts = Meerkat.data.surcounts;
+    $scope.members = Meerkat.data.members;
+    $scope.reserves = Meerkat.data.reserves;
   $scope.Meerkat = Meerkat;
 
   $scope.order = {};
   $scope.tableOrders = [];
-  $scope.selectedLocation = {id: null};
+  $scope.selectedLocation = { id: null };
+  $scope.selectedOrginisation = { id: null };
   $scope.selectedTable = {name: null};
     $scope.selectedTab = 'pay-at-table';
     $scope.itemPosId = undefined;
@@ -43,6 +49,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.transacitonInvoice = "Inv010101";
     $scope.consumerName = "John Doe";
     $scope.consumerPhoneNumber = "0404040404";
+    $scope.consumerEmail = "testEmail@test.com.au";
     $scope.consumerAddressLine1 = "616 St Kilda Road";
     $scope.consumerAddressLine2 = "2/8";
     $scope.consumerCity = "Melbourne";
@@ -60,6 +67,36 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.orderPayload = "";
     $scope.transactionPayload = "";
     $scope.consumerPayload = "";
+    $scope.newMemberName = "John Doe";
+    $scope.newMemberEmail = "JohnDoe@test.com.au";
+    $scope.newMemberPhone = "0231658974";
+    $scope.newMemberPoints = 100;
+    $scope.newMemberAddressLine1 = "34 Member Street";
+    $scope.newMemberAddressLine2 = undefined;
+    $scope.newMemberCity = "Melbourne";
+    $scope.newMemberState = "Vic";
+    $scope.newMemberPostalCode = "3000";
+    $scope.newMemberCountry = "Au";
+    $scope.newMemberJson = "";
+    $scope.tipsAmount = 100;
+    $scope.includeTips = false;
+    
+    $scope.newReserveTableNames = "";
+    $scope.newReserveDate = "";
+    $scope.newReserveCovers = "2";
+    $scope.newReserveRef = "";
+    $scope.newReserveName = "John Doe";
+    $scope.newReserveEmail = "JohnDoe@test.com.au";
+    $scope.newReservePhone = "0231658974";
+    $scope.newReservePoints = 100;
+    $scope.newReserveAddressLine1 = "34 Member Street";
+    $scope.newReserveAddressLine2 = undefined;
+    $scope.newReserveCity = "Melbourne";
+    $scope.newReserveState = "Vic";
+    $scope.newReservePostalCode = "3000";
+    $scope.newReserveCountry = "Au";
+    $scope.newReserveJson = ""
+    $scope.reservationStartDate = new Date().toISOString().substring(0, 10);
 
     function generateOrderSurcount() {
         if ($scope.includeOrderSurcount) {
@@ -167,36 +204,64 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     function generateConsumerJson() {
         $scope.consumerPayload = {
             "name" : $scope.consumerName,
-            "phoneNumber" : $scope.consumerPhoneNumber,
-            "addressLine1" : $scope.consumerAddressLine1,
-            "addressLine2" : $scope.consumerAddressLine2,
-            "city" : $scope.consumerCity,
-            "state" : $scope.consumerState,
-            "postalCode" : $scope.consumerPostalCode,
-            "country" : "AU",
-            "notes" : $scope.consumerNotes
+            "phone" : $scope.consumerPhoneNumber,
+            "email" : $scope.consumerEmail,
+            "address" : {
+                "line1" : $scope.consumerAddressLine1,
+                "line2" : $scope.consumerAddressLine2,
+                "city" : $scope.consumerCity,
+                "state" : $scope.consumerState,
+                "postalCode" : $scope.consumerPostalCode,
+                "country" : "AU"
+            }
+            
+            //,"notes" : $scope.consumerNotes
         }
     }
     
     function generateTransactionJson() {
         generateOrderTotal();
         if ($scope.manualPaymentTotal) {
-            $scope.transactionPayload = [
-                {
-                    "amount": parseInt($scope.manualPaymentTotal).toString(),
-                    "prepaid": true,
-                    "invoice": $scope.transacitonInvoice
-                }
-            ];
-        } else {
-            if ($scope.includeTransaction) {
+            if ($scope.includeTips) {
                 $scope.transactionPayload = [
                     {
-                        "amount": $scope.transactionTotal,
+                        "amount": parseInt($scope.manualPaymentTotal).toString(),
+                        "prepaid": true,
+                        "invoice": $scope.transacitonInvoice,
+                        "tip": $scope.tipsAmount
+                    }
+                ];
+            } else {
+                $scope.transactionPayload = [
+                    {
+                        "amount": parseInt($scope.manualPaymentTotal).toString(),
                         "prepaid": true,
                         "invoice": $scope.transacitonInvoice
                     }
                 ];
+            }
+            
+        } else {
+            if ($scope.includeTransaction) {
+                if ($scope.includeTips) {
+                    $scope.transactionPayload = [
+                        {
+                            "amount": $scope.transactionTotal,
+                            "prepaid": true,
+                            "invoice": $scope.transacitonInvoice,
+                            "tip": $scope.tipsAmount
+                        }
+                    ];
+                } else {
+                    $scope.transactionPayload = [
+                        {
+                            "amount": $scope.transactionTotal,
+                            "prepaid": true,
+                            "invoice": $scope.transacitonInvoice
+                        }
+                    ];
+                }
+                
             } else {
                 $scope.transactionPayload = [];
             }
@@ -231,9 +296,17 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         generateConsumerJson();
         generateTransactionJson();
     }
-
-    setOrderJson();
     
+    $scope.setAcceptRewardsRedemptions = function (acceptRewardsRedemptions) {
+        $scope.acceptRewardsRedemptions = acceptRewardsRedemptions;
+        Meerkat.acceptRewardsRedemptions = acceptRewardsRedemptions;
+    }
+    
+    $scope.setAcceptPointsRedemptions = function (acceptPointsRedemptions) {
+        $scope.acceptPointsRedemptions = acceptPointsRedemptions;
+        Meerkat.acceptPointsRedemptions = acceptPointsRedemptions;
+    }
+
     $scope.setPosId = function (posId) {
         if (posId) {
             $scope.itemPosId = posId;
@@ -413,6 +486,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         setOrderJson();
     }
     
+    $scope.setConsumerEmail = function (consumerEmail) {
+        $scope.consumerEmail = consumerEmail;
+        setOrderJson();
+    }
+    
     $scope.setConsumerNotes = function (invoiceString) {
         $scope.consumerNotes = invoiceString;
         setOrderJson();
@@ -426,11 +504,114 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         $scope.manualPaymentTotal = manualPaymentAmount;
         setOrderJson();
     }
+    
+    $scope.setTipsAmount = function (tipsAmount) {
+        $scope.tipsAmount = tipsAmount;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeTips = function (includeTips) {
+        $scope.includeTips = includeTips;
+        setOrderJson();
+    }
 
     $scope.formattedOrder = () => JSON.stringify($scope.orderPayload, undefined, 2);
     $scope.formattedTransaction = () => JSON.stringify($scope.transactionPayload, undefined, 2);
     $scope.formattedConsumer = () => JSON.stringify($scope.consumerPayload, undefined, 2);
+    
+    function setNewMemberJson(){
+        $scope.newMemberJson = {
+            "name": $scope.newMemberName,
+            "email": $scope.newMemberEmail,
+            "phone": $scope.newMemberPhone,
+            "points": $scope.newMemberPoints,
+            "address": {
+                    "line1": $scope.newMemberAddressLine1,
+                    "line2": $scope.newMemberAddressLine2,
+                    "city": $scope.newMemberCity,
+                    "state": $scope.newMemberState,
+                    "country": "Au",
+                    "postalCode": $scope.newMemberPostalCode
+                }
+            
+        }
+    }
+    
+    $scope.createMember = () => {
+        setNewMemberJson();
+        Meerkat.createMember($scope.newMemberJson, $scope.selectedOrginisation.id);
+    }
 
+    $scope.setNewMemberName = (newMemberName) => {
+        $scope.newMemberName = newMemberName;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberEmail = (newMemberEmail) => {
+        $scope.newMemberEmail = newMemberEmail;
+        setNewMemberJson(); 
+    }
+    $scope.setNewMemberPhone = (newMemberPhone) => {
+        $scope.newMemberPhone = newMemberPhone;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberPoints = (newMemberPoints) => {
+        if (newMemberPoints) {
+            $scope.newMemberPoints = newMemberPoints;
+        } else {
+            $scope.newMemberPoints = undefined;
+        }
+        setNewMemberJson();
+    }
+    $scope.setNewMemberAddressLine1 = (newMemberAddressLine1) => {
+        if (newMemberAddressLine1) {
+            $scope.newMemberAddressLine1 = newMemberAddressLine1;
+        } else {
+            $scope.newMemberAddressLine1 = undefined;
+        }
+        setNewMemberJson();
+    }
+    $scope.setNewMemberAddressLine2 = (newMemberAddressLine2) => {
+        if (newMemberAddressLine2) {
+            $scope.newMemberAddressLine2 = newMemberAddressLine2;
+        } else {
+            $scope.newMemberAddressLine2 = undefined;
+        }
+        setNewMemberJson();
+    }
+    $scope.setNewMemberCity = (newMemberCity) => {
+        $scope.newMemberCity = newMemberCity;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberState = (newMemberState) => {
+        $scope.newMemberState = newMemberState;
+        setNewMemberJson();
+    }
+    $scope.setNewMemberPostalCode = (newMemberPostalCode) => {
+        $scope.newMemberPostalCode = newMemberPostalCode;
+        setNewMemberJson();
+    } 
+
+    $scope.fiveDollerReward = [{
+        "ref": "1",
+        "name": "Five Dollar Reward",
+        "description" : "Five Dollars Off Check",
+        "description" : "Five Dollar Reward",
+        "surcountType" : "absolute",
+        "surcountAmount" : "500"
+    }]
+
+    $scope.fivePercentReward = [{
+        "ref": "1",
+        "name": "Five Percent Reward",
+        "description" : "Five Percent Off Check",
+        "description" : "Five Percent Reward",
+        "surcountType" : "percentage",
+        "surcountAmount" : "5"
+    }]
+    
+    $scope.formattedNewMember = () => JSON.stringify($scope.newMemberJson, undefined, 2);
+    $scope.formattedFiveDollarRewardToSend = () => JSON.stringify($scope.fiveDollerReward, undefined, 2);
+    $scope.formattedFivePercentRewardToSend = () => JSON.stringify($scope.fivePercentReward, undefined, 2);
 
     $scope.formattedJsonToSend = () => {
         var sendBody = {};
@@ -441,7 +622,19 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         return JSON.stringify(sendBody, undefined, 2);
 
     };
-    
+
+    $scope.getFiveDollarRewardToSend = () => {
+        var sendBody = {};
+        sendBody = $scope.formattedFiveDollarRewardToSend();
+        return sendBody;
+    };
+
+    $scope.getFivePercentRewardToSend = () => {
+        var sendBody = {};
+        sendBody = $scope.formattedFivePercentRewardToSend();
+        return sendBody;
+    };
+
     $scope.selectTab = function (tabName) {
         $scope.selectedTab = tabName;
     };
@@ -449,8 +642,10 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.getLocations = Meerkat.getLocations;
   $scope.startOver = () => WizardHandler.wizard().goTo(0);
 
-  $scope.selectLocationAndGo = (locId) => {
+  $scope.selectLocationAndGo = (locId, orgId) => {
+    $scope.selectedOrginisation.id = orgId;
     $scope.selectedLocation.id = locId;
+    Meerkat.organisationId = orgId;
     WizardHandler.wizard().next();
   };
 
@@ -485,6 +680,116 @@ $scope.getMenu = () => {
     Meerkat.getMenu($scope.selectedLocation.id);
 };
 
+$scope.getMembers = () => {
+    Meerkat.getMembers($scope.selectedOrginisation.id);
+};
+
+
+$scope.addFiveDollarReward = (memberId) => {
+    Meerkat.addFiveDollarReward(memberId, $scope.selectedOrginisation.id, $scope.getFiveDollarRewardToSend());
+};
+
+$scope.addFivePercentReward = (memberId) => {
+    Meerkat.addFivePercentReward(memberId, $scope.selectedOrginisation.id, $scope.getFivePercentRewardToSend());
+};
+
+$scope.deleteMember = (memberId) => {
+    Meerkat.deleteMember(memberId, $scope.selectedOrginisation.id);
+}
+
+$scope.addFiftyPointsToMember = (member) => {
+member.points = member.points + 50;
+    
+    member.address.country = "Au";
+    Meerkat.updateMember(member.id, $scope.selectedOrginisation.id, member);
+}
+
+    $scope.getReservations = () => {
+        var f = new Date($scope.reservationStartDate);
+        var t = new Date().setDate(f.getDate() + 2);
+        
+        Meerkat.getReservations($scope.selectedLocation.id, Math.round(f.valueOf()/1000), Math.round(t.valueOf()/1000));
+    };
+    
+    function setNewReserveJson(){
+        $scope.newReserveJson = {
+            "tableNames": $scope.newReserveTableNames.split(','),
+            "date": $scope.newReserveDate,
+            "covers": $scope.newReserveCovers,
+            "ref": $scope.newReserveRef,
+            "consumer": {
+                "name": $scope.newReserveName,
+                "email": $scope.newReserveEmail,
+                "phone": $scope.newReservePhone,
+                "address": {
+                    "line1": $scope.newReserveAddressLine1,
+                    "line2": $scope.newReserveAddressLine2,
+                    "city": $scope.newReserveCity,
+                    "state": $scope.newReserveState,
+                    "country": "Au",
+                    "postalCode": $scope.newReservePostalCode
+                }
+            }
+            
+        }
+    }
+    $scope.setNewReserveTableNames = (newReserveTableNames) => {
+        $scope.newReserveTableNames = newReserveTableNames;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveDate = (newReserveDate) => {
+        $scope.newReserveDate = newReserveDate;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveCovers = (newReserveCovers) => {
+        $scope.newReserveCovers = newReserveCovers;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveRef = (newReserveRef) => {
+        $scope.newReserveRef = newReserveRef;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveName = (newReserveName) => {
+        $scope.newReserveName = newReserveName;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveEmail = (newReserveEmail) => {
+        $scope.newReserveEmail = newReserveEmail;
+        setNewReserveJson();
+    }
+    $scope.setNewReservePhone = (newReservePhone) => {
+        $scope.newReservePhone = newReservePhone;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressLine1 = (newReserveAddressLine1) => {
+        $scope.newReserveAddressLine1 = newReserveAddressLine1;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressLine2 = (newReserveAddressLine2) => {
+        $scope.newReserveAddressLine2 = newReserveAddressLine2;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressCity = (newReserveAddressCity) => {
+        $scope.setNewReserveAddressCity = newReserveAddressCity;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressState = (newReserveAddressState) => {
+        $scope.newReserveAddressState = newReserveAddressState;
+        setNewReserveJson();
+    }
+    $scope.setNewReserveAddressPostalCode = (newReserveAddressPostalCode) => {
+        $scope.newReserveAddressPostalCode = newReserveAddressPostalCode;
+        setNewReserveJson();
+    }
+    
+    $scope.createReservation = () => {
+        setNewReserveJson();
+        Meerkat.createReservation($scope.newReserveJson, $scope.selectedLocation.id);
+    }
+    
+    
+    $scope.formattedReservation = () => JSON.stringify($scope.newReserveJson, undefined, 2);
+    
   $scope.sendOrderAndGo = () => {
     Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
       .then(res => {
