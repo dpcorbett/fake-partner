@@ -597,7 +597,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         "description" : "Five Dollars Off Check",
         "description" : "Five Dollar Reward",
         "surcountType" : "absolute",
-        "surcountAmount" : "500"
+        "surcountAmount" : "-500"
     }]
 
     $scope.fivePercentReward = [{
@@ -606,7 +606,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         "description" : "Five Percent Off Check",
         "description" : "Five Percent Reward",
         "surcountType" : "percentage",
-        "surcountAmount" : "5"
+        "surcountAmount" : "-5"
     }]
     
     $scope.formattedNewMember = () => JSON.stringify($scope.newMemberJson, undefined, 2);
