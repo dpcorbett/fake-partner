@@ -135,6 +135,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                     "posId": $scope.itemSurcountPosId,
                     "name": "item surcount",
                     "amount": $scope.itemSurcountPrice,
+                    "value": $scope.itemSurcountPrice,
                     "type" : "absolute"
                 }
             ];
