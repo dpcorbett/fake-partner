@@ -68,6 +68,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.transactionPayload = "";
     $scope.consumerPayload = "";
     $scope.newMemberName = "John Doe";
+    $scope.newMemberFirstName = "John";
+    $scope.newMemberLastName = "Doe";
     $scope.newMemberEmail = "JohnDoe@test.com.au";
     $scope.newMemberPhone = "0231658974";
     $scope.newMemberPoints = 100;
@@ -523,6 +525,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     function setNewMemberJson(){
         $scope.newMemberJson = {
             "name": $scope.newMemberName,
+            "firstName" : $scope.newMemberFirstName,
+            "lastName" : $scope.newMemberLastName,
             "email": $scope.newMemberEmail,
             "phone": $scope.newMemberPhone,
             "points": $scope.newMemberPoints,
@@ -545,6 +549,12 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
     $scope.setNewMemberName = (newMemberName) => {
         $scope.newMemberName = newMemberName;
+        var memberNameArray = newMemberName.split(" ");
+        $scope.newMemberFirstName = memberNameArray[0];
+        $scope.newMemberLastName = "";
+        for (var i = 1; i < memberNameArray.length; i++) {
+            $scope.newMemberLastName = $scope.newMemberLastName + memberNameArray[i];
+        }
         setNewMemberJson();
     }
     $scope.setNewMemberEmail = (newMemberEmail) => {
