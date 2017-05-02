@@ -73,6 +73,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.newMemberEmail = "JohnDoe@test.com.au";
     $scope.newMemberPhone = "0231658974";
     $scope.newMemberPoints = 100;
+    $scope.newMemberRef = undefined;
     $scope.newMemberAddressLine1 = "34 Member Street";
     $scope.newMemberAddressLine2 = undefined;
     $scope.newMemberCity = "Melbourne";
@@ -522,14 +523,15 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.formattedTransaction = () => JSON.stringify($scope.transactionPayload, undefined, 2);
     $scope.formattedConsumer = () => JSON.stringify($scope.consumerPayload, undefined, 2);
     
-    function setNewMemberJson(){
+    function setNewMemberJson() {
         $scope.newMemberJson = {
             "name": $scope.newMemberName,
-            "firstName" : $scope.newMemberFirstName,
-            "lastName" : $scope.newMemberLastName,
+            "firstName": $scope.newMemberName,
+            "lastName": $scope.newMemberName,
             "email": $scope.newMemberEmail,
             "phone": $scope.newMemberPhone,
             "points": $scope.newMemberPoints,
+            "ref": $scope.newMemberRef,
             "address": {
                     "line1": $scope.newMemberAddressLine1,
                     "line2": $scope.newMemberAddressLine2,
@@ -573,6 +575,14 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         }
         setNewMemberJson();
     }
+    $scope.setNewMemberRef = (newMemberRef) => {
+        if (newMemberRef) {
+            $scope.newMemberRef = newMemberRef;
+        } else {
+            $scope.newMemberRef = undefined;
+        }
+        setNewMemberJson();
+    }
     $scope.setNewMemberAddressLine1 = (newMemberAddressLine1) => {
         if (newMemberAddressLine1) {
             $scope.newMemberAddressLine1 = newMemberAddressLine1;
@@ -604,18 +614,16 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
 
     $scope.fiveDollerReward = [{
         "ref": "1",
-        "name": "Five Dollar Reward",
-        "description" : "Five Dollars Off Check",
-        "description" : "Five Dollar Reward",
+        "name": "New Five Dollar Reward",
+        "description" : "New Five Dollars Off Check",
         "surcountType" : "absolute",
         "surcountAmount" : "-500"
     }]
 
     $scope.fivePercentReward = [{
         "ref": "1",
-        "name": "Five Percent Reward",
-        "description" : "Five Percent Off Check",
-        "description" : "Five Percent Reward",
+        "name": "New Five Percent Reward",
+        "description" : "New Five Percent Off Check",
         "surcountType" : "percentage",
         "surcountAmount" : "-5"
     }]
