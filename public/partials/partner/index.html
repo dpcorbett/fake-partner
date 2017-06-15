@@ -47,6 +47,7 @@
         <input type="checkbox" name="acceptPointsRedemptions" ng-model="acceptPointsRedemptions" ng-change="setAcceptPointsRedemptions({{'acceptPointsRedemptions'}})" />
     <tabset>
         
+    
     <tab heading="Pay@Table" select="selectTab('pay-at-table')">
         <h2>Pay@Table:</h2>
 
@@ -59,6 +60,47 @@
         <button class="tiny" ng-click="fetchTableAndGo()">
             Fetch table
         </button>
+    </tab>
+    <tab heading="Pos Orders" select="selectTab('pos-orders')">
+        <h2>Get Pos Orders</h2>
+
+        <button class="tiny" ng-click="getPosOrders()">Refresh</button>
+
+        <table>
+            <thead>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Checkin</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="order in posOrders">
+                    <td>{{order.id}}</td>
+                    <td>{{order.status}}</td>
+                    <td>
+                        <table>
+                            <thead>
+                                <th>checkinId</th>
+                                <th>TableNames</th>
+                                <th>covers</th>
+                                <th>State</th>
+                            </thead>
+                            <tbody>
+                                <td>{{order.checkin.id}}</td>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            <tr ng-repeat="tableName in order.checkin.tableNames">
+                                                <td>{{tableName}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tbody>                                 
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </tab>
     <tab heading="Order Ahead" select="selectTab('order-ahead')">
         <h2>Order Ahead</h2>

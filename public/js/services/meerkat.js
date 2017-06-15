@@ -13,6 +13,7 @@ function MeerkatService($http, $modal, flash) {
             surcounts: [],
             members: [],
             reserves: [],
+            posOrders: [],
             acceptRewardsRedemptions: false,
             acceptPointsRedemptions: false,
             organisationId: ""
@@ -406,6 +407,26 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
             return Meerkat.data.members;
         })
             .catch(err=> flash.error = 'Getting Members failed ' + organisationId );
+    };
+
+    Meerkat.getPosOrders = function (organisationId, locationId) {
+        return $http.get('/orders', {
+            headers: { 'doshii-location-id': locationId },
+            params: {
+                'status': 'accepted',
+                'sort' : 'desc',
+                'from' : 1497498176
+            }
+        })
+            .then(res => {
+                Meerkat.data.posOrders.length = 0;
+
+                Array.prototype.push.apply(Meerkat.data.posOrders, res.data.rows);
+                flash.success = 'Updated Orders ' + ' test ' + res.data;
+
+                return Meerkat.data.posOrders;
+            })
+            .catch(err=> flash.error = 'Getting orders failed ' + locationId + ' ' + err);
     };
 
     Meerkat.getReservations = function(locationId, fromDate, toDate) {

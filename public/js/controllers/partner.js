@@ -13,6 +13,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   $scope.products = Meerkat.data.products;
     $scope.surcounts = Meerkat.data.surcounts;
     $scope.members = Meerkat.data.members;
+    $scope.posOrders = Meerkat.data.posOrders;
     $scope.reserves = Meerkat.data.reserves;
   $scope.Meerkat = Meerkat;
 
@@ -701,6 +702,10 @@ $scope.getMenu = () => {
 
 $scope.getMembers = () => {
     Meerkat.getMembers($scope.selectedOrginisation.id);
+};
+
+$scope.getPosOrders = () => {
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id);
 };
 
 
