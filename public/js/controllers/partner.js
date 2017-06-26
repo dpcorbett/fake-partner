@@ -713,6 +713,10 @@ $scope.addFiveDollarReward = (memberId) => {
     Meerkat.addFiveDollarReward(memberId, $scope.selectedOrginisation.id, $scope.getFiveDollarRewardToSend());
 };
 
+$scope.cancelOrder = (order) => {
+    Meerkat.cancelOrder(order, $scope.selectedLocation.id)
+}
+
 $scope.addFivePercentReward = (memberId) => {
     Meerkat.addFivePercentReward(memberId, $scope.selectedOrginisation.id, $scope.getFivePercentRewardToSend());
 };

@@ -160,6 +160,33 @@ Meerkat.addFiveDollarReward = function (memberId, organisationId, jsonToSend) {
     });
 };
 
+Meerkat.cancelOrder = function (order, locationId){
+    order.status = 'venue_cancelled'
+    var sendBody = JSON.stringify(order, undefined, 2);;
+    
+    var req = {
+            method: 'PUT',
+            url: '/orders/' + order.id,
+            data: sendBody,
+            headers: {
+                'doshii-location-id': locationId
+            }
+        };
+
+    return $http(req)
+        .then(res => {
+        var response = angular.copy(res.data);
+        console.log(response);
+        flash.success = 'order cancelled';
+        return;
+    })
+    .catch(err => {
+        flash.error = 'Order failed to cancel: ' + err.statusText + getErrorMessage(err.data);
+        throw err;
+    });
+    
+}
+
 Meerkat.addFivePercentReward = function (memberId, organisationId, jsonToSend) {
 
     var req = {
