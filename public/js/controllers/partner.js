@@ -84,6 +84,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.newMemberJson = "";
     $scope.tipsAmount = 100;
     $scope.includeTips = false;
+    $scope.manuallyAccepted = false;
     
     $scope.newReserveTableNames = "";
     $scope.newReserveDate = "";
@@ -274,25 +275,50 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     }
 
     function generateOrderJson() {
-        $scope.orderPayload = {
-            "type": $scope.orderType,
-            "surcounts": $scope.orderSurcountJson,
-            "requiredAt" : $scope.orderRequiredAt,
-            "items": [
-                {
-                    "name": $scope.itemName,
-                    "description": "Yum",
-                    "unitPrice": $scope.itemPrice,
-                    "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
-                    "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
-                    "posId": $scope.itemPosId,
-                    "surcounts": $scope.itemSurcountJson,
-                    "options": $scope.itemOptionJson,
-                    "quantity": $scope.itemQuantity
-                    
-                }
-            ]
+        if ($scope.manuallyAccepted){
+                $scope.orderPayload = {
+                "type": $scope.orderType,
+                "surcounts": $scope.orderSurcountJson,
+                "requiredAt" : $scope.orderRequiredAt,
+                "manuallyProcessed" : true,
+                "items": [
+                    {
+                        "name": $scope.itemName,
+                        "description": "Yum",
+                        "unitPrice": $scope.itemPrice,
+                        "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                        "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                        "posId": $scope.itemPosId,
+                        "surcounts": $scope.itemSurcountJson,
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.itemQuantity
+                        
+                    }
+                ]
+            }
+        }else{
+            $scope.orderPayload = {
+                "type": $scope.orderType,
+                "surcounts": $scope.orderSurcountJson,
+                "requiredAt" : $scope.orderRequiredAt,
+                "items": [
+                    {
+                        "name": $scope.itemName,
+                        "description": "Yum",
+                        "unitPrice": $scope.itemPrice,
+                        "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                        "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                        "posId": $scope.itemPosId,
+                        "surcounts": $scope.itemSurcountJson,
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.itemQuantity
+                        
+                    }
+                ]
+            }
         }
+        
+        
     }
     
     function setOrderJson() {
@@ -312,6 +338,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         Meerkat.acceptPointsRedemptions = acceptPointsRedemptions;
     }
 
+    $scope.setManuallyAccepted = function (manuallyAccepted) {
+        $scope.manuallyAccepted = manuallyAccepted;
+        Meerkat.manuallyAccepted = manuallyAccepted;
+    }
+    
     $scope.setPosId = function (posId) {
         if (posId) {
             $scope.itemPosId = posId;
@@ -634,6 +665,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.formattedFivePercentRewardToSend = () => JSON.stringify($scope.fivePercentReward, undefined, 2);
 
     $scope.formattedJsonToSend = () => {
+                
         var sendBody = {};
         sendBody.consumer = $scope.consumerPayload;
         sendBody.transactions = $scope.transactionPayload;

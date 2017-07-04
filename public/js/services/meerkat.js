@@ -16,6 +16,7 @@ function MeerkatService($http, $modal, flash) {
             posOrders: [],
             acceptRewardsRedemptions: false,
             acceptPointsRedemptions: false,
+            manuallyAccepted: false,
             organisationId: ""
         }
   };
@@ -162,6 +163,9 @@ Meerkat.addFiveDollarReward = function (memberId, organisationId, jsonToSend) {
 
 Meerkat.cancelOrder = function (order, locationId){
     order.status = 'venue_cancelled'
+    if (Meerkat.manuallyAccepted){
+        order.manuallyAccepted = true
+    } 
     var sendBody = JSON.stringify(order, undefined, 2);;
     
     var req = {
