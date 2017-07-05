@@ -82,7 +82,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.newMemberPostalCode = "3000";
     $scope.newMemberCountry = "Au";
     $scope.newMemberJson = "";
-    $scope.tipsAmount = 100;
+    $scope.tipsAmount = "100";
     $scope.includeTips = false;
     $scope.manuallyAccepted = false;
     
