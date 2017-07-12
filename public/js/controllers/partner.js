@@ -736,10 +736,29 @@ $scope.getMembers = () => {
     Meerkat.getMembers($scope.selectedOrginisation.id);
 };
 
-$scope.getPosOrders = () => {
-    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id);
+$scope.getAcceptedPosOrders = () => {
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "accepted");
 };
 
+$scope.getCompletedPosOrders = () => {
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "complete");
+};
+
+$scope.getPendingPosOrders = () => {
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "pending");
+};
+
+$scope.getRejectedPosOrders = () => {
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "rejected");
+};
+
+$scope.getCancelledPosOrders = () => {
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "cancelled");
+};
+
+$scope.getVenueCancelledPosOrders = () => {
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "venue_cancelled");
+};
 
 $scope.addFiveDollarReward = (memberId) => {
     Meerkat.addFiveDollarReward(memberId, $scope.selectedOrginisation.id, $scope.getFiveDollarRewardToSend());

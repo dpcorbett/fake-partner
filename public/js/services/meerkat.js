@@ -440,11 +440,11 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
             .catch(err=> flash.error = 'Getting Members failed ' + organisationId );
     };
 
-    Meerkat.getPosOrders = function (organisationId, locationId) {
+    Meerkat.getPosOrders = function (organisationId, locationId, orderStatus) {
         return $http.get('/orders', {
             headers: { 'doshii-location-id': locationId },
             params: {
-                'status': 'accepted',
+                'status': orderStatus,
                 'sort' : 'desc',
                 'from' : 1497498176
             }

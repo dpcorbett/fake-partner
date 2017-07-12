@@ -66,8 +66,12 @@
     <tab heading="Pos Orders" select="selectTab('pos-orders')">
         <h2>Get Pos Orders</h2>
 
-        <button class="tiny" ng-click="getPosOrders()">Refresh</button>
-
+        <button class="tiny" ng-click="getAcceptedPosOrders()">Accpeted Orders</button>
+        <button class="tiny" ng-click="getCompletedPosOrders()">Completed Orders</button>
+        <button class="tiny" ng-click="getPendingPosOrders()">Pending Orders</button>
+        <button class="tiny" ng-click="getRejectedPosOrders()">Rejected Orders</button>
+        <button class="tiny" ng-click="getCancelledPosOrders()">Cancelled Orders</button>
+        
         <table>
             <thead>
                 <th>Id</th>
