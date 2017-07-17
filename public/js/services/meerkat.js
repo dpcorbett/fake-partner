@@ -14,15 +14,95 @@ function MeerkatService($http, $modal, flash) {
             members: [],
             reserves: [],
             posOrders: [],
+            myTransactions: [],
             acceptRewardsRedemptions: false,
             acceptPointsRedemptions: false,
             manuallyAccepted: false,
+            completeTransactions: true,
             organisationId: ""
         }
   };
 
+  
+    Meerkat.processTransactionWaiting = function(id, orderId, status) {
+        if (status == 'waiting') {
+            console.log("id = " + id)
+            console.log("orderId = " + orderId)
+            console.log("status = " + status)
+            //get transaction from doshii
+            var transReq = {
+                method: 'GET',
+                url: '/transactions/' + id,
+                headers: {
+                    'doshii-organisation-id': Meerkat.organisationId
+                }
+            };
+            
+            return $http(transReq)
+                .then(res => {
+                    var response = angular.copy(res.data);
+                    delete response.orderId;
+                    delete response.log;
+                    delete response.acceptLess;
+                    delete response.partnerInitiated;
+                    delete response.uri;
+                    delete response.updatedAt;
+                    delete response.createdAt;
+                    var theId = response.id;
+                    delete response.id;
+                    if (Meerkat.data.completeTransactions){
+                        response.status = 'complete'
+                        console.log(response);
+                        flash.success = 'transaction received';
+                        var req = {
+                            method: 'PUT',
+                            url: '/transactions/' + theId,
+                            headers: {
+                                'doshii-organisation-id': Meerkat.organisationId
+                            },
+                            data: JSON.stringify(response)
+                        };
+
+                        return $http(req)
+                            .then(res => {
+                                var response = angular.copy(res.data);
+                                console.log(response);
+                                flash.success = 'transaction completed';
+                                return;
+                            })
+                    }else{
+                        var response = angular.copy(res.data);
+                        if (Meerkat.completeTransactions){
+                            response.status = 'cancelled'
+                            console.log(response);
+                            flash.success = 'transaction received';
+                            var req = {
+                                method: 'PUT',
+                                url: '/transactions/' + theId,
+                                headers: {
+                                    'doshii-organisation-id': Meerkat.organisationId
+                                },
+                                data: JSON.stringify(response)
+                            };
+
+                            return $http(req)
+                                .then(res => {
+                                    var response = angular.copy(res.data);
+                                    console.log(response);
+                                    flash.success = 'transaction cancelled';
+                                    return;
+                                })
+                        }
+                    }
+                }).catch(err => {
+                    flash.error = 'transaction receive failed: ' + err.statusText + getErrorMessage(err.data);
+                    throw err;
+                });
+        } 
+    };
+
     Meerkat.processRewardsRedemption = function(memberId, rewardId) {
-        if (Meerkat.acceptRewardsRedemptions) {
+        if (Meerkat.data.acceptRewardsRedemptions) {
             var req = {
                 method: 'PUT',
                 url: '/members/' + memberId + '/rewards/' + rewardId + '/accept',
@@ -66,7 +146,7 @@ function MeerkatService($http, $modal, flash) {
     };
 
     Meerkat.processPointsRedemption = function(memberId) {
-        if (Meerkat.acceptPointsRedemptions) {
+        if (Meerkat.data.acceptPointsRedemptions) {
             var req = {
                 method: 'PUT',
                 url: '/members/' + memberId + '/points/accept',
@@ -190,6 +270,38 @@ Meerkat.cancelOrder = function (order, locationId){
     });
     
 }
+
+Meerkat.requestrefund = function(transaction, locationId){
+    var refundTransaction = {
+        'orderId' : transaction.orderId,
+        "amount": '-' + transaction.amount,
+        "reference": transaction.reference + '1',
+        "invoice": transaction.invoice = '1',
+        "linkedTrxIds" : [transaction.id]
+    };
+    var sendBody = JSON.stringify(refundTransaction, undefined, 2);
+    var req = {
+            method: 'POST',
+            url: '/transactions',
+            data: sendBody,
+            headers: {
+                'doshii-location-id': locationId
+            }
+        };
+
+    return $http(req)
+        .then(res => {
+        var response = angular.copy(res.data);
+        console.log(response);
+        flash.success = 'order cancelled';
+        return;
+    })
+    .catch(err => {
+        flash.error = 'Order failed to cancel: ' + err.statusText + getErrorMessage(err.data);
+        throw err;
+    });
+}
+
 
 Meerkat.addFivePercentReward = function (memberId, organisationId, jsonToSend) {
 
@@ -440,6 +552,34 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
             .catch(err=> flash.error = 'Getting Members failed ' + organisationId );
     };
 
+    Meerkat.getMyPaidTransactions = function (organisationId, locationId) {
+        return $http.get('/orders', {
+            headers: { 'doshii-location-id': locationId },
+            params: {
+                'status': "complete",
+                'sort' : 'desc',
+                'from' : 1497498176
+            }
+        })
+            .then(res => {
+                Meerkat.data.posOrders.length = 0;
+                Meerkat.data.myTransactions.length = 0;
+                Array.prototype.push.apply(Meerkat.data.posOrders, res.data.rows);
+                Meerkat.data.posOrders.forEach(function (item){
+                    $http.get('/orders/' + item.id + '/transactions', {
+                        headers: { 'doshii-location-id': locationId }
+                    }).then(transRes => {
+                        if (transRes.data !== undefined){
+                            Array.prototype.push.apply(Meerkat.data.myTransactions, transRes.data);
+                        }
+                    })
+                })
+                flash.success = 'Transactions updated ' + ' test ' + res.data;
+                return Meerkat.data.myTransactions;
+            })
+            .catch(err=> flash.error = 'Getting Transactions failed ' + locationId + ' ' + err);
+    };
+    
     Meerkat.getPosOrders = function (organisationId, locationId, orderStatus) {
         return $http.get('/orders', {
             headers: { 'doshii-location-id': locationId },

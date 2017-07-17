@@ -14,6 +14,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.surcounts = Meerkat.data.surcounts;
     $scope.members = Meerkat.data.members;
     $scope.posOrders = Meerkat.data.posOrders;
+    $scope.MyTransactions = Meerkat.data.myTransactions;
     $scope.reserves = Meerkat.data.reserves;
   $scope.Meerkat = Meerkat;
 
@@ -85,6 +86,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.tipsAmount = "100";
     $scope.includeTips = false;
     $scope.manuallyAccepted = false;
+    $scope.completeTransactions = true;
     
     $scope.newReserveTableNames = "";
     $scope.newReserveDate = "";
@@ -330,17 +332,22 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     
     $scope.setAcceptRewardsRedemptions = function (acceptRewardsRedemptions) {
         $scope.acceptRewardsRedemptions = acceptRewardsRedemptions;
-        Meerkat.acceptRewardsRedemptions = acceptRewardsRedemptions;
+        Meerkat.data.acceptRewardsRedemptions = acceptRewardsRedemptions;
     }
     
     $scope.setAcceptPointsRedemptions = function (acceptPointsRedemptions) {
         $scope.acceptPointsRedemptions = acceptPointsRedemptions;
-        Meerkat.acceptPointsRedemptions = acceptPointsRedemptions;
+        Meerkat.data.acceptPointsRedemptions = acceptPointsRedemptions;
     }
 
     $scope.setManuallyAccepted = function (manuallyAccepted) {
         $scope.manuallyAccepted = manuallyAccepted;
-        Meerkat.manuallyAccepted = manuallyAccepted;
+        Meerkat.data.manuallyAccepted = manuallyAccepted;
+    }
+
+    $scope.setCompleteTransactions = function (CompleteTransactions){
+        $scope.completeTransactions = completeTransactions;
+        Meerkat.data.completeTransactions = completeTransactions;
     }
     
     $scope.setPosId = function (posId) {
@@ -756,6 +763,10 @@ $scope.getCancelledPosOrders = () => {
     Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "cancelled");
 };
 
+$scope.getMyPaidTransactions = () => {
+    Meerkat.getMyPaidTransactions($scope.selectedOrginisation.id, $scope.selectedLocation.id);
+};
+
 $scope.getVenueCancelledPosOrders = () => {
     Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "venue_cancelled");
 };
@@ -767,6 +778,12 @@ $scope.addFiveDollarReward = (memberId) => {
 $scope.cancelOrder = (order) => {
     Meerkat.cancelOrder(order, $scope.selectedLocation.id)
 }
+
+$scope.requestRefund = (transaction) => {
+    Meerkat.requestrefund(transaction, $scope.selectedLocation.id)
+}
+
+
 
 $scope.addFivePercentReward = (memberId) => {
     Meerkat.addFivePercentReward(memberId, $scope.selectedOrginisation.id, $scope.getFivePercentRewardToSend());

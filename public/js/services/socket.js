@@ -41,17 +41,22 @@ function SocketService(clientId, clientSecret, websocketUrl, doshiiEmitter, Meer
       var data = JSON.parse(event.data);
 
       if (!data.emit) {
-        return console.debug('received ' + '"' + data + '"');
+        return console.log('received ' + '"' + data + '"');
       }
       if (data.emit[0].indexOf("points_redemption", 0) > -1){
                 //is a points redemption
-          console.debug("Process Points Redemption");
+                console.log("Process Points Redemption");
                 Meerkat.processPointsRedemption(data.emit[1].memberId);
       }
       if (data.emit[0].indexOf("reward_redemption", 0) > -1) {
                 //is a rewards redemption
-                console.debug("Process Rewards Redemption");
+                console.log("Process Rewards Redemption");
                 Meerkat.processRewardsRedemption(data.emit[1].memberId, data.emit[1].rewardId);
+      }
+      if (data.emit[0].indexOf("transaction_updated", 0) > -1) {
+                //is a rewards redemption
+                console.log("Process transaction update");
+                Meerkat.processTransactionWaiting(data.emit[1].id, data.emit[1].orderId, data.emit[1].status);
       }
       console.debug(data.emit[0], data.emit[1]);
       doshiiEmitter.emit(data.emit[0], data.emit[1]);
