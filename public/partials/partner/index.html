@@ -279,15 +279,18 @@
                 <table>
                     <thead>
                     <th>PosId</th>
+                    <th>Type</th>
                     <th>Name</th>
                     <th>description</th>
                     <th>price</th>
                     <th>tags</th>
                     <th>Options</th>
+                    <th>Included Items</th>
                     </thead>
                     <tbody>
                     <tr ng-repeat="product in products">
                         <td>{{product.posId}}</td>
+                        <td>{{product.type}}</td>
                         <td>{{product.name}}</td>
                         <td>{{product.description}}</td>
                         <td>{{product.unitPrice}}</td>
@@ -327,6 +330,65 @@
                                 </tbody>
                             </table>
                         </td>
+                        <td>
+                           <table>
+                                <thead>
+                                <th>PosId</th>
+                                <th>Quantity</th>
+                                <th>Name</th>
+                                <th>description</th>
+                                <th>price</th>
+                                <th>tags</th>
+                                <th>Options</th>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="product in product.includedItems">
+                                    <td>{{product.posId}}</td>
+                                    <td>{{product.quantity}}</td>
+                                    <td>{{product.type}}</td>
+                                    <td>{{product.name}}</td>
+                                    <td>{{product.description}}</td>
+                                    <td>{{product.unitPrice}}</td>
+                                    <td>{{product.tags}}</td>
+                                    <td>
+                                        <table>
+                                            <thead>
+                                            <th>min</th>
+                                            <th>max</th>
+                                            <th>name</th>
+                                            <th>Varients</th>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="option in product.options">
+                                                <td>{{option.max}}</td>
+                                                <td>{{option.min}}</td>
+                                                <td>{{option.name}}</td>
+                                                <td>
+                                                    <table>
+                                                        <thead>
+                                                        <th>name</th>
+                                                        <th>posId</th>
+                                                        <th>price</th>
+                                                        <th>selectedOptionalVariant</th>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr ng-repeat="varient in option.variants">
+                                                            <td>{{varient.name}}</td>
+                                                            <td>{{varient.posId}}</td>
+                                                            <td>{{varient.price}}</td>
+                                                            <td>{{varient.selectedOptionalVariant}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table> 
+                        </td>    
                     </tr>
                     </tbody>
                 </table>
