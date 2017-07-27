@@ -28,6 +28,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.itemPrice = "1000";
     $scope.optionsListId = "Pos Option List Id";
     $scope.optionsListName = "Pos Option List Name";
+    $scope.bundleOptionsListId = "Pos Bundle Option List Id";
+    $scope.bundleOptionsListName = "Pos Bundle Option List Name";
     $scope.varientId = undefined;
     $scope.varientPrice = "200";
     $scope.includeTransaction = false;
@@ -64,6 +66,21 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.itemQuantity = "1";
     $scope.manualPaymentTotal = 0;
     
+    $scope.includeBundleItem = false;
+    $scope.bundleItemPosId = undefined;
+    $scope.bundleItemQuantity = "1";
+    $scope.bundleItemPrice = "1000";
+    $scope.bundleItemName = "my Bundle item";
+    $scope.bundleItemIncludedItemItemPosId = undefined
+    $scope.bundleItemIncludedItemItemPrice = "100"
+    $scope.bundleItemIncludedItemItemName = "my included item"
+    $scope.includeBundleItemIncludedItemVarient = false;
+    $scope.bundleItemIncludedItemVarientId = undefined;
+    $scope.bundleItemIncludedItemVarientPrice = "200";
+    $scope.bundleItemIncludedItemVarientName = "bundle item varient";
+    $scope.bundleItemTotalAfterSurcounts = "0";
+    $scope.bundleItemTotalBeforeSurcounts = "0";
+
     $scope.orderTotal = "0";
 
     $scope.orderPayload = "";
@@ -179,6 +196,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     }
     
     function generateItemPriceAfterSurcount() {
+        generateBundleItemitemPrices();
         generateItemPriceBeforeSurcount();
         if ($scope.includeItemSurcount) {
             $scope.itemPriceAfterSurcount = (parseInt($scope.itemPriceBeforeSurcount) + parseInt($scope.itemSurcountPrice)).toString();
@@ -187,12 +205,24 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         }
     }
     
+
+    function generateBundleItemitemPrices(){
+        if ($scope.includeBundleItemIncludedItemVarient){
+            $scope.bundleItemTotalBeforeSurcounts = ((parseInt($scope.bundleItemPrice) * parseInt($scope.bundleItemQuantity)) + (parseInt($scope.bundleItemIncludedItemItemPrice) * parseInt($scope.bundleItemIncludedItemItemQuantity)) + (parseInt($scope.bundleItemIncludedItemVarientPrice))).toString();
+        }else{
+            $scope.bundleItemTotalBeforeSurcounts = ((parseInt($scope.bundleItemPrice) * parseInt($scope.bundleItemQuantity)) + (parseInt($scope.bundleItemIncludedItemItemPrice) * parseInt($scope.bundleItemIncludedItemItemQuantity))).toString();
+        }
+        $scope.bundleItemTotalAfterSurcounts = $scope.bundleItemTotalBeforeSurcounts;
+        
+    }
+
     function generateOrderTotal() {
         generateItemPriceAfterSurcount();
+        generateBundleItemitemPrices();
         if ($scope.includeOrderSurcount) {
-            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue)).toString();
+            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
         } else {
-            $scope.orderTotal = $scope.itemPriceAfterSurcount;
+            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
         }
         if ($scope.payFullAmount) {
             $scope.transactionTotal = parseInt($scope.orderTotal).toString();
@@ -276,51 +306,111 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         }
     }
 
+    $scope.bundleItemOptionJson = [];
+    function generateBundleItemOptions() {
+        if ($scope.includeBundleItemIncludedItemVarient) {
+            $scope.bundleItemOptionJson = [
+                {
+                    "posId": $scope.bundleOptionsListId,
+                    "name": $scope.bundleOptionsListName,
+                    "variants": [
+                    {
+                        "posId" : $scope.bundleItemIncludedItemVarientId,
+                        "name" : $scope.bundleItemIncludedItemVarientPrice,
+                        "price" : $scope.bundleItemIncludedItemVarientName
+                    }]
+                }
+            ];
+        } else {
+            $scope.bundleItemOptionJson = [];
+        }
+    }
+    
+    $scope.itemsArray = undefined;
+    $scope.bundleIncludedItemJson = undefined;
+    function generateBundleIndludedItemJson(){
+        generateBundleItemOptions()
+        $scope.bundleIncludedItemJson = [
+            {
+                "name": $scope.bundleItemName,
+                "unitPrice": $scope.bundleItemPrice,
+                "options": $scope.bundleItemOptionJson,
+                "quantity": $scope.bundleItemQuantity,
+                "posId": $scope.bundleItemIncludedItemItemPosId
+            }
+        ]
+    }
+
+
+    
+    function generateOrderItemJson(){
+        generateBundleItemitemPrices()
+        generateBundleIndludedItemJson()
+        if ($scope.includeBundleItem){
+            $scope.itemsArray = [
+                {
+                    "name": $scope.itemName,
+                    "description": "Yum",
+                    "unitPrice": $scope.itemPrice,
+                    "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                    "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                    "posId": $scope.itemPosId,
+                    "surcounts": $scope.itemSurcountJson,
+                    "options": $scope.itemOptionJson,
+                    "quantity": $scope.itemQuantity,
+                    "type" : "single"
+                    
+                },
+                {
+                    "name": $scope.bundleItemName,
+                    "description": "bundleItem",
+                    "unitPrice": $scope.bundleItemPrice,
+                    "totalBeforeSurcounts": $scope.bundleItemTotalBeforeSurcounts,
+                    "totalAfterSurcounts": $scope.bundleItemTotalAfterSurcounts,
+                    "posId": $scope.bundleItemPosId,
+                    "surcounts": [],
+                    "options": $scope.itemOptionJson,
+                    "quantity": $scope.bundleItemQuantity,
+                    "type" : "bundle",
+                    "includedItems" : $scope.bundleIncludedItemJson,
+                }
+            ]
+        }else{
+            $scope.itemsArray = [
+                {
+                    "name": $scope.itemName,
+                    "description": "Yum",
+                    "unitPrice": $scope.itemPrice,
+                    "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                    "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                    "posId": $scope.itemPosId,
+                    "surcounts": $scope.itemSurcountJson,
+                    "options": $scope.itemOptionJson,
+                    "quantity": $scope.itemQuantity
+                    
+                }
+            ]
+        }
+    }
+
     function generateOrderJson() {
+        generateOrderItemJson()
         if ($scope.manuallyAccepted){
                 $scope.orderPayload = {
                 "type": $scope.orderType,
                 "surcounts": $scope.orderSurcountJson,
                 "requiredAt" : $scope.orderRequiredAt,
                 "manuallyProcessed" : true,
-                "items": [
-                    {
-                        "name": $scope.itemName,
-                        "description": "Yum",
-                        "unitPrice": $scope.itemPrice,
-                        "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
-                        "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
-                        "posId": $scope.itemPosId,
-                        "surcounts": $scope.itemSurcountJson,
-                        "options": $scope.itemOptionJson,
-                        "quantity": $scope.itemQuantity
-                        
-                    }
-                ]
+                "items": $scope.itemsArray
             }
         }else{
             $scope.orderPayload = {
                 "type": $scope.orderType,
                 "surcounts": $scope.orderSurcountJson,
                 "requiredAt" : $scope.orderRequiredAt,
-                "items": [
-                    {
-                        "name": $scope.itemName,
-                        "description": "Yum",
-                        "unitPrice": $scope.itemPrice,
-                        "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
-                        "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
-                        "posId": $scope.itemPosId,
-                        "surcounts": $scope.itemSurcountJson,
-                        "options": $scope.itemOptionJson,
-                        "quantity": $scope.itemQuantity
-                        
-                    }
-                ]
+                "items": $scope.itemsArray
             }
         }
-        
-        
     }
     
     function setOrderJson() {
@@ -359,6 +449,100 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         setOrderJson();
     }
     
+    $scope.includeBundleItem = false;
+    $scope.bundleItemPosId = undefined;
+    $scope.bundleItemQuantity = "1";
+    $scope.bundleItemPrice = "1000";
+    $scope.bundleItemName = "my Bundle item";
+    $scope.bundleItemIncludedItemItemPosId = undefined
+    $scope.bundleItemIncludedItemItemPrice = "100"
+    $scope.bundleItemIncludedItemItemName = "my included item"
+    $scope.includeBundleItemIncludedItemVarient = false;
+    $scope.bundleItemIncludedItemVarientId = undefined;
+    $scope.bundleItemIncludedItemVarientPrice = "200";
+    $scope.bundleItemIncludedItemVarientName = "bundle item varient";
+    $scope.bundleItemIncludedItemItemQuantity = "1";
+    /////////////////////////////////
+
+    $scope.setbundleItemIncludedItemItemQuantity = function (bundleItemIncludedItemItemQuantity) {
+        $scope.bundleItemIncludedItemItemQuantity = bundleItemIncludedItemItemQuantity;
+        setOrderJson();
+    }
+
+    $scope.setBundleItemIncludedItemVarientName = function (bundleItemIncludedItemVarientName) {
+        $scope.bundleItemIncludedItemVarientName = bundleItemIncludedItemVarientName;
+        setOrderJson();
+    }
+    
+    $scope.setBundleItemIncludedItemVarientPrice = function (bundleItemIncludedItemVarientPrice) {
+        $scope.bundleItemIncludedItemVarientPrice = bundleItemIncludedItemVarientPrice;
+        setOrderJson();
+    }
+    
+    $scope.setBundleItemIncludedItemVarientId = function (bundleItemIncludedItemVarientId) {
+        if (bundleItemIncludedItemVarientId) {
+            $scope.bundleItemIncludedItemVarientId = bundleItemIncludedItemVarientId;
+        } else {
+            $scope.bundleItemIncludedItemVarientId = undefined;
+        }
+        setOrderJson();
+    }
+
+    $scope.setIncludeBundleItemIncludedItemVarient = function (includeBundleItemIncludedItemVarient) {
+        $scope.includeBundleItemIncludedItemVarient = includeBundleItemIncludedItemVarient;
+        setOrderJson();
+    }
+
+    $scope.setBundleItemIncludedItemItemName = function (bundleItemIncludedItemItemName) {
+        $scope.bundleItemIncludedItemItemName = bundleItemIncludedItemItemName;
+        setOrderJson();
+    }
+
+    $scope.setBundleItemIncludedItemItemPrice = function (bundleItemIncludedItemItemPrice) {
+        $scope.bundleItemIncludedItemItemPrice = bundleItemIncludedItemItemPrice;
+        setOrderJson();
+    }
+    
+    $scope.setBundleItemIncludedItemPosId = function (bundleItemIncludedItemItemPosId) {
+        if (bundleItemIncludedItemItemPosId) {
+            $scope.bundleItemIncludedItemItemPosId = bundleItemIncludedItemItemPosId;
+        } else {
+            $scope.bundleItemIncludedItemItemPosId = undefined;
+        }
+        setOrderJson();
+    }
+
+    $scope.setBundleItemName = function (bundleItemName) {
+        $scope.bundleItemName = bundleItemName;
+        setOrderJson();
+    }
+    
+    $scope.setBundleItemPrice = function (bundleItemPrice) {
+        $scope.bundleItemPrice = bundleItemPrice;
+        setOrderJson();
+    }
+    
+    $scope.setBundleItemQuantity = function (bundleItemQuantity) {
+        $scope.bundleItemQuantity = bundleItemQuantity;
+        setOrderJson();
+    }
+    
+    $scope.setIncludeBundleItem = function (includeBundleItem) {
+        $scope.includeBundleItem = includeBundleItem;
+        setOrderJson();
+    }
+
+    $scope.setBundleItemPosId = function(bundleItemPosId) {
+        if (bundleItemPosId) {
+            $scope.bundleItemPosId = bundleItemPosId;
+        } else {
+            $scope.bundleItemPosId = undefined;
+        }
+        setOrderJson();
+    }
+
+    ///////////////////////////////
+
     $scope.setOrderRequiredAt = function (requiredAt) {
         if (requiredAt) {
             $scope.orderRequiredAt = requiredAt;
