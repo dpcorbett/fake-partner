@@ -213,7 +213,6 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
             $scope.bundleItemTotalBeforeSurcounts = ((parseInt($scope.bundleItemPrice) * parseInt($scope.bundleItemQuantity)) + (parseInt($scope.bundleItemIncludedItemItemPrice) * parseInt($scope.bundleItemIncludedItemItemQuantity))).toString();
         }
         $scope.bundleItemTotalAfterSurcounts = $scope.bundleItemTotalBeforeSurcounts;
-        
     }
 
     function generateOrderTotal() {
@@ -333,7 +332,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         $scope.bundleIncludedItemJson = [
             {
                 "name": $scope.bundleItemName,
-                "unitPrice": $scope.bundleItemPrice,
+                "unitPrice": $scope.bundleItemIncludedItemPrice,
                 "options": $scope.bundleItemOptionJson,
                 "quantity": $scope.bundleItemQuantity,
                 "posId": $scope.bundleItemIncludedItemItemPosId
