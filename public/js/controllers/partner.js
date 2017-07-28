@@ -218,10 +218,29 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     function generateOrderTotal() {
         generateItemPriceAfterSurcount();
         generateBundleItemitemPrices();
+        console.log("generate order total");
         if ($scope.includeOrderSurcount) {
-            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+            console.log("generate order total - include item surcount");
+            if ($scope.includeBundleItem){
+                console.log("generate order total - include bundle item");
+                $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+                console.log($scope.orderTotal)
+            }else{
+                console.log("generate order total - Dont include bundle item");
+                $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue)).toString();
+                console.log($scope.orderTotal)
+            }
         } else {
-            $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+            console.log("generate order total - dont include item surcount");
+            if ($scope.includeBundleItem){
+                console.log("generate order total - include bundle item");
+                $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+                console.log($scope.orderTotal)
+            }else{
+                console.log("generate order total - Dont include bundle item");
+                $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount)).toString();
+                console.log($scope.orderTotal)
+            }
         }
         if ($scope.payFullAmount) {
             $scope.transactionTotal = parseInt($scope.orderTotal).toString();
