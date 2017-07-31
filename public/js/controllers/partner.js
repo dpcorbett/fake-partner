@@ -334,8 +334,8 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                     "variants": [
                     {
                         "posId" : $scope.bundleItemIncludedItemVarientId,
-                        "name" : $scope.bundleItemIncludedItemVarientPrice,
-                        "price" : $scope.bundleItemIncludedItemVarientName
+                        "name" : $scope.bundleItemIncludedItemVarientName,
+                        "price" : $scope.bundleItemIncludedItemVarientPrice
                     }]
                 }
             ];
@@ -351,7 +351,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         $scope.bundleIncludedItemJson = [
             {
                 "name": $scope.bundleItemName,
-                "unitPrice": $scope.bundleItemIncludedItemPrice,
+                "unitPrice": $scope.bundleItemIncludedItemItemPrice,
                 "options": $scope.bundleItemOptionJson,
                 "quantity": $scope.bundleItemQuantity,
                 "posId": $scope.bundleItemIncludedItemItemPosId
