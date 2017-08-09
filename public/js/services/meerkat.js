@@ -303,6 +303,32 @@ Meerkat.requestrefund = function(transaction, locationId){
 }
 
 
+Meerkat.requestPayment = function(transaction, locationId){
+    
+    
+    var sendBody = JSON.stringify(transaction, undefined, 2);
+    var req = {
+            method: 'POST',
+            url: '/transactions',
+            data: sendBody,
+            headers: {
+                'doshii-location-id': locationId
+            }
+        };
+
+    return $http(req)
+        .then(res => {
+        var response = angular.copy(res.data);
+        console.log(response);
+        flash.success = 'Order paid successfully';
+        return;
+    })
+    .catch(err => {
+        flash.error = 'Payment Error : ' + err.statusText + getErrorMessage(err.data);
+        throw err;
+    });
+}
+
 Meerkat.addFivePercentReward = function (memberId, organisationId, jsonToSend) {
 
     var req = {
