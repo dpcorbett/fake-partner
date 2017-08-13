@@ -19,6 +19,7 @@ function MeerkatService($http, $modal, flash) {
             acceptPointsRedemptions: false,
             manuallyAccepted: false,
             completeTransactions: true,
+            dropAllTransactions: false,
             organisationId: ""
         }
   };
@@ -50,30 +51,9 @@ function MeerkatService($http, $modal, flash) {
                     delete response.createdAt;
                     var theId = response.id;
                     delete response.id;
-                    if (Meerkat.data.completeTransactions){
-                        response.status = 'complete'
-                        console.log(response);
-                        flash.success = 'transaction received';
-                        var req = {
-                            method: 'PUT',
-                            url: '/transactions/' + theId,
-                            headers: {
-                                'doshii-organisation-id': Meerkat.organisationId
-                            },
-                            data: JSON.stringify(response)
-                        };
-
-                        return $http(req)
-                            .then(res => {
-                                var response = angular.copy(res.data);
-                                console.log(response);
-                                flash.success = 'transaction completed';
-                                return;
-                            })
-                    }else{
-                        var response = angular.copy(res.data);
-                        if (Meerkat.completeTransactions){
-                            response.status = 'cancelled'
+                    if (!Meerkat.data.dropAllTransactions){
+                        if (Meerkat.data.completeTransactions){
+                            response.status = 'complete'
                             console.log(response);
                             flash.success = 'transaction received';
                             var req = {
@@ -89,9 +69,32 @@ function MeerkatService($http, $modal, flash) {
                                 .then(res => {
                                     var response = angular.copy(res.data);
                                     console.log(response);
-                                    flash.success = 'transaction cancelled';
+                                    flash.success = 'transaction completed';
                                     return;
                                 })
+                        }else{
+                            var response = angular.copy(res.data);
+                            if (Meerkat.completeTransactions){
+                                response.status = 'cancelled'
+                                console.log(response);
+                                flash.success = 'transaction received';
+                                var req = {
+                                    method: 'PUT',
+                                    url: '/transactions/' + theId,
+                                    headers: {
+                                        'doshii-organisation-id': Meerkat.organisationId
+                                    },
+                                    data: JSON.stringify(response)
+                                };
+
+                                return $http(req)
+                                    .then(res => {
+                                        var response = angular.copy(res.data);
+                                        console.log(response);
+                                        flash.success = 'transaction cancelled';
+                                        return;
+                                    })
+                            }
                         }
                     }
                 }).catch(err => {
@@ -399,17 +402,6 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
   };
 
   Meerkat.sendOrder = function(jsonToSend, locationId) {
-    //var parsedBody = {};
-
-    //try {
-    //    parsedBody.consumer = JSON.parse(consumerBody);
-    //    parsedBody.transactions = JSON.parse(transactionBody);
-    //    parsedBody.order = JSON.parse(orderBody);
-    //} catch (e) {
-    //  flash.error = 'Invalid order JSON: ' + e;
-    //  return;
-    //}
-
     var req = {
       method: 'POST',
       url: '/orders',
@@ -428,8 +420,14 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
       })
       .catch(err => {
         flash.error = 'Order not sent: ' + err.statusText + getErrorMessage(err.data);
-        throw err;
       });
+  };
+
+  Meerkat.sendMultipleOrders = function(jsonToSend, locationId) {
+    var step;
+    for (step = 0; step < 5; step++){
+        setTimeout(Meerkat.sendOrder(jsonToSend,locationId ), step * 500)
+    }
   };
 
   Meerkat.updateTransaction = function(transactionUri) {

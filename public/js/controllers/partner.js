@@ -104,6 +104,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
     $scope.includeTips = false;
     $scope.manuallyAccepted = false;
     $scope.completeTransactions = true;
+    $scope.dropAllTransactions = false;
     
     $scope.newReserveTableNames = "";
     $scope.newReserveDate = "";
@@ -458,6 +459,12 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         Meerkat.data.completeTransactions = completeTransactions;
     }
     
+    $scope.setDropAllTransactions = function (dropAllTransactions){
+        $scope.dropAllTransactions = dropAllTransactions;
+        Meerkat.data.dropAllTransactions = dropAllTransactions;
+    }
+
+
     $scope.setPosId = function (posId) {
         if (posId) {
             $scope.itemPosId = posId;
@@ -914,9 +921,9 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
   doshiiEmitter.on('transaction_updated', updateTransaction);
 
   function updateOrder(event) {
-    if(event.orderId === $scope.order.id) {
+    /* if(event.orderId === $scope.order.id) {
       Meerkat.getOrder($scope.order.id).then(res => $scope.order = res.data)
-    }
+    } */
   }
 
   function updateTransaction(event) {
@@ -1100,6 +1107,11 @@ member.points = member.points + 50;
         //  flash.error = 'No orders on table ' + $scope.selectedTable.name;
         //}
       });
+  };
+
+  $scope.sendMultipleAndGo = () => {
+    Meerkat.sendMultipleOrders($scope.formattedJsonToSend(), $scope.selectedLocation.id);
+    WizardHandler.wizard().next();  
   };
 
   $scope.getOrderAndGo = orderId => Meerkat.getOrder(orderId)

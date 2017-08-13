@@ -49,6 +49,8 @@
         <input type="checkbox" name="manuallyAccepted" ng-model="manuallyAccepted" ng-change="setManuallyAccepted({{'manuallyAccepted'}})" />
         Complete Transactions
         <input type="checkbox" name="completeTransactions" ng-model="completeTransactions" ng-change="setCompleteTransactions({{'completeTransactions'}})" />
+        Drop All transaction without response
+        <input type="checkbox" name="dropAllTransactions" ng-model="dropAllTransactions" ng-change="setDropAllTransactions({{'dropAllTransactions'}})" />
         <tabset>
             <tab heading="Pay@Table" select="selectTab('pay-at-table')">
                 <h2>Pay@Table:</h2>
@@ -1023,6 +1025,9 @@
       <a class="button small" wz-previous>Previous</a>
       <button class="tiny" ng-click="sendOrderAndGo()">
           Send Order
+      </button>
+      <button class="tiny" ng-click="sendMultipleAndGo()">
+          Send Multiple Orders
       </button>
   </wz-step>
 
