@@ -988,10 +988,61 @@ $scope.cancelOrder = (order) => {
     Meerkat.cancelOrder(order, $scope.selectedLocation.id)
 }
 
+
 $scope.requestRefund = (transaction) => {
     Meerkat.requestrefund(transaction, $scope.selectedLocation.id)
 }
 
+$scope.getOrderTotalAmt=(order)=>{
+    
+    var sum=0.00;
+    var count=0;
+    if(order.items!= undefined){
+        for(count=0;count<order.items.length;count++){
+        sum+= parseInt(order.items[count].totalAfterSurcounts);
+        }
+    }
+
+    if(order.surcounts!=undefined){
+        for(count=0;count<order.surcounts.length;count++){
+          sum+= parseInt( order.surcounts.value)
+        }
+    }
+    return sum;
+}
+
+
+$scope.requestPayment = (order) => {
+
+    var name ='txtInputAmt'+order.id;
+    var ele=angular.element(document.getElementById(name));
+    if(ele ==null || ele ==undefined){
+        alert('Element not found! ');
+        flash.error= "element not found";
+        return ;
+    }
+
+    var newValue = parseInt(ele.val())
+    var originalAmt = $scope.getOrderTotalAmt(order);
+    if(newValue!= originalAmt){
+        if(!confirm("You have edited the amount ! .Check Total is "+ originalAmt +". Do you wish to pay amout " +  newValue + "? ")){
+
+            flash.error= "Payment Cancelled ";
+            return ;
+        }
+    }
+
+    var ref = new Date().getTime().toString() + order.id;
+    var refundTransaction = {
+        'orderId' : order.id,
+        "amount":  newValue.toString() ,
+        "reference":  ref,
+        "invoice": "INV" +ref,
+        //"linkedTrxIds" : [transaction.id]
+    };
+    
+    Meerkat.requestPayment(refundTransaction, $scope.selectedLocation.id)
+}
 
 
 $scope.addFivePercentReward = (memberId) => {
