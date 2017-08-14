@@ -324,6 +324,7 @@ Meerkat.requestPayment = function(transaction, locationId){
         var response = angular.copy(res.data);
         console.log(response);
         flash.success = 'Order paid successfully';
+       
         return;
     })
     .catch(err => {

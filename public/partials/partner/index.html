@@ -136,11 +136,23 @@
                                 <td>
                                     <table>
                                         <tr>
-                                            <td><label  for={{order.id}}>$</label></td>
-                                            <td>
-                                                <input id={{'txtInputAmt'+order.id}}  style="width:100px;" type="text" value={{getOrderTotalAmt(order)}} />
-
+                                            
+                                        <td>
+                                                <div>Total&nbsp;$:&nbsp;{{getOrderTotalAmt(order)}}</div>        
                                             </td>
+
+                                            <td>
+                                                <div>Paid&nbsp;$:&nbsp;{{getOrderPaidAmt(order)}}</div>
+                                                
+                                            </td>
+                                        
+                                            <td><label  for={{order.id}}>Outstanding&nbsp;$</label></td>
+                                            <td>                                                
+                                                <input id={{'txtInputAmt'+order.id}}  style="width:100px;" type="text" value={{getOrderOutstandingAmt(order)}} />                                                
+                                            </td>
+
+
+
                                             <td>
                                                 
                                                 <button class="tiny" ng-click="requestPayment(order)">Pay</button>
@@ -151,9 +163,9 @@
                                             <td colspan="3">
                                                 <button class="tiny" ng-click="cancelOrder(order)">  Cancel Order     </button>
                                             </td>
-                                            <!-- <td colspan="2"> debugging
-                                               <pre> {{order|json}}</pre>
-                                            </td> -->
+                                             <td colspan="2"> 
+                                               <!-- <pre class="code-block"> {{order|json}}</pre> -->
+                                            </td> 
                                         </tr>
                                     </table>
 
