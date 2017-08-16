@@ -1005,12 +1005,50 @@ $scope.getOrderTotalAmt=(order)=>{
 
     if(order.surcounts!=undefined){
         for(count=0;count<order.surcounts.length;count++){
-          sum+= parseInt( order.surcounts.value)
+          sum+= parseInt( order.surcounts[count].value)
         }
     }
     return sum;
 }
 
+$scope.getOrderPaidAmt=(order)=>{
+    var sum=0.00;
+    if(order.transactions !=undefined && order.transactions.length>0){
+
+        var count=0;
+        for(count=0;count<order.transactions.length;count++){
+        sum+= parseInt(order.transactions[count].amount);
+        }
+
+    }
+    return sum;
+}
+
+$scope.getOrderOutstandingAmt=(order)=>{
+
+     var sum=0.00;
+    var count=0;
+    if(order.items!= undefined){
+        for(count=0;count<order.items.length;count++){
+        sum+= parseInt(order.items[count].totalAfterSurcounts);
+        }
+    }
+
+    if(order.surcounts!=undefined){
+        for(count=0;count<order.surcounts.length;count++){
+          sum+= parseInt( order.surcounts[count].value)
+        }
+    }
+
+    if(order.transactions !=undefined && order.transactions.length>0){
+
+        count=0;
+        for(count=0;count<order.transactions.length;count++){
+        sum-= parseInt(order.transactions[count].amount);
+        }
+    }
+    return sum;
+}
 
 $scope.requestPayment = (order) => {
 
@@ -1023,9 +1061,9 @@ $scope.requestPayment = (order) => {
     }
 
     var newValue = parseInt(ele.val())
-    var originalAmt = $scope.getOrderTotalAmt(order);
+    var originalAmt = $scope.getOrderOutstandingAmt(order);
     if(newValue!= originalAmt){
-        if(!confirm("You have edited the amount ! .Check Total is "+ originalAmt +". Do you wish to pay amout " +  newValue + "? ")){
+        if(!confirm("You have edited the amount ! .Check outstanding is "+ originalAmt +". Do you wish to pay amout " +  newValue + "? ")){
 
             flash.error= "Payment Cancelled ";
             return ;
@@ -1041,8 +1079,9 @@ $scope.requestPayment = (order) => {
         //"linkedTrxIds" : [transaction.id]
     };
     
-    Meerkat.requestPayment(refundTransaction, $scope.selectedLocation.id)
+    Meerkat.requestPayment(refundTransaction, $scope.selectedLocation.id);
 }
+
 
 
 $scope.addFivePercentReward = (memberId) => {
