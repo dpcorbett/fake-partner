@@ -1,0 +1,1069 @@
+<div class="pos">
+
+    <div flash-alert active-class="in" class="alert fade">
+        <strong class="alert-heading"></strong>
+        <alert ng-show="flash.message" type="flash.type || success">{{flash.message}}</alert>
+    </div>
+
+
+    <wizard>
+
+        <wz-step title="Location">
+            <h2>Pick a location:</h2>
+            <button class="tiny" ng-click="getLocations()">Refresh</button>
+
+            <table>
+                <thead>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>address</th>
+                    <th>orgId</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="location in locations">
+                        <td>{{location.id}}</td>
+                        <td>{{location.name}}</td>
+                        <td>
+                            {{location.address_line1}} <br/> {{location.city}} <br/> {{location.state}} <br/>
+                        </td>
+                        <td>{{location.organisationId}}</td>
+                        <td>
+                            <button class="tiny" ng-click="selectLocationAndGo(location.id, location.organisationId)">
+                  Select
+              </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </wz-step>
+
+    <wz-step title="Integration type">
+        Accept Reward Redemptions
+        <input type="checkbox" name="acceptRewardsRedemptions" ng-model="acceptRewardsRedemptions" ng-change="setAcceptRewardsRedemptions({{'acceptRewardsRedemptions'}})" />
+    </br>
+        Accept Points Redemptions
+        <input type="checkbox" name="acceptPointsRedemptions" ng-model="acceptPointsRedemptions" ng-change="setAcceptPointsRedemptions({{'acceptPointsRedemptions'}})" />
+    </br>
+        Set Manually Accepted
+        <input type="checkbox" name="manuallyAccepted" ng-model="manuallyAccepted" ng-change="setManuallyAccepted({{'manuallyAccepted'}})" />
+    </br>
+        Complete Transactions
+        <input type="checkbox" name="completeTransactions" ng-model="completeTransactions" ng-change="setCompleteTransactions({{'completeTransactions'}})" />
+    </br>
+        Drop All transaction without response
+        <input type="checkbox" name="dropAllTransactions" ng-model="dropAllTransactions" ng-change="setDropAllTransactions({{'dropAllTransactions'}})" />
+        <tabset>
+            <tab heading="Pay@Table" select="selectTab('pay-at-table')">
+                <h2>Pay@Table:</h2>
+
+                    <div>
+                        Enter a table name with some orders on it
+                    </div>
+
+                    <input type="text" ng-model="selectedTable.name" />
+
+                    <button class="tiny" ng-click="fetchTableAndGo()">
+                    Fetch table
+                </button>
+                </tab>
+                <tab heading="Refund Transactions" select="selectTab('refund-transactions')">
+                    <h2>My Transactions:</h2>
+                    <button class="tiny" ng-click="getMyPaidTransactions()">Get Paid Transactions</button>
+                    <table>
+                        <thead>
+                            <th>Id</th>
+                            <th>OrderId</th>
+                            <th>Amount</th>
+                            <th>Tip</th>
+                            <th>Partner</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="transaction in MyTransactions">
+                                <td>{{transaction.id}}</td>
+                                <td>{{transaction.orderId}}</td>
+                                <td>{{transaction.amount}}</td>
+                                <td>{{transaction.tip}}</td>
+                                <td>{{transaction.partner}}</td>
+                                <td>
+                                    <button class="tiny" ng-click="requestRefund(transaction)">
+                                    Refund Transaction
+                                </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </tab>
+                <tab heading="Pos Orders" select="selectTab('pos-orders')">
+                    <h2>Get Pos Orders</h2>
+
+                    <button class="tiny" ng-click="getAcceptedPosOrders()">Accpeted Orders</button>
+                    <button class="tiny" ng-click="getCompletedPosOrders()">Completed Orders</button>
+                    <button class="tiny" ng-click="getPendingPosOrders()">Pending Orders</button>
+                    <button class="tiny" ng-click="getRejectedPosOrders()">Rejected Orders</button>
+                    <button class="tiny" ng-click="getCancelledPosOrders()">Cancelled Orders</button>
+
+                    <table>
+                        <thead>
+                            <th>Id</th>
+                            <th>Status</th>
+                            <th>Checkin</th>
+                            <th>Actions</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="order in posOrders">
+                                <td>{{order.id}}</td>
+                                <td>{{order.status}}</td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                            <th>checkinId</th>
+                                            <th>TableNames</th>
+                                            <th>covers</th>
+                                            <th>State</th>
+                                        </thead>
+                                        <tbody>
+                                            <td>{{order.checkin.id}}</td>
+                                            <td>
+                                                <table>
+                                                    <tbody>
+                                                        <tr ng-repeat="tableName in order.checkin.tableNames">
+                                                            <td>{{tableName}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tr>
+                                            <td><label  for={{order.id}}>$</label></td>
+                                            <td>
+                                                <input id={{'txtInputAmt'+order.id}}  style="width:100px;" type="text" value={{getOrderTotalAmt(order)}} />
+
+                                            </td>
+                                            <td>
+                                                
+                                                <button class="tiny" ng-click="requestPayment(order)">Pay</button>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="3">
+                                                <button class="tiny" ng-click="cancelOrder(order)">  Cancel Order     </button>
+                                            </td>
+                                            <!-- <td colspan="2"> debugging
+                                               <pre> {{order|json}}</pre>
+                                            </td> -->
+                                        </tr>
+                                    </table>
+
+
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </tab>
+                <tab heading="Order Ahead" select="selectTab('order-ahead')">
+                    <h2>Order Ahead</h2>
+
+                    <table>
+                        <tr>
+                            <td>
+                                <table>
+                                    <caption>Create a new order for location: {{location.id}}</caption>
+                                    <tr>
+                                        <td>Order Details:</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>
+                                            <input type="radio" name="orderOfType" value="pickup" ng-model="orderType" ng-change='setOrderType("pickup")'>
+                                            Pickup
+                                        </label>
+                                        </td>
+                                        <td>
+                                            <label>
+                                            <input type="radio" name="orderOfType" value="delivery" ng-model="orderType" ng-change='setOrderType("delivery")'>
+                                            Delivery
+                                        </label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Include Order surcount
+                                            <input type="checkbox" ng-model="includeOrderSurcount" ng-change="setIncludeOrderSurcount({{'includeOrderSurcount'}})" />
+                                        </td>
+                                        <td>
+                                            Include Order is percentage
+                                            <input type="checkbox" ng-model="orderSurcountIsPercentage" ng-change="setOrderSurcountIsPercentage({{'orderSurcountIsPercentage'}})"
+                                            />
+                                        </td>
+                                        <td>
+                                            Order surcount Pos Id:
+                                            <input type="text" name="orderSurcountPosId" ng-model="orderSurcountPosId" ng-change="setOrderSurcountPosId({{'orderSurcountPosId'}})">
+                                        </td>
+                                        <td>
+                                            Order Surcount Amount:
+                                            <input type="text" name="orderSurcountAmount" ng-model="orderSurcountAmount" ng-change="setOrderSurcountAmount({{'orderSurcountAmount'}})">
+                                        </td>
+                                        <td>
+                                            Order Surcount Value:
+                                            <input type="text" name="orderSurcountValue" ng-model="orderSurcountValue" ng-change="setOrderSurcountValue({{'orderSurcountValue'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Item Details:
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Item Pos Id:
+                                            <input type="text" name="itemPosId" ng-model="itemPosId" ng-change="setPosId({{'itemPosId'}})">
+                                        </td>
+                                        <td>
+                                            Item Qty:
+                                            <input type="text" name="itemQuantity" ng-model="itemQuantity" ng-change="setitemQuantity({{'itemQuantity'}})">
+                                        </td>
+                                        <td>
+                                            Item Unit Price:
+                                            <input type="text" name="itemPrice" ng-model="itemPrice" ng-change="setItemPrice({{'itemPrice'}})">
+                                        </td>
+                                        <td>
+                                            Item Name:
+                                            <input type="text" name="itemName" ng-model="itemName" ng-change="setItemName({{'itemName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Include Varient
+                                            <input type="checkbox" ng-model="includeVarient" ng-change="setIncludeVarient({{'includeVarient'}})" />
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Options List Pos Id
+                                            <input type="text" name="optionsListId" ng-model="optionsListId" ng-change="setOptionListId({{'optionsListId'}})">
+                                        </td>
+                                        <td>
+                                            Options List Name
+                                            <input type="text" name="optionsListName" ng-model="optionsListName" ng-change="setOptionsListName({{'optionsListName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Varient Pos Id:
+                                            <input type="text" name="varientId" ng-model="varientId" ng-change="setVarientId({{'varientId'}})">
+                                        </td>
+                                        <td>
+                                            Varient Price:
+                                            <input type="text" name="varientPrice" ng-model="varientPrice" ng-change="setVarientPrice({{'varientPrice'}})">
+                                        </td>
+                                        <td>
+                                            Varient Name:
+                                            <input type="text" name="varientName" ng-model="varientName" ng-change="setVarientName({{'varientName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Include Item surcount
+                                            <input type="checkbox" ng-model="includeItemSurcount" ng-change="setIncludeItemSurcount({{'includeItemSurcount'}})" />
+                                        </td>
+                                        <td>
+                                            Item surcount Pos Id:
+                                            <input type="text" name="itemSurcountPosId" ng-model="itemSurcountPosId" ng-change="setItemSurcountPosId({{'itemSurcountPosId'}})">
+                                        </td>
+                                        <td>
+                                            Item Surcount Price:
+                                            <input type="text" name="itemSurcountPrice" ng-model="itemSurcountPrice" ng-change="setItemSurcountPrice({{'itemSurcountPrice'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Include bundle Item
+                                            <input type="checkbox" ng-model="includeBundleItem" ng-change="setIncludeBundleItem({{'includeBundleItem'}})" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Bundle Item Pos Id:
+                                            <input type="text" name="bundleItemPosId" ng-model="bundleItemPosId" ng-change="setBundleItemPosId({{'bundleItemPosId'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Qty:
+                                            <input type="text" name="bundleItemQuantity" ng-model="bundleItemQuantity" ng-change="setBundleItemQuantity({{'bundleItemQuantity'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Unit Price:
+                                            <input type="text" name="bundleItemPrice" ng-model="bundleItemPrice" ng-change="setBundleItemPrice({{'bundleItemPrice'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Name:
+                                            <input type="text" name="bundleItemName" ng-model="bundleItemName" ng-change="setBundleItemName({{'bundleItemName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Bundle Item Included Item Pos Id:
+                                            <input type="text" name="bundleItemIncludedItemItemPosId" ng-model="bundleItemIncludedItemItemPosId" ng-change="setBundleItemIncludedItemPosId({{'bundleItemIncludedItemItemPosId'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Included Item quantity:
+                                            <input type="text" name="bundleItemIncludedItemItemQuantity" ng-model="bundleItemIncludedItemItemQuantity" ng-change="setbundleItemIncludedItemItemQuantity({{'bundleItemIncludedItemItemQuantity'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Unit Price:
+                                            <input type="text" name="bundleItemIncludedItemItemPrice" ng-model="bundleItemIncludedItemItemPrice" ng-change="setBundleItemIncludedItemItemPrice({{'bundleItemIncludedItemItemPrice'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Name:
+                                            <input type="text" name="bundleItemIncludedItemItemName" ng-model="bundleItemIncludedItemItemName" ng-change="setBundleItemIncludedItemItemName({{'bundleItemIncludedItemItemName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Include bundle Item Included Item Varient
+                                            <input type="checkbox" ng-model="includeBundleItemIncludedItemVarient" ng-change="setIncludeBundleItemIncludedItemVarient({{'includeBundleItemIncludedItemVarient'}})"
+                                            />
+                                        </td>
+                                        <td>
+                                            Bundle Item Included Varent Item Pos Id:
+                                            <input type="text" name="bundleItemIncludedItemVarientId" ng-model="bundleItemIncludedItemVarientId" ng-change="setBundleItemIncludedItemVarientId({{'bundleItemIncludedItemVarientId'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Varient Unit Price:
+                                            <input type="text" name="bundleItemIncludedItemVarientPrice" ng-model="bundleItemIncludedItemVarientPrice" ng-change="setBundleItemIncludedItemVarientPrice({{'bundleItemIncludedItemVarientPrice'}})">
+                                        </td>
+                                        <td>
+                                            Bundle Item Varient Name:
+                                            <input type="text" name="bundleItemIncludedItemVarientName" ng-model="bundleItemIncludedItemVarientName" ng-change="setBundleItemIncludedItemVarientName({{'bundleItemIncludedItemVarientName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Required At
+                                            <input type="text" name="orderRequiredAt" ng-model="orderRequiredAt" ng-change="setOrderRequiredAt({{'orderRequiredAt'}})">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <a class="button small" wz-next>Next</a>
+                            </td>
+                            <td>
+                                Order JSON
+                                <pre class="code-block"><code>{{formattedOrder()}}</code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </tab>
+                <tab heading="Pos Menu" select="selectTab('pos-menu')">
+                    <h2>Pos Menu:</h2>
+                    <button class="tiny" ng-click="getMenu()">Refresh</button>
+
+                    <table>
+                        <thead>
+                            <th>PosId</th>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>description</th>
+                            <th>price</th>
+                            <th>tags</th>
+                            <th>Options</th>
+                            <th>Included Items</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="product in products">
+                                <td>{{product.posId}}</td>
+                                <td>{{product.type}}</td>
+                                <td>{{product.name}}</td>
+                                <td>{{product.description}}</td>
+                                <td>{{product.unitPrice}}</td>
+                                <td>{{product.tags}}</td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                            <th>min</th>
+                                            <th>max</th>
+                                            <th>name</th>
+                                            <th>Varients</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="option in product.options">
+                                                <td>{{option.max}}</td>
+                                                <td>{{option.min}}</td>
+                                                <td>{{option.name}}</td>
+                                                <td>
+                                                    <table>
+                                                        <thead>
+                                                            <th>name</th>
+                                                            <th>posId</th>
+                                                            <th>price</th>
+                                                            <th>selectedOptionalVariant</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="varient in option.variants">
+                                                                <td>{{varient.name}}</td>
+                                                                <td>{{varient.posId}}</td>
+                                                                <td>{{varient.price}}</td>
+                                                                <td>{{varient.selectedOptionalVariant}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                            <th>PosId</th>
+                                            <th>Quantity</th>
+                                            <th>Name</th>
+                                            <th>description</th>
+                                            <th>price</th>
+                                            <th>tags</th>
+                                            <th>Options</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="product in product.includedItems">
+                                                <td>{{product.posId}}</td>
+                                                <td>{{product.quantity}}</td>
+                                                <td>{{product.type}}</td>
+                                                <td>{{product.name}}</td>
+                                                <td>{{product.description}}</td>
+                                                <td>{{product.unitPrice}}</td>
+                                                <td>{{product.tags}}</td>
+                                                <td>
+                                                    <table>
+                                                        <thead>
+                                                            <th>min</th>
+                                                            <th>max</th>
+                                                            <th>name</th>
+                                                            <th>Varients</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr ng-repeat="option in product.options">
+                                                                <td>{{option.max}}</td>
+                                                                <td>{{option.min}}</td>
+                                                                <td>{{option.name}}</td>
+                                                                <td>
+                                                                    <table>
+                                                                        <thead>
+                                                                            <th>name</th>
+                                                                            <th>posId</th>
+                                                                            <th>price</th>
+                                                                            <th>selectedOptionalVariant</th>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr ng-repeat="varient in option.variants">
+                                                                                <td>{{varient.name}}</td>
+                                                                                <td>{{varient.posId}}</td>
+                                                                                <td>{{varient.price}}</td>
+                                                                                <td>{{varient.selectedOptionalVariant}}</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </tab>
+                <tab heading="Current Members" select="selectTab('current-Members')">
+                    <h2>Current Members:</h2>
+                    <button class="tiny" ng-click="getMembers()">Refresh</button>
+
+                    <table>
+                        <thead>
+                            <th>Id</th>
+                            <th>Ref</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Points</th>
+                            <th>Address</th>
+                            <th>Pos Details</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="member in members">
+                                <td>{{member.id}}</td>
+                                <td>{{member.ref}}</td>
+                                <td>{{member.name}}</td>
+                                <td>{{member.phone}}</td>
+                                <td>{{member.email}}</td>
+                                <td>{{member.points}}</td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                            <th>Line1</th>
+                                            <th>Line2</th>
+                                            <th>City</th>
+                                            <th>State</th>
+                                            <th>PostalCode</th>
+                                        </thead>
+                                        <tbody>
+                                            <td>{{member.address.line1}}</td>
+                                            <td>{{member.address.line2}}</td>
+                                            <td>{{member.address.city}}</td>
+                                            <td>{{member.address.state}}</td>
+                                            <td>{{member.address.postalCode}}</td>
+                                            <td>{{member.address.country}}</td>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                        </thead>
+                                        <tbody>
+                                            <td>{{member.OrganisationMember.name}}</td>
+                                            <td>{{member.OrganisationMember.email}}</td>
+                                            <td>{{member.OrganisationMember.phone}}</td>
+                                            <td>
+                                                <table>
+                                                    <thead>
+                                                        <th>Line1</th>
+                                                        <th>Line2</th>
+                                                        <th>City</th>
+                                                        <th>State</th>
+                                                        <th>PostalCode</th>
+                                                        <th>Country</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <td>{{member.OrganisationMember.address.line1}}</td>
+                                                        <td>{{member.OrganisationMember.address.line2}}</td>
+                                                        <td>{{member.OrganisationMember.address.city}}</td>
+                                                        <td>{{member.OrganisationMember.address.state}}</td>
+                                                        <td>{{member.OrganisationMember.address.postalCode}}</td>
+                                                        <td>{{member.OrganisationMember.address.country}}</td>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <button class="tiny" ng-click="addFiveDollarReward(member.id)">
+                                            Add $5 reward
+                                        </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button class="tiny" ng-click="addFivePercentReward(member.id)">
+                                            Add 5% reward
+                                        </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button class="tiny" ng-click="deleteMember(member.id)">
+                                            Delete
+                                        </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <button class="tiny" ng-click="addFiftyPointsToMember(member)">
+                                            Add 50 points
+                                        </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </tab>
+                <tab heading="Add Member" select="selectTab('add-Member')">
+                    <h2>Add Member:</h2>
+                    <table>
+                        <tr>
+                            <td>
+
+
+
+                                <table>
+                                    <tr>
+                                        <td>
+                                            New Member Name:
+                                            <input type="text" name="newMemberName" ng-model="newMemberName" ng-change="setNewMemberName({{'newMemberName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Email:
+                                            <input type="text" name="newMemberEmail" ng-model="newMemberEmail" ng-change="setNewMemberEmail({{'newMemberEmail'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Phone:
+                                            <input type="text" name="newMemberPhone" ng-model="newMemberPhone" ng-change="setNewMemberPhone({{'newMemberPhone'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Points:
+                                            <input type="text" name="newMemberPoints" ng-model="newMemberPoints" ng-change="setNewMemberPoints({{'newMemberPoints'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Ref:
+                                            <input type="text" name="newMemberRef" ng-model="newMemberRef" ng-change="setNewMemberRef({{'newMemberRef'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Address Line1:
+                                            <input type="text" name="newMemberAddressLine1" ng-model="newMemberAddressLine1" ng-change="setNewMemberAddressLine1({{'newMemberAddressLine1'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Address Line2:
+                                            <input type="text" name="newMemberAddressLine2" ng-model="newMemberAddressLine2" ng-change="setNewMemberAddressLine2({{'newMemberAddressLine2'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Address City:
+                                            <input type="text" name="newMemberCity" ng-model="newMemberCity" ng-change="setNewMemberCity({{'newMemberCity'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Address State:
+                                            <input type="text" name="newMemberState" ng-model="newMemberState" ng-change="setNewMemberState({{'newMemberState'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            New Member Address PostalCode:
+                                            <input type="text" name="newMemberPostalCode" ng-model="newMemberPostalCode" ng-change="setNewMemberPostalCode({{'newMemberPostalCode'}})">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                Member JSON
+                                <pre class="code-block"><code>{{formattedNewMember()}}</code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                    <button class="tiny" ng-click="createMember()">Create</button>
+                    <!--<a class="button small" wz-next>Next</a>-->
+                </tab>
+                <tab heading="Current Reservations" select="selectTab('current-Reservations')">
+                    <h2>Current Reservations:</h2>
+                    <div>
+                        Enter a start date (yyyy-mm-dd) to search for reservations
+                    </div>
+
+                    <input type="text" ng-model="reservationStartDate" />
+
+                    <button class="tiny" ng-click="getReservations()">Refresh</button>
+                    <table>
+                        <thead>
+                            <th>Id</th>
+                            <th>Ref</th>
+                            <th>Table Names</th>
+                            <th>Date</th>
+                            <th>Covers</th>
+                            <th>Checkin Id</th>
+                            <th>Consumer</th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="reserve in reserves">
+                                <td>{{reserve.id}}</td>
+                                <td>{{reserve.ref}}</td>
+                                <td>
+                                    <table>
+                                        <tbody>
+                                            <tr ng-repeat="table in reserve.tableNames">
+                                                <td>{{table}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>{{reserve.date}}</td>
+                                <td>{{reserve.covers}}</td>
+                                <td>{{reserve.checkinId}}</td>
+                                <td>
+                                    <table>
+                                        <thead>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Address</th>
+                                        </thead>
+                                        <tbody>
+                                            <td>{{reserve.consumer.name}}</td>
+                                            <td>{{reserve.consumer.email}}</td>
+                                            <td>{{reserve.consumer.phone}}</td>
+                                            <td>
+                                                <table>
+                                                    <thead>
+                                                        <th>Line1</th>
+                                                        <th>Line2</th>
+                                                        <th>City</th>
+                                                        <th>State</th>
+                                                        <th>PostalCode</th>
+                                                        <th>Country</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <td>{{reserve.consumer.address.line1}}</td>
+                                                        <td>{{reserve.consumer.address.line2}}</td>
+                                                        <td>{{reserve.consumer.address.city}}</td>
+                                                        <td>{{reserve.consumer.address.state}}</td>
+                                                        <td>{{reserve.consumer.address.postalCode}}</td>
+                                                        <td>{{reserve.consumer.address.country}}</td>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </tab>
+
+                <tab heading="Add Reservation" select="selectTab('add-reservation')">
+                    <h2>Add Reservation:</h2>
+                    <table>
+                        <tr>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            Table Names:
+                                            <input type="text" name="newReserveTableNames" ng-model="newReserveTableNames" ng-change="setNewReserveTableNames({{'newReserveTableNames'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Booking Date:
+                                            <input type="text" name="newReserveDate" ng-model="newReserveDate" ng-change="setNewReserveDate({{'newReserveDate'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Covers:
+                                            <input type="text" name="newReserveCovers" ng-model="newReserveCovers" ng-change="setNewReserveCovers({{'newReserveCovers'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Ref:
+                                            <input type="text" name="newReserveRef" ng-model="newReserveRef" ng-change="setNewReserveRef({{'newReserveRef'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Name:
+                                            <input type="text" name="newReserveName" ng-model="newReserveName" ng-change="setNewReserveName({{'newReserveName'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Email:
+                                            <input type="text" name="newReserveEmail" ng-model="newReserveEmail" ng-change="setNewReserveEmail({{'newReserveEmail'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Phone:
+                                            <input type="text" name="newReservePhone" ng-model="newReservePhone" ng-change="setNewReservePhone({{'newReservePhone'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Address Line1:
+                                            <input type="text" name="newReserveAddressLine1" ng-model="newReserveAddressLine1" ng-change="setNewReserveAddressLine1({{'newReserveAddressLine1'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Address Line2:
+                                            <input type="text" name="newReserveAddressLine2" ng-model="newReserveAddressLine2" ng-change="setNewReserveAddressLine2({{'newReserveAddressLine2'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Address City:
+                                            <input type="text" name="newReserveCity" ng-model="newReserveCity" ng-change="setNewReserveCity({{'newReserveCity'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Address State:
+                                            <input type="text" name="newReserveState" ng-model="newReserveState" ng-change="setNewReserveState({{'newReserveState'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Consumer Address PostalCode:
+                                            <input type="text" name="newReservePostalCode" ng-model="newReservePostalCode" ng-change="setNewReservePostalCode({{'newReservePostalCode'}})">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <button class="tiny" ng-click="createReservation()">Create</button>
+                            </td>
+                            <td>
+                                Reservation JSON
+                                <pre class="code-block"><code>{{formattedReservation()}}</code></pre>
+                            </td>
+                        </tr>
+                    </table>
+                </tab>
+            </tabset>
+
+        </wz-step>
+
+        <wz-step title="Table Orders" wz-disabled="{{ selectedTab === 'order-ahead' }}">
+            <h2>Orders for table "{{ selectedTable.name }}":</h2>
+
+            <table>
+                <thead>
+                    <th>order Id</th>
+                    <th>checkin id</th>
+                    <th>status</th>
+                    <th>version</th>
+                    <th>actions</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="order in tableOrders">
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.checkinId }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.version }}</td>
+                        <td>
+                            <button class="tiny" ng-click="getOrderAndGo(order.id)">Get Order</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </wz-step>
+        <wz-step title="Order Details" wz-disabled="{{ selectedTab === 'order-ahead' }}">
+            <h2>Details for order "{{ order.id }}":</h2>
+
+            <div><b>id:</b> {{ order.id }}</div>
+            <div><b>status:</b> {{ order.status }}</div>
+            <div><b>version:</b> {{ order.version }}</div>
+            <div><b>uri:</b> {{ order.uri }}</div>
+            <div>
+                <b>items:</b> <br/>
+
+                <table>
+                    <thead>
+                        <th>posId</th>
+                        <th>name</th>
+                        <th>description</th>
+                        <th>price</th>
+                        <th>quantity</th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in order.items">
+                            <td>{{ item.posId }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p ng-show="order.status !== 'accepted'">You cannot pay for an order that hasn't been accepted.</p>
+
+            <button class="tiny" ng-click="addPayments()" ng-disabled="order.status !== 'accepted'">Add Payments</button>
+        </wz-step>
+        <wz-step title="Transaction" wz-disabled="{{ selectedTab === 'order-ahead' }}">
+            <h2>Details for transaction "{{ Meerkat.data.pendingTransactions[0].id }}":</h2>
+
+            <div ng-if="Meerkat.data.pendingTransactions[0].status !== 'waiting'">
+                The order is ready to pay, you'll be able to continue when the POS is waiting for payment.
+
+                <br/>
+                <br/>
+
+                <img src="images/loader.gif" width="200px" height="200px" />
+            </div>
+
+
+            <div ng-if="Meerkat.data.pendingTransactions[0].status === 'waiting'">
+                The transaction is now waiting for payment. Click "Pay" to complete the transaction.
+                <button class="tiny" ng-click="complete()">Pay</button>
+            </div>
+
+            <div ng-if="Meerkat.data.pendingTransactions[0].status === 'rejected'">
+                The POS has rejected the transaction.
+                <a class="button small" wz-next>Next</a>
+            </div>
+        </wz-step>
+        <wz-step title="Consumer" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
+            <table>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    Consumer:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Name:
+                                    <input type="text" name="consumerName" ng-model="consumerName" ng-change="setConsumerName({{'consumerName'}})">
+                                </td>
+                                <td>
+                                    Phone:
+                                    <input type="text" name="consumerPhoneNumber" ng-model="consumerPhoneNumber" ng-change="setConsumerPhoneNumber({{'consumerPhoneNumber'}})">
+                                </td>
+                                <td>
+                                    Email:
+                                    <input type="text" name="consumerEmail" ng-model="consumerEmail" ng-change="setConsumerEmail({{'consumerEmail'}})">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Address Line 1:
+                                    <input type="text" name="consumerAddressLine1" ng-model="consumerAddressLine1" ng-change="setConsumerAddressLine1({{'consumerAddressLine1'}})">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Address Line 2:
+                                    <input type="text" name="consumerAddressLine2" ng-model="consumerAddressLine2" ng-change="setConsumerAddressLine2({{'consumerAddressLine2'}})">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    City:
+                                    <input type="text" name="consumerCity" ng-model="consumerCity" ng-change="setConsumerCity({{'consumerCity'}})">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    State:
+                                    <input type="text" name="consumerState" ng-model="consumerState" ng-change="setConsumerState({{'consumerState'}})">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Post Code:
+                                    <input type="text" name="consumerPostalCode" ng-model="consumerPostalCode" ng-change="setConsumerPostalCode({{'consumerPostalCode'}})">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        Transaction JSON
+                        <pre class="code-block"><code>{{formattedConsumer()}}</code></pre>
+                    </td>
+                </tr>
+            </table>
+
+            <a class="button small" wz-previous>Previous</a>
+            <a class="button small" wz-next>Next</a>
+        </wz-step>
+
+        <wz-step title="Transactions" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
+            <table>
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td>
+                                    Transactions:
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Include Transaction
+                                    <input type="checkbox" name="includeTransaction" ng-model="includeTransaction" ng-change="setIncludeTransaction({{'includeTransaction'}})"
+                                    />
+                                </td>
+                                <td>
+                                    Pay Full Amount
+                                    <input type="checkbox" name="payFullAmount" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})" />
+                                </td>
+                                <td>
+                                    Override Transaction With Amount
+                                    <input type="text" name="manualPaymentTotal" ng-model="manualPaymentTotal" ng-change="setManualPaymentTotal({{'manualPaymentTotal'}})">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Include Tips
+                                    <input type="checkbox" name="includeTips" ng-model="includeTips" ng-change="setIncludeTips({{'includeTips'}})" />
+                                </td>
+                                <td>
+                                    Tips Amount
+                                    <input type="text" name="tipsAmount" ng-model="tipsAmount" ng-change="setTipsAmount({{'tipsAmount'}})">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Transaction Invoice
+                                    <input type="text" name="transacitonInvoice" ng-model="transacitonInvoice" ng-change="setTransactionInvoice({{'transacitonInvoice'}})">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        Transaction JSON
+                        <pre class="code-block"><code>{{formattedTransaction()}}</code></pre>
+                    </td>
+                </tr>
+            </table>
+            <a class="button small" wz-previous>Previous</a>
+            <a class="button small" wz-next>Next</a>
+
+        </wz-step>
+
+        <wz-step title="Send" wz-disabled="{{ selectedTab === 'pay-at-table' }}">
+            Json Payload
+            <pre class="code-block"><code>{{formattedJsonToSend()}}</code></pre>
+            <a class="button small" wz-previous>Previous</a>
+            <button class="tiny" ng-click="sendOrderAndGo()">
+          Send Order
+      </button>
+      <button class="tiny" ng-click="sendMultipleAndGo()">
+          Send Multiple Orders
+      </button>
+  </wz-step>
+
+        <wz-step title="Done">
+            You're done! You can start over by pressing "Go home".
+            <a class="button small" ng-click="startOver()">Go home</a>
+        </wz-step>
+
+    </wizard>
+
+</div>

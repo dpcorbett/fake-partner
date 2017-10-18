@@ -26,6 +26,7 @@ function MeerkatService($http, $modal, flash) {
 
   
     Meerkat.processTransactionWaiting = function(id, orderId, status) {
+        console.log("Process transaction")
         if (status == 'waiting') {
             console.log("id = " + id)
             console.log("orderId = " + orderId)
@@ -42,17 +43,27 @@ function MeerkatService($http, $modal, flash) {
             return $http(transReq)
                 .then(res => {
                     var response = angular.copy(res.data);
+                    console.log("response");
+                    console.log(response);
                     delete response.orderId;
+                    console.log("1");
                     delete response.log;
                     delete response.acceptLess;
                     delete response.partnerInitiated;
                     delete response.uri;
                     delete response.updatedAt;
                     delete response.createdAt;
-                    var theId = response.id;
+                    var theId = id;
                     delete response.id;
+                    console.log("2");
                     if (!Meerkat.data.dropAllTransactions){
                         if (Meerkat.data.completeTransactions){
+                            if (!response.invoice || response.invoice === ""){
+                                response.invoice = "posInitiatedRefundInvoice"
+                            }
+                            if (!response.reference || response.reference === ""){
+                                response.reference = "posInitiatedRefundReference"
+                            }
                             response.status = 'complete'
                             console.log(response);
                             flash.success = 'transaction received';
@@ -64,7 +75,7 @@ function MeerkatService($http, $modal, flash) {
                                 },
                                 data: JSON.stringify(response)
                             };
-
+                            console.log("4");
                             return $http(req)
                                 .then(res => {
                                     var response = angular.copy(res.data);
@@ -86,7 +97,6 @@ function MeerkatService($http, $modal, flash) {
                                     },
                                     data: JSON.stringify(response)
                                 };
-
                                 return $http(req)
                                     .then(res => {
                                         var response = angular.copy(res.data);
@@ -98,6 +108,8 @@ function MeerkatService($http, $modal, flash) {
                         }
                     }
                 }).catch(err => {
+                    console.log("this is the error")
+                    console.log(err.data);
                     flash.error = 'transaction receive failed: ' + err.statusText + getErrorMessage(err.data);
                     throw err;
                 });
