@@ -454,7 +454,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         Meerkat.data.manuallyAccepted = manuallyAccepted;
     }
 
-    $scope.setCompleteTransactions = function (CompleteTransactions){
+    $scope.setCompleteTransactions = function (completeTransactions){
         $scope.completeTransactions = completeTransactions;
         Meerkat.data.completeTransactions = completeTransactions;
     }

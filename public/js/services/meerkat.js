@@ -85,7 +85,7 @@ function MeerkatService($http, $modal, flash) {
                                 })
                         }else{
                             var response = angular.copy(res.data);
-                            if (Meerkat.completeTransactions){
+                            if (Meerkat.data.completeTransactions){
                                 response.status = 'cancelled'
                                 console.log(response);
                                 flash.success = 'transaction received';
