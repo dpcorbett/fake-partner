@@ -177,8 +177,13 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
                     "name": $scope.optionsListName,
                     "variants": [
                     {
-                        "posId" : $scope.varientId,
-                        "name" : $scope.varientName,
+                        "posId" : undefined,
+                        "name" : "test1",
+                        "price" : $scope.varientPrice
+                    },
+                    {
+                        "posId" : undefined,
+                        "name" : "test2",
                         "price" : $scope.varientPrice
                     }]
                 }
@@ -397,7 +402,19 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
         }else{
             $scope.itemsArray = [
                 {
-                    "name": $scope.itemName,
+                    "name": "test2",
+                    "description": "Yum",
+                    "unitPrice": $scope.itemPrice,
+                    "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                    "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                    "posId": $scope.itemPosId,
+                    "surcounts": $scope.itemSurcountJson,
+                    "options": $scope.itemOptionJson,
+                    "quantity": $scope.itemQuantity
+                    
+                },
+                {
+                    "name": "test1",
                     "description": "Yum",
                     "unitPrice": $scope.itemPrice,
                     "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
