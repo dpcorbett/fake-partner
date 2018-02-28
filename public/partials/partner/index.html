@@ -177,8 +177,12 @@
                     </table>
                 </tab>
                 <tab heading="Order Ahead" select="selectTab('order-ahead')">
-                    <h2>Order Ahead</h2>
+                    
 
+                    <div class="panel panel-primary">
+
+                            <div class="panel-heading"><h2>Order Ahead</h2></div>
+                            <div class="panel-body">
                     <table>
                         <tr>
                             <td>
@@ -200,6 +204,7 @@
                                             Delivery
                                         </label>
                                         </td>
+                                        <td colspan="3"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -228,6 +233,7 @@
                                         <td>
                                             Item Details:
                                         </td>
+                                        <td colspan="4"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -242,7 +248,7 @@
                                             Item Unit Price:
                                             <input type="text" name="itemPrice" ng-model="itemPrice" ng-change="setItemPrice({{'itemPrice'}})">
                                         </td>
-                                        <td>
+                                        <td colspan="2">
                                             Item Name:
                                             <input type="text" name="itemName" ng-model="itemName" ng-change="setItemName({{'itemName'}})">
                                         </td>
@@ -253,6 +259,7 @@
                                             <input type="checkbox" ng-model="includeVarient" ng-change="setIncludeVarient({{'includeVarient'}})" />
                                         </td>
 
+                                        <td colspan="4"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -263,6 +270,8 @@
                                             Options List Name
                                             <input type="text" name="optionsListName" ng-model="optionsListName" ng-change="setOptionsListName({{'optionsListName'}})">
                                         </td>
+
+                                        <td colspan="3"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -273,10 +282,11 @@
                                             Varient Price:
                                             <input type="text" name="varientPrice" ng-model="varientPrice" ng-change="setVarientPrice({{'varientPrice'}})">
                                         </td>
-                                        <td>
+                                        <td colspan="3">
                                             Varient Name:
                                             <input type="text" name="varientName" ng-model="varientName" ng-change="setVarientName({{'varientName'}})">
                                         </td>
+                                        
                                     </tr>
                                     <tr>
                                         <td>
@@ -287,16 +297,18 @@
                                             Item surcount Pos Id:
                                             <input type="text" name="itemSurcountPosId" ng-model="itemSurcountPosId" ng-change="setItemSurcountPosId({{'itemSurcountPosId'}})">
                                         </td>
-                                        <td>
+                                        <td colspan="3">
                                             Item Surcount Price:
                                             <input type="text" name="itemSurcountPrice" ng-model="itemSurcountPrice" ng-change="setItemSurcountPrice({{'itemSurcountPrice'}})">
                                         </td>
+                                        
                                     </tr>
                                     <tr>
                                         <td>
                                             Include bundle Item
                                             <input type="checkbox" ng-model="includeBundleItem" ng-change="setIncludeBundleItem({{'includeBundleItem'}})" />
                                         </td>
+                                        <td colspan="4"></td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -311,10 +323,11 @@
                                             Bundle Item Unit Price:
                                             <input type="text" name="bundleItemPrice" ng-model="bundleItemPrice" ng-change="setBundleItemPrice({{'bundleItemPrice'}})">
                                         </td>
-                                        <td>
+                                        <td colspan="2">
                                             Bundle Item Name:
                                             <input type="text" name="bundleItemName" ng-model="bundleItemName" ng-change="setBundleItemName({{'bundleItemName'}})">
                                         </td>
+                                        
                                     </tr>
                                     <tr>
                                         <td>
@@ -329,7 +342,7 @@
                                             Bundle Item Unit Price:
                                             <input type="text" name="bundleItemIncludedItemItemPrice" ng-model="bundleItemIncludedItemItemPrice" ng-change="setBundleItemIncludedItemItemPrice({{'bundleItemIncludedItemItemPrice'}})">
                                         </td>
-                                        <td>
+                                        <td colspan="2">
                                             Bundle Item Name:
                                             <input type="text" name="bundleItemIncludedItemItemName" ng-model="bundleItemIncludedItemItemName" ng-change="setBundleItemIncludedItemItemName({{'bundleItemIncludedItemItemName'}})">
                                         </td>
@@ -348,16 +361,26 @@
                                             Bundle Item Varient Unit Price:
                                             <input type="text" name="bundleItemIncludedItemVarientPrice" ng-model="bundleItemIncludedItemVarientPrice" ng-change="setBundleItemIncludedItemVarientPrice({{'bundleItemIncludedItemVarientPrice'}})">
                                         </td>
-                                        <td>
+                                        <td colspan="2">
                                             Bundle Item Varient Name:
                                             <input type="text" name="bundleItemIncludedItemVarientName" ng-model="bundleItemIncludedItemVarientName" ng-change="setBundleItemIncludedItemVarientName({{'bundleItemIncludedItemVarientName'}})">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td colspan="5">
                                             Required At
                                             <input type="text" name="orderRequiredAt" ng-model="orderRequiredAt" ng-change="setOrderRequiredAt({{'orderRequiredAt'}})">
                                         </td>
+                                        
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="5">
+                                                Notes:                                               
+
+                                                <textarea name="Text1" cols="40" rows="5" name="orderNotes" ng-model="orderNotes" ng-change="setOrderNotes({{'orderNotes'}})"></textarea>
+                                        </td>
+                                        
                                     </tr>
                                 </table>
                                 <a class="button small" wz-next>Next</a>
@@ -368,7 +391,12 @@
                             </td>
                         </tr>
                     </table>
+                    </div>
+                    </div>
                 </tab>
+
+                
+
                 <tab heading="Pos Menu" select="selectTab('pos-menu')">
                     <h2>Pos Menu:</h2>
                     <button class="tiny" ng-click="getMenu()">Refresh</button>
