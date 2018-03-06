@@ -469,6 +469,35 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
     }
   };
 
+Meerkat.addOrderItems = function(locationId, order, items) {
+    var orderData = {
+        version: order.version,
+        unapprovedItems: items
+    };
+
+    /*var orderData = angular.copy(order);
+    orderData.unapprovedItems.concat(items);
+    console.log(items);
+    console.log(orderData);*/
+
+    var req = {
+        method: 'POST',
+        url: '/orders/' + order.id,
+        headers: {
+            'doshii-location-id': locationId,
+        },
+        data: orderData,
+    };
+
+    return $http(req)
+        .then(res => {
+            var result = angular.copy(res.data);
+
+            flash.success = 'Order updated';
+            return result;
+        });
+};
+
   Meerkat.updateTransaction = function(transactionUri) {
     return $http.get(transactionUri)
       .then(res => {

@@ -164,11 +164,14 @@
                                         </tr>
 
                                         <tr>
+                                            <td colspan="2">
+                                                <button class="tiny" ng-click="openAddItemModal(order)">Add Item</button>
+                                            </td>
                                             <td colspan="3">
                                                 <button class="tiny" ng-click="cancelOrder(order)">  Cancel Order     </button>
                                             </td>
                                              <td colspan="2"> 
-                                               <!-- <pre class="code-block"> {{order|json}}</pre> -->
+                                                <pre class="code-block"> {{order|json}}</pre> 
                                             </td> 
                                         </tr>
                                     </table>
