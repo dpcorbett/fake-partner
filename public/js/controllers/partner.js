@@ -1,8 +1,8 @@
 angular
   .module('FakePartnerApp')
-  .controller('PartnerCtrl', [ '$scope', 'flash', 'Meerkat', 'WizardHandler', 'doshiiEmitter', PartnerCtrl ]);
+  .controller('PartnerCtrl', [ '$scope', 'flash', 'Meerkat', 'WizardHandler', 'doshiiEmitter', '$modal', PartnerCtrl ]);
 
-function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter) {
+function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $modal) {
   console.log('loaded partner ctrl');
   Meerkat.getLocations();
 
@@ -964,24 +964,13 @@ $scope.getMembers = () => {
     Meerkat.getMembers($scope.selectedOrginisation.id);
 };
 
-$scope.getAcceptedPosOrders = () => {
-    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "accepted");
-};
+$scope.getAllOrders = function(filterBy) {
+    if (typeof(filterBy) === "undefined")
+        filterBy = "accepted";
 
-$scope.getCompletedPosOrders = () => {
-    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "complete");
-};
+    $scope.lastOrderFilter = filterBy;
 
-$scope.getPendingPosOrders = () => {
-    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "pending");
-};
-
-$scope.getRejectedPosOrders = () => {
-    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "rejected");
-};
-
-$scope.getCancelledPosOrders = () => {
-    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "cancelled");
+    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, filterBy);
 };
 
 $scope.getMyPaidTransactions = () => {
@@ -989,7 +978,7 @@ $scope.getMyPaidTransactions = () => {
 };
 
 $scope.getVenueCancelledPosOrders = () => {
-    Meerkat.getPosOrders($scope.selectedOrginisation.id, $scope.selectedLocation.id, "venue_cancelled");
+    $scope.getAllOrders("venue_cancelled");
 };
 
 $scope.addFiveDollarReward = (memberId) => {
@@ -1239,4 +1228,23 @@ member.points = member.points + 50;
         $scope.order = {};
       });
   };
+
+  $scope.openAddItemModal = function(order) {
+    $modal.open({
+      templateUrl: 'js/modals/add_order_item_modal.html',
+      controller: 'AddOrderItemController',
+      resolve: {
+        order: function() {
+            return order;
+        },
+        locationId: function() {
+            return $scope.selectedLocation.id;
+        }
+      }
+    });
+  };
+
+  $scope.$on("ordersUpdatedEvent", function(args) {
+    $scope.getAllOrders($scope.lastOrderFilter);
+  });
 }
