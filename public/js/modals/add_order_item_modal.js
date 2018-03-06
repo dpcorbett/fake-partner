@@ -7,15 +7,15 @@ angular
 function AddOrderItemController($scope, $modalInstance, OrderHelper, order, locationId, Meerkat) {
     console.log(order);
     $scope.itemForm = {
-        posId: 0,
+        posId: "0",
         quantity: 1,
         unitPrice: 1000,
         name: "Pepperoni Pizza",
         type: "single",
 
-        includedItems: [],
+        //includedItems: [], // no includes if type == single
         options: [],
-        status: "pending"
+        surcounts: []
     };
 
     $scope.canSubmit = function() {
@@ -33,13 +33,17 @@ function AddOrderItemController($scope, $modalInstance, OrderHelper, order, loca
 
         Meerkat.addOrderItems(locationId, order, [$scope.itemForm]).then(
             response => {
-
+                $scope.$root.$broadcast("ordersUpdatedEvent", {});
                 $modalInstance.close();
             });
     };
 
     function calculateItemCost() {
         var beforeSurcount = $scope.itemForm.quantity * $scope.itemForm.unitPrice;
+
+        if (typeof($scope.itemForm.includedItems) === "undefined")
+            return beforeSurcount;
+
         for (var i = 0; i < $scope.itemForm.includedItems.length; ++i) {
             var include = $scope.itemForm.includedItems[i];
 
@@ -78,7 +82,7 @@ function AddOrderItemController($scope, $modalInstance, OrderHelper, order, loca
             options: [],
             quantity: 1,
             unitPrice: 0,
-            posId: 0
+            posId: "0"
         });
     }
 

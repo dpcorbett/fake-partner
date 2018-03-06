@@ -472,7 +472,7 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
 Meerkat.addOrderItems = function(locationId, order, items) {
     var orderData = {
         version: order.version,
-        unapprovedItems: items
+        items: items
     };
 
     /*var orderData = angular.copy(order);
@@ -482,7 +482,7 @@ Meerkat.addOrderItems = function(locationId, order, items) {
 
     var req = {
         method: 'POST',
-        url: '/orders/' + order.id,
+        url: '/orders/' + order.id + "/items",
         headers: {
             'doshii-location-id': locationId,
         },
