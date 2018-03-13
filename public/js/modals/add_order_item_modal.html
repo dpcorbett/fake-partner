@@ -1,41 +1,170 @@
-<div id="partial-payment-modal">
-    <div class="modal-header">
-        <h2>Add additional items for order {{order.id}}</h2>
+<div class="modal" id="partial-payment-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add additional items for order {{order.id}}</h2>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="form-control">POS ID</label>
+                        <input type="text" ng-model="itemForm.posId">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control">Quantity</label>
+                        <input type="text" ng-model="itemForm.quantity">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control">Unit Price</label>
+                        <input type="text" ng-model="itemForm.unitPrice">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control">Item Name</label>
+                        <input type="text" ng-model="itemForm.name">
+                    </div>
+
+                    <button ng-click="newInclude()">Add include</button>
+                    <div class="form-group">
+                        <label class="form-control">Included items</label>
+                    </div>
+                    <div class="panel" ng-repeat="include in itemForm.includedItems">
+                        Include
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="form-control">Name</label>
+                                    <input type="text" ng-model="include.name">
+                                </td>
+                                <td>
+                                    <label class="form-control">Quantity</label>
+                                    <input type="text" ng-model="include.quantity">
+                                </td>
+                                <td>
+                                    <label class="form-control">Unit Price</label>
+                                    <input type="text" ng-model="include.unitPrice">
+                                </td>
+                                <td>
+                                    <label class="form-control">POS ID</label>
+                                    <input type="text" ng-model="include.posId">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <button class="btn-primary2" ng-click="newOption(include)">New option</button>
+                        <div class="panel" ng-repeat="option in include.options">
+                            Option
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label class="form-control">Name</label>
+                                        <input type="text" ng-model="option.name">
+                                    </td>
+                                    <td>
+                                        <label class="form-control">POS ID</label>
+                                        <input type="text" ng-model="option.posId">
+                                    </td>
+                                    <td>
+                                        <label class="form-control">Min</label>
+                                        <input type="text" ng-model="option.min">
+                                    </td>
+                                    <td>
+                                        <label class="form-control">Max</label>
+                                        <input type="text" ng-model="option.max">
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <button class="btn-default" ng-click="newOptionVariant(option)">Variant</button>
+                            <div class="panel" ng-repeat="variant in option.variants">
+                                Variant
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <label class="form-control">Name</label>
+                                            <input type="text" ng-model="variant.name">
+                                        </td>
+                                        <td>
+                                            <label class="form-control">posId</label>
+                                            <input type="text" ng-model="variant.posId">
+                                        </td>
+                                        <td>
+                                            <label class="form-control">Price</label>
+                                            <input type="text" ng-model="variant.price">
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <button ng-click="removeItemFromArray(option.variants, variant)">Delete variant</button>
+                            </div>
+
+                            <div>
+                                <button ng-click="removeItemFromArray(include.options, option)" class="btn-danger">Delete Option</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <button ng-click="deleteInclude(include)">Delete Include</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-control">Options</label>
+                    </div>
+                    <button ng-click="newOptionNoLimits(itemForm)">New Option</button>
+                    <div class="panel" ng-repeat="option in itemForm.options">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label class="form-control">Name</label>
+                                    <input type="text" ng-model="option.name">
+                                </td>
+                                <td>
+                                    <label class="form-control">POS ID</label>
+                                    <input type="text" ng-model="option.posId">
+                                </td>
+                            </tr>
+                        </table>
+
+                        <button ng-click="newOptionVariant(option)">New Variant</button>
+                        <div class="panel" ng-repeat="variant in option.variants">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <label class="form-control">Name</label>
+                                        <input type="text" ng-model="variant.name">
+                                    </td>
+                                    <td>
+                                        <label class="form-control">posId</label>
+                                        <input type="text" ng-model="variant.posId">
+                                    </td>
+                                    <td>
+                                        <label class="form-control">Price</label>
+                                        <input type="text" ng-model="variant.price">
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <button ng-click="removeItemFromArray(option.variants, variant)">Delete variant</button>
+                        </div>
+
+                        <button ng-click="removeItemFromArray(itemForm.options, option)">Delete option</button>
+                    </div>
+                </form>
+
+                {{ itemForm | json }}
+            </div>
+            <div class="modal-footer">
+                <button class="button btn-confirm" id="btn-ok"
+                    ng-disabled="!canSubmit()"
+                    ng-click="submit()">
+                    Send
+                </button>
+
+                <button ng-click="loadDefault()">
+                    Default
+                </button>
+            </div>
+        </div>
     </div>
-
-    <div class="presets panel panel-default">
-
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="form-control">POS ID</label>
-                <input type="text" ng-model="itemForm.posId">
-            </div>
-            <div class="form-group">
-                <label class="form-control">Quantity</label>
-                <input type="text" ng-model="itemForm.quantity">
-            </div>
-            <div class="form-group">
-                <label class="form-control">Unit Price</label>
-                <input type="text" ng-model="itemForm.unitPrice">
-            </div>
-            <div class="form-group">
-                <label class="form-control">Item Name</label>
-                <input type="text" ng-model="itemForm.name">
-            </div>
-
-            <button ng-click="newInclude()">Add include</button>
-            <div ng-repeat="include in itemForm.includedItems">
-                aaa
-                <button ng-click="deleteInclude(include)">Delete</button>
-            </div>
-        </form>
-
-        {{ itemForm | json }}
-    </div>
-
-    <button class="button btn-confirm" id="btn-ok"
-        ng-disabled="!canSubmit()"
-        ng-click="submit()">
-        Send
-    </button>
 </div>
