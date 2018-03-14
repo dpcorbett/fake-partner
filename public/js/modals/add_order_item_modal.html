@@ -154,7 +154,10 @@
 
                 {{ itemForm | json }}
             </div>
-            <div class="modal-footer">
+            <div>
+                <span><input type="checkbox" ng-model="vm.sendMultipleItems">Multiple copies</span>
+
+                {{ vm.sendMultipleItems }}
                 <button class="button btn-confirm" id="btn-ok"
                     ng-disabled="!canSubmit()"
                     ng-click="submit()">

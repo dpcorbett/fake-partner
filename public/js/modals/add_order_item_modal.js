@@ -12,6 +12,10 @@ function AddOrderItemController($scope, $modalInstance, OrderHelper, order, loca
             );
     };
 
+    $scope.vm = {
+        sendMultipleItems: false
+    };
+
     $scope.itemForm = {
         posId: "",
         quantity: 1,
@@ -43,7 +47,15 @@ function AddOrderItemController($scope, $modalInstance, OrderHelper, order, loca
             $scope.itemForm.type = "bundle";
         }
 
-        Meerkat.addOrderItems(locationId, order, [$scope.itemForm]).then(
+        var items = [$scope.itemForm];
+
+        if ($scope.vm.sendMultipleItems === true) {
+            for (var i = 0; i < 3; ++i) {
+                items.push($scope.itemForm);
+            }
+        }
+
+        Meerkat.addOrderItems(locationId, order, items).then(
             response => {
                 $scope.$root.$broadcast("ordersUpdatedEvent", {});
                 $modalInstance.close();
