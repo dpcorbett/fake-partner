@@ -1100,6 +1100,10 @@
       <button class="tiny" ng-click="sendMultipleAndGo()">
           Send Multiple Orders
       </button>
+      <button class="tiny" ng-click="sendAndAllocate()">
+        Send Order and allocate table
+    </button>
+    <input type="text" name="tableToAllocate" ng-model="tableToAllocate" ng-change="setTableToAllocate({{'tableToAllocate'}})">
   </wz-step>
 
         <wz-step title="Done">

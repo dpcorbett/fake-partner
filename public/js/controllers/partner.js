@@ -18,6 +18,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     $scope.reserves = Meerkat.data.reserves;
   $scope.Meerkat = Meerkat;
 
+  $scope.tableToAllocate = 6;
   $scope.order = {};
   $scope.tableOrders = [];
   $scope.selectedLocation = { id: null };
@@ -714,6 +715,10 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
         $scope.transacitonInvoice = invoiceString;
         setOrderJson();
     }
+
+    $scope.setTableToAllocate = function (tableToAllocate){
+        $scope.tableToAllocate = tableToAllocate;
+    }
     
     $scope.setConsumerName = function (nameString) {
         $scope.consumerName = nameString;
@@ -1205,6 +1210,8 @@ member.points = member.points + 50;
     WizardHandler.wizard().next();  
   };
 
+  
+
   $scope.getOrderAndGo = orderId => Meerkat.getOrder(orderId)
     .then(res => {
       $scope.order = res.data;
@@ -1247,4 +1254,47 @@ member.points = member.points + 50;
   $scope.$on("ordersUpdatedEvent", function(args) {
     $scope.getAllOrders($scope.lastOrderFilter);
   });
+
+  $scope.sendAndAllocate = () => {
+    Meerkat.getNewCheckinForTable($scope.tableToAllocate, $scope.selectedLocation.id).then(res =>{
+        setOrderJsonWithCheckin(res.id)
+        Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
+        .then(res => {
+          WizardHandler.wizard().next();
+        });
+    })
+  };
+
+  function setOrderJsonWithCheckin(checkinId) {
+    calculateOrderDetails();
+    generateOrderJsonWithCheckinId(checkinId);
+    generateConsumerJson();
+    generateTransactionJson();
+    }
+
+    function generateOrderJsonWithCheckinId(checkinId) {
+        generateOrderItemJson()
+        if ($scope.manuallyAccepted){
+                $scope.orderPayload = {
+                "type": $scope.orderType,
+                "surcounts": $scope.orderSurcountJson,
+                "requiredAt" : $scope.orderRequiredAt,
+                "notes" : $scope.orderNotes,
+                "manuallyProcessed" : true,
+                "items": $scope.itemsArray,
+                "checkinId" : checkinId
+            }
+        }else{
+            $scope.orderPayload = {
+                "type": $scope.orderType,
+                "surcounts": $scope.orderSurcountJson,
+                "requiredAt" : $scope.orderRequiredAt,
+                "notes" : $scope.orderNotes,
+                "items": $scope.itemsArray,
+                "checkinId" : checkinId
+            }
+        }
+    }
+
+    
 }
