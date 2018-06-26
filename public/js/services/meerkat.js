@@ -66,6 +66,10 @@ function MeerkatService($http, $modal, flash) {
                             }
                             response.status = 'complete'
                             console.log(response);
+
+                            delete response.createdByApp;
+                            delete response.processedByApp;
+
                             flash.success = 'transaction received';
                             var req = {
                                 method: 'PUT',
@@ -82,7 +86,11 @@ function MeerkatService($http, $modal, flash) {
                                     console.log(response);
                                     flash.success = 'transaction completed';
                                     return;
-                                })
+                                }).catch(err=>{
+                                    console.log("Error PUT, /Transactions");
+                                    console.log(response);
+                                    throw err;
+                                });
                         }else{
                             var response = angular.copy(res.data);
                             if (Meerkat.data.completeTransactions){
