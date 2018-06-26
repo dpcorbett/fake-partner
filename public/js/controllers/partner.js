@@ -69,6 +69,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     $scope.manualPaymentTotal = 0;
     
     $scope.includeBundleItem = false;
+    $scope.onlyBundleItem = false;
     $scope.bundleItemPosId = undefined;
     $scope.bundleItemQuantity = "1";
     $scope.bundleItemPrice = "1000";
@@ -225,9 +226,16 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
         if ($scope.includeOrderSurcount) {
             console.log("generate order total - include item surcount");
             if ($scope.includeBundleItem){
-                console.log("generate order total - include bundle item");
-                $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
-                console.log($scope.orderTotal)
+                if ($scope.onlyBundleItem){
+                    console.log("generate order total - include bundle item");
+                    $scope.orderTotal = (parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+                    console.log($scope.orderTotal)
+                }else{
+                    console.log("generate order total - include bundle item");
+                    $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+                    console.log($scope.orderTotal)
+                }
+                
             }else{
                 console.log("generate order total - Dont include bundle item");
                 $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue)).toString();
@@ -368,34 +376,52 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
         generateBundleItemitemPrices()
         generateBundleIndludedItemJson()
         if ($scope.includeBundleItem){
-            $scope.itemsArray = [
-                {
-                    "name": $scope.itemName,
-                    "description": "Yum",
-                    "unitPrice": $scope.itemPrice,
-                    "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
-                    "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
-                    "posId": $scope.itemPosId,
-                    "surcounts": $scope.itemSurcountJson,
-                    "options": $scope.itemOptionJson,
-                    "quantity": $scope.itemQuantity,
-                    "type" : "single"
-                    
-                },
-                {
-                    "name": $scope.bundleItemName,
-                    "description": "bundleItem",
-                    "unitPrice": $scope.bundleItemPrice,
-                    "totalBeforeSurcounts": $scope.bundleItemTotalBeforeSurcounts,
-                    "totalAfterSurcounts": $scope.bundleItemTotalAfterSurcounts,
-                    "posId": $scope.bundleItemPosId,
-                    "surcounts": [],
-                    "options": $scope.itemOptionJson,
-                    "quantity": $scope.bundleItemQuantity,
-                    "type" : "bundle",
-                    "includedItems" : $scope.bundleIncludedItemJson,
-                }
-            ]
+            if ($scope.onlyBundleItem){
+                $scope.itemsArray = [
+                    {
+                        "name": $scope.bundleItemName,
+                        "description": "bundleItem",
+                        "unitPrice": $scope.bundleItemPrice,
+                        "totalBeforeSurcounts": $scope.bundleItemTotalBeforeSurcounts,
+                        "totalAfterSurcounts": $scope.bundleItemTotalAfterSurcounts,
+                        "posId": $scope.bundleItemPosId,
+                        "surcounts": [],
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.bundleItemQuantity,
+                        "type" : "bundle",
+                        "includedItems" : $scope.bundleIncludedItemJson,
+                    }
+                ]
+            }else{
+                $scope.itemsArray = [
+                    {
+                        "name": $scope.itemName,
+                        "description": "Yum",
+                        "unitPrice": $scope.itemPrice,
+                        "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                        "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                        "posId": $scope.itemPosId,
+                        "surcounts": $scope.itemSurcountJson,
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.itemQuantity,
+                        "type" : "single"
+                        
+                    },
+                    {
+                        "name": $scope.bundleItemName,
+                        "description": "bundleItem",
+                        "unitPrice": $scope.bundleItemPrice,
+                        "totalBeforeSurcounts": $scope.bundleItemTotalBeforeSurcounts,
+                        "totalAfterSurcounts": $scope.bundleItemTotalAfterSurcounts,
+                        "posId": $scope.bundleItemPosId,
+                        "surcounts": [],
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.bundleItemQuantity,
+                        "type" : "bundle",
+                        "includedItems" : $scope.bundleIncludedItemJson,
+                    }
+                ]
+            }
         }else{
             $scope.itemsArray = [
                 {
@@ -558,6 +584,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     
     $scope.setIncludeBundleItem = function (includeBundleItem) {
         $scope.includeBundleItem = includeBundleItem;
+        setOrderJson();
+    }
+
+    $scope.setOnlyBundleItem = function (onlyBundleItem) {
+        $scope.onlyBundleItem = onlyBundleItem;
         setOrderJson();
     }
 
