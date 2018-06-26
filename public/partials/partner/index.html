@@ -1052,14 +1052,43 @@
                                     <input type="checkbox" name="includeTransaction" ng-model="includeTransaction" ng-change="setIncludeTransaction({{'includeTransaction'}})"
                                     />
                                 </td>
-                                <td>
-                                    Pay Full Amount
-                                    <input type="checkbox" name="payFullAmount" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})" />
+
+                                <td colspan="2">
+                                    <fieldset  ng-disabled="payMultiples">
+                                        <legend>Full Payment</legend>
+                                
+                                        <div class="form-group">
+                                            Pay Full Amount
+                                            <input type="checkbox" name="payFullAmount" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})" />
+                                        </div>
+                                        <div class="form-group">
+                                            Override Transaction With Amount
+                                            <input type="text" name="manualPaymentTotal" ng-model="manualPaymentTotal" ng-change="setManualPaymentTotal({{'manualPaymentTotal'}})">
+                                        </div>
+                                
+                                    </fieldset>
+                                
+                                
+                                
+                                    <fieldset ng-disabled="payFullAmount">
+                                        <legend>Multi Payment</legend>
+                                
+                                        <div class="form-group">
+                                            Multi Payment
+                                            <input type="checkbox" name="payMultiples" ng-model="payMultiples" ng-change="setpayMultiples({{'payMultiples'}})" />
+                                        </div>
+                                        <div class="form-group">
+                                            Split Count
+                                            <input type="text"  name="splitCount" ng-model="splitCount" ng-change="setsplitCount({{'splitCount'}})">
+                                        </div>
+                                
+                                
+                                    </fieldset>
+                                
+                                
                                 </td>
-                                <td>
-                                    Override Transaction With Amount
-                                    <input type="text" name="manualPaymentTotal" ng-model="manualPaymentTotal" ng-change="setManualPaymentTotal({{'manualPaymentTotal'}})">
-                                </td>
+
+                                
                             </tr>
                             <tr>
                                 <td>
