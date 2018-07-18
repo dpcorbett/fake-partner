@@ -211,6 +211,12 @@
                                             Delivery
                                         </label>
                                         </td>
+                                        <td>
+                                            <label>
+                                            <input type="radio" name="orderOfType" value="dine-in" ng-model="orderType" ng-change='setOrderType("dinein")'>
+                                            Dine-In
+                                        </label>
+                                        </td>
                                         <td colspan="3"></td>
                                     </tr>
                                     <tr>
@@ -314,6 +320,10 @@
                                         <td>
                                             Include bundle Item
                                             <input type="checkbox" ng-model="includeBundleItem" ng-change="setIncludeBundleItem({{'includeBundleItem'}})" />
+                                        </td>
+                                        <td>
+                                            Only bundle Item
+                                            <input type="checkbox" ng-model="onlyBundleItem" ng-change="setOnlyBundleItem({{'onlyBundleItem'}})" />
                                         </td>
                                         <td colspan="4"></td>
                                     </tr>
@@ -1052,14 +1062,43 @@
                                     <input type="checkbox" name="includeTransaction" ng-model="includeTransaction" ng-change="setIncludeTransaction({{'includeTransaction'}})"
                                     />
                                 </td>
-                                <td>
-                                    Pay Full Amount
-                                    <input type="checkbox" name="payFullAmount" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})" />
+
+                                <td colspan="2">
+                                    <fieldset  ng-disabled="payMultiples">
+                                        <legend>Full Payment</legend>
+                                
+                                        <div class="form-group">
+                                            Pay Full Amount
+                                            <input type="checkbox" name="payFullAmount" ng-model="payFullAmount" ng-change="setPayFullAmount({{'payFullAmount'}})" />
+                                        </div>
+                                        <div class="form-group">
+                                            Override Transaction With Amount
+                                            <input type="text" name="manualPaymentTotal" ng-model="manualPaymentTotal" ng-change="setManualPaymentTotal({{'manualPaymentTotal'}})">
+                                        </div>
+                                
+                                    </fieldset>
+                                
+                                
+                                
+                                    <fieldset ng-disabled="payFullAmount">
+                                        <legend>Multi Payment</legend>
+                                
+                                        <div class="form-group">
+                                            Multi Payment
+                                            <input type="checkbox" name="payMultiples" ng-model="payMultiples" ng-change="setpayMultiples({{'payMultiples'}})" />
+                                        </div>
+                                        <div class="form-group">
+                                            Split Count
+                                            <input type="text"  name="splitCount" ng-model="splitCount" ng-change="setsplitCount({{'splitCount'}})">
+                                        </div>
+                                
+                                
+                                    </fieldset>
+                                
+                                
                                 </td>
-                                <td>
-                                    Override Transaction With Amount
-                                    <input type="text" name="manualPaymentTotal" ng-model="manualPaymentTotal" ng-change="setManualPaymentTotal({{'manualPaymentTotal'}})">
-                                </td>
+
+                                
                             </tr>
                             <tr>
                                 <td>
@@ -1100,6 +1139,10 @@
       <button class="tiny" ng-click="sendMultipleAndGo()">
           Send Multiple Orders
       </button>
+      <button class="tiny" ng-click="sendAndAllocate()">
+        Send Order and allocate table
+    </button>
+    <input type="text" name="tableToAllocate" ng-model="tableToAllocate" ng-change="setTableToAllocate({{'tableToAllocate'}})">
   </wz-step>
 
         <wz-step title="Done">

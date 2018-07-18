@@ -18,6 +18,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     $scope.reserves = Meerkat.data.reserves;
   $scope.Meerkat = Meerkat;
 
+  $scope.tableToAllocate = 6;
   $scope.order = {};
   $scope.tableOrders = [];
   $scope.selectedLocation = { id: null };
@@ -68,6 +69,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     $scope.manualPaymentTotal = 0;
     
     $scope.includeBundleItem = false;
+    $scope.onlyBundleItem = false;
     $scope.bundleItemPosId = undefined;
     $scope.bundleItemQuantity = "1";
     $scope.bundleItemPrice = "1000";
@@ -123,6 +125,10 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     $scope.newReserveCountry = "Au";
     $scope.newReserveJson = ""
     $scope.reservationStartDate = new Date().toISOString().substring(0, 10);
+
+    $scope.splitCount="2";
+    $scope.payFullAmount=true;
+    $scope.payMultiples=false;
 
     function generateOrderSurcount() {
         if ($scope.includeOrderSurcount) {
@@ -224,9 +230,16 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
         if ($scope.includeOrderSurcount) {
             console.log("generate order total - include item surcount");
             if ($scope.includeBundleItem){
-                console.log("generate order total - include bundle item");
-                $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
-                console.log($scope.orderTotal)
+                if ($scope.onlyBundleItem){
+                    console.log("generate order total - include bundle item");
+                    $scope.orderTotal = (parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+                    console.log($scope.orderTotal)
+                }else{
+                    console.log("generate order total - include bundle item");
+                    $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue) + parseInt($scope.bundleItemTotalAfterSurcounts)).toString();
+                    console.log($scope.orderTotal)
+                }
+                
             }else{
                 console.log("generate order total - Dont include bundle item");
                 $scope.orderTotal = (parseInt($scope.itemPriceAfterSurcount) + parseInt($scope.orderSurcountValue)).toString();
@@ -248,6 +261,17 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
             $scope.transactionTotal = parseInt($scope.orderTotal).toString();
         } else {
             $scope.transactionTotal = (parseInt($scope.orderTotal) / 2).toString();
+        }
+
+        if($scope.payMultiples){
+            var payTotAmt= parseInt($scope.orderTotal);
+            var split=  parseInt($scope.splitCount);
+            if(split>0){
+                $scope.transactionTotal = (payTotAmt /split).toString();
+            }else{
+                $scope.splitCount="1";
+                $scope.transactionTotal = parseInt($scope.orderTotal).toString();
+            }            
         }
     }
     
@@ -279,7 +303,50 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     
     function generateTransactionJson() {
         generateOrderTotal();
-        if ($scope.manualPaymentTotal) {
+
+        if($scope.payMultiples){
+
+            if ($scope.includeTransaction && $scope.splitCount!=undefined)
+            {
+
+            
+                $scope.transactionPayload = [                      
+                ];
+
+
+                
+                var splitCnt = parseInt( $scope.splitCount)
+                for (var index = 0; index <  splitCnt; index++) {
+                
+                    if($scope.includeTips){
+
+                        $scope.transactionPayload.push({
+                            "amount": $scope.transactionTotal,
+                            "prepaid": true,
+                            "invoice": $scope.transacitonInvoice + index.toString(),
+                            "tip": $scope.tipsAmount                                
+                        });
+    
+                    }
+                    else{
+                        $scope.transactionPayload.push({
+                            "amount": $scope.transactionTotal,
+                            "prepaid": true,
+                            "invoice": $scope.transacitonInvoice  + index.toString()
+                            
+                        });
+    
+                    }
+                    
+                }
+                    
+              
+
+            }else{
+                $scope.transactionPayload = [];   
+            }
+
+        }else if ($scope.manualPaymentTotal) {
             if ($scope.includeTips) {
                 $scope.transactionPayload = [
                     {
@@ -367,34 +434,52 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
         generateBundleItemitemPrices()
         generateBundleIndludedItemJson()
         if ($scope.includeBundleItem){
-            $scope.itemsArray = [
-                {
-                    "name": $scope.itemName,
-                    "description": "Yum",
-                    "unitPrice": $scope.itemPrice,
-                    "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
-                    "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
-                    "posId": $scope.itemPosId,
-                    "surcounts": $scope.itemSurcountJson,
-                    "options": $scope.itemOptionJson,
-                    "quantity": $scope.itemQuantity,
-                    "type" : "single"
-                    
-                },
-                {
-                    "name": $scope.bundleItemName,
-                    "description": "bundleItem",
-                    "unitPrice": $scope.bundleItemPrice,
-                    "totalBeforeSurcounts": $scope.bundleItemTotalBeforeSurcounts,
-                    "totalAfterSurcounts": $scope.bundleItemTotalAfterSurcounts,
-                    "posId": $scope.bundleItemPosId,
-                    "surcounts": [],
-                    "options": $scope.itemOptionJson,
-                    "quantity": $scope.bundleItemQuantity,
-                    "type" : "bundle",
-                    "includedItems" : $scope.bundleIncludedItemJson,
-                }
-            ]
+            if ($scope.onlyBundleItem){
+                $scope.itemsArray = [
+                    {
+                        "name": $scope.bundleItemName,
+                        "description": "bundleItem",
+                        "unitPrice": $scope.bundleItemPrice,
+                        "totalBeforeSurcounts": $scope.bundleItemTotalBeforeSurcounts,
+                        "totalAfterSurcounts": $scope.bundleItemTotalAfterSurcounts,
+                        "posId": $scope.bundleItemPosId,
+                        "surcounts": [],
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.bundleItemQuantity,
+                        "type" : "bundle",
+                        "includedItems" : $scope.bundleIncludedItemJson,
+                    }
+                ]
+            }else{
+                $scope.itemsArray = [
+                    {
+                        "name": $scope.itemName,
+                        "description": "Yum",
+                        "unitPrice": $scope.itemPrice,
+                        "totalBeforeSurcounts": $scope.itemPriceBeforeSurcount,
+                        "totalAfterSurcounts": $scope.itemPriceAfterSurcount,
+                        "posId": $scope.itemPosId,
+                        "surcounts": $scope.itemSurcountJson,
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.itemQuantity,
+                        "type" : "single"
+                        
+                    },
+                    {
+                        "name": $scope.bundleItemName,
+                        "description": "bundleItem",
+                        "unitPrice": $scope.bundleItemPrice,
+                        "totalBeforeSurcounts": $scope.bundleItemTotalBeforeSurcounts,
+                        "totalAfterSurcounts": $scope.bundleItemTotalAfterSurcounts,
+                        "posId": $scope.bundleItemPosId,
+                        "surcounts": [],
+                        "options": $scope.itemOptionJson,
+                        "quantity": $scope.bundleItemQuantity,
+                        "type" : "bundle",
+                        "includedItems" : $scope.bundleIncludedItemJson,
+                    }
+                ]
+            }
         }else{
             $scope.itemsArray = [
                 {
@@ -560,6 +645,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
         setOrderJson();
     }
 
+    $scope.setOnlyBundleItem = function (onlyBundleItem) {
+        $scope.onlyBundleItem = onlyBundleItem;
+        setOrderJson();
+    }
+
     $scope.setBundleItemPosId = function(bundleItemPosId) {
         if (bundleItemPosId) {
             $scope.bundleItemPosId = bundleItemPosId;
@@ -706,13 +796,27 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     }  
     
     $scope.setPayFullAmount = function(shouldPayAll) {
-        $scope.payFullAmount = shouldPayAll;
+        $scope.payFullAmount = shouldPayAll;        
+        setOrderJson();
+    }
+
+    $scope.setsplitCount = function (splitCount) {
+        $scope.splitCount = splitCount;
+        setOrderJson();
+    }
+
+    $scope.setpayMultiples = function(setpayMultiples) {
+        $scope.payMultiples = setpayMultiples;        
         setOrderJson();
     }
     
     $scope.setTransactionInvoice = function (invoiceString) {
         $scope.transacitonInvoice = invoiceString;
         setOrderJson();
+    }
+
+    $scope.setTableToAllocate = function (tableToAllocate){
+        $scope.tableToAllocate = tableToAllocate;
     }
     
     $scope.setConsumerName = function (nameString) {
@@ -1205,6 +1309,8 @@ member.points = member.points + 50;
     WizardHandler.wizard().next();  
   };
 
+  
+
   $scope.getOrderAndGo = orderId => Meerkat.getOrder(orderId)
     .then(res => {
       $scope.order = res.data;
@@ -1247,4 +1353,47 @@ member.points = member.points + 50;
   $scope.$on("ordersUpdatedEvent", function(args) {
     $scope.getAllOrders($scope.lastOrderFilter);
   });
+
+  $scope.sendAndAllocate = () => {
+    Meerkat.getNewCheckinForTable($scope.tableToAllocate, $scope.selectedLocation.id).then(res =>{
+        setOrderJsonWithCheckin(res.id)
+        Meerkat.sendOrder($scope.formattedJsonToSend(), $scope.selectedLocation.id)
+        .then(res => {
+          WizardHandler.wizard().next();
+        });
+    })
+  };
+
+  function setOrderJsonWithCheckin(checkinId) {
+    calculateOrderDetails();
+    generateOrderJsonWithCheckinId(checkinId);
+    generateConsumerJson();
+    generateTransactionJson();
+    }
+
+    function generateOrderJsonWithCheckinId(checkinId) {
+        generateOrderItemJson()
+        if ($scope.manuallyAccepted){
+                $scope.orderPayload = {
+                "type": $scope.orderType,
+                "surcounts": $scope.orderSurcountJson,
+                "requiredAt" : $scope.orderRequiredAt,
+                "notes" : $scope.orderNotes,
+                "manuallyProcessed" : true,
+                "items": $scope.itemsArray,
+                "checkinId" : checkinId
+            }
+        }else{
+            $scope.orderPayload = {
+                "type": $scope.orderType,
+                "surcounts": $scope.orderSurcountJson,
+                "requiredAt" : $scope.orderRequiredAt,
+                "notes" : $scope.orderNotes,
+                "items": $scope.itemsArray,
+                "checkinId" : checkinId
+            }
+        }
+    }
+
+    
 }

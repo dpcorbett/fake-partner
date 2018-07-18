@@ -66,6 +66,10 @@ function MeerkatService($http, $modal, flash) {
                             }
                             response.status = 'complete'
                             console.log(response);
+
+                            delete response.createdByApp;
+                            delete response.processedByApp;
+
                             flash.success = 'transaction received';
                             var req = {
                                 method: 'PUT',
@@ -82,7 +86,11 @@ function MeerkatService($http, $modal, flash) {
                                     console.log(response);
                                     flash.success = 'transaction completed';
                                     return;
-                                })
+                                }).catch(err=>{
+                                    console.log("Error PUT, /Transactions");
+                                    console.log(response);
+                                    throw err;
+                                });
                         }else{
                             var response = angular.copy(res.data);
                             if (Meerkat.data.completeTransactions){
@@ -449,11 +457,9 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
         'doshii-location-id': locationId
       }
     };
-
     return $http(req)
       .then(res => {
         var order = angular.copy(res.data);
-        console.log(order);
         flash.success = 'Order sent';
         return order;
       })
@@ -467,6 +473,66 @@ Meerkat.createMember = function (jsonToSend, organisationId) {
     for (step = 0; step < 5; step++){
         setTimeout(Meerkat.sendOrder(jsonToSend,locationId ), step * 500)
     }
+  };
+
+  Meerkat.updateOrder = function(orderId, jsonToSend, locationId) {
+    console.log("the order id");
+    console.log(orderId);
+    var req = {
+      method: 'PUT',
+      url: '/orders/' + orderId,
+      data: jsonToSend,
+      headers: {
+        'doshii-location-id': locationId
+      }
+    };
+
+    return $http(req)
+      .then(res => {
+        var order = angular.copy(res.data);
+        console.log(order);
+        flash.success = 'Order sent';
+        return order;
+      })
+      .catch(err => {
+        flash.error = 'Order not sent: ' + err.statusText + getErrorMessage(err.data);
+      });
+  };
+
+  Meerkat.getNewCheckinForTable = function(tableToAllocate, locationId) {
+    var jsonToSend = {"tableNames":[tableToAllocate.toString()],
+                      "consumer" : {
+                        "name": "John Doe",
+                        "phone": "0404040404",
+                        "email": "testEmail@test.com.au",
+                        "address": {
+                          "line1": "616 St Kilda Road",
+                          "line2": "2/8",
+                          "city": "Melbourne",
+                          "state": "Victoria",
+                          "postalCode": "3004",
+                          "country": "AU"
+                        }
+                      }  
+                    }
+    var req = {
+      method: 'POST',
+      url: '/checkins',
+      data: jsonToSend,
+      headers: {
+        'doshii-location-id': locationId
+      }
+    };
+
+    return $http(req)
+      .then(res => {
+        var checkin = angular.copy(res.data);
+        flash.success = 'checkin created';
+        return checkin;
+      })
+      .catch(err => {
+        flash.error = 'Checkin not created: ' + err.statusText + getErrorMessage(err.data);
+      });
   };
 
 Meerkat.addOrderItems = function(locationId, order, items) {
@@ -711,6 +777,7 @@ Meerkat.addOrderItems = function(locationId, order, items) {
   return Meerkat;
 }
 
-function getErrorMessage(data) {
-    return data.message; 
+function getErrorMessage(arg){
+    console.log(arg);
+    return arg;
 }
