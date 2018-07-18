@@ -710,3 +710,7 @@ Meerkat.addOrderItems = function(locationId, order, items) {
     
   return Meerkat;
 }
+
+function getErrorMessage(data) {
+    return data.message; 
+}
