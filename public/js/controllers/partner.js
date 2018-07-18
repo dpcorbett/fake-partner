@@ -352,7 +352,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
         generateBundleItemOptions()
         $scope.bundleIncludedItemJson = [
             {
-                "name": $scope.bundleItemName,
+                "name": $scope.bundleItemIncludedItemItemName,
                 "unitPrice": $scope.bundleItemIncludedItemItemPrice,
                 "options": $scope.bundleItemOptionJson,
                 "quantity": $scope.bundleItemQuantity,
