@@ -869,21 +869,35 @@
                                     <tr>
                                         <td>
                                             Consumer Address City:
-                                            <input type="text" name="newReserveCity" ng-model="newReserveCity" ng-change="setNewReserveCity({{'newReserveCity'}})">
+                                            <input type="text" name="newReserveAddressCity" ng-model="newReserveAddressCity" ng-change="setNewReserveAddressCity({{'newReserveAddressCity'}})">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             Consumer Address State:
-                                            <input type="text" name="newReserveState" ng-model="newReserveState" ng-change="setNewReserveState({{'newReserveState'}})">
+                                            <input type="text" name="newReserveAddressState" ng-model="newReserveAddressState" ng-change="setNewReserveAddressState({{'newReserveAddressState'}})">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             Consumer Address PostalCode:
-                                            <input type="text" name="newReservePostalCode" ng-model="newReservePostalCode" ng-change="setNewReservePostalCode({{'newReservePostalCode'}})">
+                                            <input type="text" name="newReserveAddressPostalCode" ng-model="newReserveAddressPostalCode" ng-change="setNewReserveAddressPostalCode({{'newReserveAddressPostalCode'}})">
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td>
+                                            Booking Notes:
+                                            <input type="text" name="newReserveNotes" ng-model="newReserveNotes" ng-change="setnewReserveNotes({{'newReserveNotes'}})">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Remove Consumer Address:
+                                            <input type="checkbox" name="removeConsumerAddress" ng-model="removeConsumerAddress" ng-change="setRemoveConsumerAddress({{'removeConsumerAddress'}})" />
+                                        </td>
+                                    </tr>
+
+                                    
                                 </table>
                                 <button class="tiny" ng-click="createReservation()">Create</button>
                             </td>

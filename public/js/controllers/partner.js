@@ -8,6 +8,7 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
 
 
     $scope.acceptRewardsRedemptions = false;
+    $scope.removeConsumerAddress = false;
     $scope.acceptPointsRedemptions = false;
   $scope.locations = Meerkat.data.locations;
   $scope.products = Meerkat.data.products;
@@ -119,11 +120,12 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     $scope.newReservePoints = 100;
     $scope.newReserveAddressLine1 = "34 Member Street";
     $scope.newReserveAddressLine2 = undefined;
-    $scope.newReserveCity = "Melbourne";
-    $scope.newReserveState = "Vic";
-    $scope.newReservePostalCode = "3000";
-    $scope.newReserveCountry = "Au";
-    $scope.newReserveJson = ""
+    $scope.newReserveAddressCity = "Melbourne";
+    $scope.newReserveAddressState = "Vic";
+    $scope.newReserveAddressPostalCode = "3000";
+    $scope.newReserveAddressCountry = "Au";
+    $scope.newReserveJson = "";
+    $scope.newReserveNotes = "";
     $scope.reservationStartDate = new Date().toISOString().substring(0, 10);
 
     $scope.splitCount="2";
@@ -530,6 +532,11 @@ function PartnerCtrl($scope, flash, Meerkat, WizardHandler, doshiiEmitter, $moda
     $scope.setAcceptRewardsRedemptions = function (acceptRewardsRedemptions) {
         $scope.acceptRewardsRedemptions = acceptRewardsRedemptions;
         Meerkat.data.acceptRewardsRedemptions = acceptRewardsRedemptions;
+    }
+
+    $scope.setRemoveConsumerAddress = function (removeConsumerAddress) {
+        $scope.removeConsumerAddress = removeConsumerAddress;
+        setNewReserveJson();
     }
     
     $scope.setAcceptPointsRedemptions = function (acceptPointsRedemptions) {
@@ -1212,26 +1219,88 @@ member.points = member.points + 50;
     };
     
     function setNewReserveJson(){
-        $scope.newReserveJson = {
-            "tableNames": $scope.newReserveTableNames.split(','),
-            "date": $scope.newReserveDate,
-            "covers": $scope.newReserveCovers,
-            "ref": $scope.newReserveRef,
-            "consumer": {
-                "name": $scope.newReserveName,
-                "email": $scope.newReserveEmail,
-                "phone": $scope.newReservePhone,
-                "address": {
-                    "line1": $scope.newReserveAddressLine1,
-                    "line2": $scope.newReserveAddressLine2,
-                    "city": $scope.newReserveCity,
-                    "state": $scope.newReserveState,
-                    "country": "Au",
-                    "postalCode": $scope.newReservePostalCode
+        if ($scope.removeConsumerAddress){
+            if ($scope.newReserveTableNames == ""){
+                $scope.newReserveJson = {
+                    "date": $scope.newReserveDate,
+                    "covers": $scope.newReserveCovers,
+                    "ref": $scope.newReserveRef,
+                    "consumer": {
+                        "name": $scope.newReserveName,
+                        "email": $scope.newReserveEmail,
+                        "phone": $scope.newReservePhone
+                    },
+                    "notes": $scope.newReserveNotes
+                    
+                }
+            }else{
+                $scope.newReserveJson = {
+                    "tableNames": $scope.newReserveTableNames.split(','),
+                    "date": $scope.newReserveDate,
+                    "covers": $scope.newReserveCovers,
+                    "ref": $scope.newReserveRef,
+                    "consumer": {
+                        "name": $scope.newReserveName,
+                        "email": $scope.newReserveEmail,
+                        "phone": $scope.newReservePhone
+                    },
+                    "notes": $scope.newReserveNotes
+                    
+                }
+            }
+            
+        }else{
+            if ($scope.newReserveTableNames == ""){
+                $scope.newReserveJson = {
+                    "date": $scope.newReserveDate,
+                    "covers": $scope.newReserveCovers,
+                    "ref": $scope.newReserveRef,
+                    "consumer": {
+                        "name": $scope.newReserveName,
+                        "email": $scope.newReserveEmail,
+                        "phone": $scope.newReservePhone,
+                        "address": {
+                            "line1": $scope.newReserveAddressLine1,
+                            "line2": $scope.newReserveAddressLine2,
+                            "city": $scope.newReserveAddressCity,
+                            "state": $scope.newReserveAddressState,
+                            "country": "Au",
+                            "postalCode": $scope.newReserveAddressPostalCode
+                        }
+                    },
+                    "notes": $scope.newReserveNotes
+                    
+                }
+            }else{
+                $scope.newReserveJson = {
+                    "tableNames": $scope.newReserveTableNames.split(','),
+                    "date": $scope.newReserveDate,
+                    "covers": $scope.newReserveCovers,
+                    "ref": $scope.newReserveRef,
+                    "consumer": {
+                        "name": $scope.newReserveName,
+                        "email": $scope.newReserveEmail,
+                        "phone": $scope.newReservePhone,
+                        "address": {
+                            "line1": $scope.newReserveAddressLine1,
+                            "line2": $scope.newReserveAddressLine2,
+                            "city": $scope.newReserveAddressCity,
+                            "state": $scope.newReserveAddressState,
+                            "country": "Au",
+                            "postalCode": $scope.newReserveAddressPostalCode
+                        }
+                    },
+                    "notes": $scope.newReserveNotes
+                    
                 }
             }
             
         }
+        
+    }
+    $scope.setnewReserveNotes = (newReserveNotes) => {
+        $scope.newReserveNotes = newReserveNotes;
+        setNewReserveJson();
     }
     $scope.setNewReserveTableNames = (newReserveTableNames) => {
         $scope.newReserveTableNames = newReserveTableNames;
@@ -1270,7 +1339,7 @@ member.points = member.points + 50;
         setNewReserveJson();
     }
     $scope.setNewReserveAddressCity = (newReserveAddressCity) => {
-        $scope.setNewReserveAddressCity = newReserveAddressCity;
+        $scope.newReserveAddressCity = newReserveAddressCity;
         setNewReserveJson();
     }
     $scope.setNewReserveAddressState = (newReserveAddressState) => {
